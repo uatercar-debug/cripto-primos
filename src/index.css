@@ -8,51 +8,66 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
+    /* Base colors */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 215 25% 15%;
 
+    /* Card colors */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 215 25% 15%;
 
+    /* Popover colors */
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 215 25% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Brand colors - Copytrading theme */
+    --primary: 210 100% 45%; /* Professional blue */
+    --primary-foreground: 0 0% 100%;
+    
+    --secondary: 150 70% 55%; /* Trust green */
+    --secondary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Accent colors */
+    --accent-lime: 75 85% 60%; /* Lime green for CTAs */
+    --accent-lime-foreground: 215 25% 15%;
+    
+    --accent-dark: 215 35% 12%; /* Dark blue */
+    --accent-dark-foreground: 0 0% 100%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted colors */
+    --muted: 210 15% 96%;
+    --muted-foreground: 215 15% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-
+    /* Utility colors */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+    
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Form elements */
+    --border: 214 15% 88%;
+    --input: 214 15% 88%;
+    --ring: 210 100% 45%;
 
-    --radius: 0.5rem;
+    /* Gradients */
+    --gradient-hero: linear-gradient(135deg, hsl(210 100% 45%), hsl(150 70% 55%));
+    --gradient-cta: linear-gradient(135deg, hsl(75 85% 60%), hsl(150 70% 55%));
+    --gradient-dark: linear-gradient(135deg, hsl(215 35% 12%), hsl(210 100% 20%));
+    
+    /* Shadows */
+    --shadow-soft: 0 4px 12px -2px hsl(210 15% 35% / 0.15);
+    --shadow-card: 0 8px 25px -8px hsl(210 15% 35% / 0.2);
+    --shadow-cta: 0 8px 25px -5px hsl(75 85% 60% / 0.4);
 
-    --sidebar-background: 0 0% 98%;
+    /* Border radius */
+    --radius: 0.75rem;
+    --radius-lg: 1rem;
+    --radius-xl: 1.5rem;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
 
   .dark {
