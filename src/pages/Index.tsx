@@ -3,6 +3,7 @@ import CopytradingEducation from "@/components/sections/CopytradingEducation";
 import WhatYouWillLearn from "@/components/sections/WhatYouWillLearn";
 import Differentials from "@/components/sections/Differentials";
 import SocialProof from "@/components/sections/SocialProof";
+import AffiliateLinks from "@/components/sections/AffiliateLinks";
 import Guarantee from "@/components/sections/Guarantee";
 import FinalCTA from "@/components/sections/FinalCTA";
 import Footer from "@/components/sections/Footer";
@@ -28,6 +29,8 @@ const Index = () => {
         <Differentials />
         
         <SocialProof />
+        
+        <AffiliateLinks />
         
         <section id="garantia">
           <Guarantee />

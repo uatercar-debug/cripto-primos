@@ -1,32 +1,76 @@
-import { BookOpen, Play, FileText, GraduationCap, Star, ExternalLink } from "lucide-react";
+import { BookOpen, Play, FileText, GraduationCap, Star, ExternalLink, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import Header from "@/components/navigation/Header";
+import { useState } from "react";
+
+// Componente de imagem com fallback
+const RecommendationImage = ({ src, alt, className }: { src: string; alt: string; className?: string }) => {
+  const [imageError, setImageError] = useState(false);
+  const [imageLoading, setImageLoading] = useState(true);
+
+  const handleImageError = () => {
+    setImageError(true);
+    setImageLoading(false);
+  };
+
+  const handleImageLoad = () => {
+    setImageLoading(false);
+  };
+
+  if (imageError || !src || src === '/placeholder.svg') {
+    return (
+      <div className={`bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 rounded-lg flex items-center justify-center ${className}`}>
+        <ImageIcon className="w-8 h-8 text-slate-400" />
+      </div>
+    );
+  }
+
+  return (
+    <div className={`relative ${className}`}>
+      {imageLoading && (
+        <div className="absolute inset-0 bg-slate-200 dark:bg-slate-700 rounded-lg animate-pulse flex items-center justify-center">
+          <ImageIcon className="w-6 h-6 text-slate-400" />
+        </div>
+      )}
+      <img
+        src={src}
+        alt={alt}
+        onError={handleImageError}
+        onLoad={handleImageLoad}
+        className={`w-full h-full object-cover rounded-lg transition-opacity duration-300 ${
+          imageLoading ? 'opacity-0' : 'opacity-100'
+        }`}
+      />
+    </div>
+  );
+};
 
 const Recomendacoes = () => {
   const categories = [
     {
       icon: <BookOpen className="w-6 h-6" />,
       title: "Livros",
-      count: "12 recomendações",
+      count: "3 recomendações",
       color: "bg-blue-500/10 text-blue-600"
     },
     {
       icon: <Play className="w-6 h-6" />,
       title: "Vídeos",
-      count: "8 canais",
+      count: "2 canais",
       color: "bg-red-500/10 text-red-600"
     },
     {
       icon: <GraduationCap className="w-6 h-6" />,
       title: "Cursos",
-      count: "15 cursos",
+      count: "2 cursos",
       color: "bg-green-500/10 text-green-600"
     },
     {
       icon: <FileText className="w-6 h-6" />,
       title: "E-books",
-      count: "20 e-books",
+      count: "2 e-books",
       color: "bg-purple-500/10 text-purple-600"
     }
   ];
@@ -40,7 +84,8 @@ const Recomendacoes = () => {
       description: "Clássico fundamental sobre value investing e análise de investimentos.",
       link: "#",
       price: "R$ 45,90",
-      badge: "Clássico"
+      badge: "Clássico",
+      image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=250&fit=crop&crop=center"
     },
     {
       category: "Curso",
@@ -50,7 +95,8 @@ const Recomendacoes = () => {
       description: "Curso completo sobre estratégias avançadas de copytrading na Exness.",
       link: "#",
       price: "R$ 297,00",
-      badge: "Exclusivo"
+      badge: "Exclusivo",
+      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=250&fit=crop&crop=center"
     },
     {
       category: "E-book",
@@ -60,7 +106,8 @@ const Recomendacoes = () => {
       description: "Manual atualizado sobre investimentos em criptomoedas e DeFi.",
       link: "#",
       price: "R$ 19,90",
-      badge: "Atualizado"
+      badge: "Atualizado",
+      image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&h=250&fit=crop&crop=center"
     },
     {
       category: "Vídeo",
@@ -70,7 +117,8 @@ const Recomendacoes = () => {
       description: "Canal essencial sobre educação financeira e investimentos no Brasil.",
       link: "#",
       price: "Gratuito",
-      badge: "Recomendado"
+      badge: "Recomendado",
+      image: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=400&h=250&fit=crop&crop=center"
     },
     {
       category: "Livro",
@@ -80,7 +128,8 @@ const Recomendacoes = () => {
       description: "Fundamentos sobre mentalidade financeira e criação de riqueza.",
       link: "#",
       price: "R$ 39,90",
-      badge: "Bestseller"
+      badge: "Bestseller",
+      image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=250&fit=crop&crop=center"
     },
     {
       category: "Curso",
@@ -90,7 +139,41 @@ const Recomendacoes = () => {
       description: "Curso básico sobre análise técnica e fundamentos do trading.",
       link: "#",
       price: "R$ 197,00",
-      badge: "Iniciante"
+      badge: "Iniciante",
+      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=250&fit=crop&crop=center"
+    },
+    {
+      category: "E-book",
+      title: "Análise Técnica Aplicada",
+      author: "Trader Profissional",
+      rating: 5,
+      description: "Guia completo sobre gráficos, indicadores e estratégias de trading.",
+      link: "#",
+      price: "R$ 29,90",
+      badge: "Técnico",
+      image: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&h=250&fit=crop&crop=center"
+    },
+    {
+      category: "Vídeo",
+      title: "Canal Investimentos e Cia",
+      author: "Bruno Perini",
+      rating: 4,
+      description: "Análises de mercado e dicas práticas de investimento em criptomoedas.",
+      link: "#",
+      price: "Gratuito",
+      badge: "Popular",
+      image: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=400&h=250&fit=crop&crop=center"
+    },
+    {
+      category: "Livro",
+      title: "A Random Walk Down Wall Street",
+      author: "Burton Malkiel",
+      rating: 5,
+      description: "Clássico sobre teoria do mercado eficiente e estratégias de investimento.",
+      link: "#",
+      price: "R$ 52,90",
+      badge: "Acadêmico",
+      image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=400&h=250&fit=crop&crop=center"
     }
   ];
 
@@ -101,13 +184,17 @@ const Recomendacoes = () => {
       "Atualizado": "bg-green-500/10 text-green-600",
       "Recomendado": "bg-orange-500/10 text-orange-600",
       "Bestseller": "bg-red-500/10 text-red-600",
-      "Iniciante": "bg-cyan-500/10 text-cyan-600"
+      "Iniciante": "bg-cyan-500/10 text-cyan-600",
+      "Técnico": "bg-indigo-500/10 text-indigo-600",
+      "Popular": "bg-pink-500/10 text-pink-600",
+      "Acadêmico": "bg-emerald-500/10 text-emerald-600"
     };
     return colors[badge] || "bg-gray-500/10 text-gray-600";
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted/30">
+      <Header />
       <div className="container mx-auto px-4 pt-24 pb-16">
         {/* Hero Section */}
         <div className="text-center mb-16">
@@ -147,7 +234,16 @@ const Recomendacoes = () => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           {recommendations.map((item, index) => (
-            <Card key={index} className="border-0 bg-card/50 backdrop-blur-sm hover:shadow-lg transition-all duration-300 group">
+            <Card key={index} className="border-0 bg-card/50 backdrop-blur-sm hover:shadow-lg transition-all duration-300 group overflow-hidden">
+              {/* Imagem do item */}
+              <div className="aspect-video">
+                <RecommendationImage 
+                  src={item.image} 
+                  alt={item.title}
+                  className="w-full h-full"
+                />
+              </div>
+              
               <CardHeader>
                 <div className="flex justify-between items-start mb-2">
                   <Badge variant="secondary" className="text-xs">
