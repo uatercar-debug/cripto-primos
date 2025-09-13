@@ -1,7 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Clock } from "lucide-react";
+import { useState } from "react";
+import { CheckoutModal } from "@/components/checkout/CheckoutModal";
 
 const FinalCTA = () => {
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
+
   return (
     <section className="py-20 bg-gradient-dark text-white">
       <div className="container mx-auto px-4">
@@ -21,6 +25,7 @@ const FinalCTA = () => {
               variant="cta" 
               size="xl" 
               className="w-full sm:w-auto group"
+              onClick={() => setCheckoutOpen(true)}
             >
               <span>Quero meu acesso agora</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -52,6 +57,11 @@ const FinalCTA = () => {
           </div>
         </div>
       </div>
+      
+      <CheckoutModal 
+        open={checkoutOpen} 
+        onOpenChange={setCheckoutOpen} 
+      />
     </section>
   );
 };
