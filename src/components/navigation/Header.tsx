@@ -3,10 +3,12 @@ import Logo from "@/components/ui/logo";
 import { useState, useEffect } from "react";
 import { Menu, X, Sparkles, Star } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
+import { CheckoutModal } from "@/components/checkout/CheckoutModal";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -70,19 +72,18 @@ const Header = () => {
           
           {/* CTA Button */}
           <div className="hidden md:block">
-            <Link to="/login">
-              <Button 
-                variant="cta" 
-                size="default"
-                className="relative overflow-hidden group bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
-              >
-                <span className="relative z-10 flex items-center gap-2">
-                  <Star className="w-4 h-4" />
-                  Garanta seu acesso
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </Button>
-            </Link>
+            <Button 
+              onClick={() => setCheckoutOpen(true)}
+              variant="cta" 
+              size="default"
+              className="relative overflow-hidden group bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+            >
+              <span className="relative z-10 flex items-center gap-2">
+                <Star className="w-4 h-4" />
+                Garanta seu acesso
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            </Button>
           </div>
           
           {/* Mobile Menu Button */}
@@ -116,21 +117,28 @@ const Header = () => {
                 </Link>
               ))}
               <div className="px-6 pt-4">
-                <Link to="/login" className="block" onClick={() => setIsMenuOpen(false)}>
-                  <Button 
-                    variant="cta" 
-                    size="default" 
-                    className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 shadow-lg"
-                  >
-                    <Star className="w-4 h-4 mr-2" />
-                    Garanta seu acesso
-                  </Button>
-                </Link>
+                <Button 
+                  onClick={() => {
+                    setCheckoutOpen(true);
+                    setIsMenuOpen(false);
+                  }}
+                  variant="cta" 
+                  size="default" 
+                  className="w-full bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 shadow-lg"
+                >
+                  <Star className="w-4 h-4 mr-2" />
+                  Garanta seu acesso
+                </Button>
               </div>
             </nav>
           </div>
         )}
       </div>
+      
+      <CheckoutModal 
+        open={checkoutOpen} 
+        onOpenChange={setCheckoutOpen} 
+      />
     </header>
   );
 };

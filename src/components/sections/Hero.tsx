@@ -1,12 +1,13 @@
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Star, Users, TrendingUp, Shield, Zap, CheckCircle, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
 import ebookMockup from "@/assets/ebook-mockup.jpg";
+import { CheckoutModal } from "@/components/checkout/CheckoutModal";
 
 const Hero = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
 
   useEffect(() => {
     setIsVisible(true);
@@ -71,13 +72,14 @@ const Hero = () => {
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4">
-              <Link to="/login">
-                <Button className="w-full sm:w-auto h-14 px-8 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold text-lg shadow-2xl hover:shadow-yellow-500/25 transition-all duration-300 group">
-                  <Zap className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
-                  Garantir meu acesso por R$29
-                  <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
+              <Button 
+                onClick={() => setCheckoutOpen(true)}
+                className="w-full sm:w-auto h-14 px-8 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold text-lg shadow-2xl hover:shadow-yellow-500/25 transition-all duration-300 group"
+              >
+                <Zap className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
+                Garantir meu acesso por R$29
+                <ArrowRight className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
               <Button variant="outline" className="w-full sm:w-auto h-14 px-8 bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20 text-lg">
                 <Users className="w-5 h-5 mr-2" />
                 Ver Depoimentos
@@ -128,6 +130,11 @@ const Hero = () => {
           </div>
         </div>
       </div>
+      
+      <CheckoutModal 
+        open={checkoutOpen} 
+        onOpenChange={setCheckoutOpen} 
+      />
     </section>
   );
 };
