@@ -6,11 +6,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Header from "@/components/navigation/Header";
+import EbookReader from "@/components/ebook/EbookReader";
 
 const AreaVip = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
+  const [showEbook, setShowEbook] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -22,9 +24,8 @@ const AreaVip = () => {
       icon: <BookOpen className="w-8 h-8 text-primary" />,
       title: "Ebook Exclusivo",
       description: "Copytrading Descomplicado - Guia Completo",
-      action: "Baixar Ebook",
-      link: "#",
-      isDownload: true,
+      action: "Ler Ebook",
+      onClick: () => setShowEbook(true),
       gradient: "from-blue-500 to-purple-600"
     },
     {
@@ -49,286 +50,284 @@ const AreaVip = () => {
 
   const bonusContent = [
     {
-      icon: <Calculator className="w-6 h-6" />,
+      icon: <Calculator className="w-8 h-8 text-primary" />,
       title: "Calculadora de Risco",
-      description: "Calcule o risco ideal para suas operações",
-      action: "Abrir Calculadora",
+      description: "Calcule o tamanho ideal das suas posições",
       isNew: true
     },
     {
-      icon: <BarChart3 className="w-6 h-6" />,
+      icon: <BarChart3 className="w-8 h-8 text-primary" />,
       title: "Dashboard de Performance",
       description: "Acompanhe seus resultados em tempo real",
-      action: "Ver Dashboard",
       isNew: false
     },
     {
-      icon: <FileText className="w-6 h-6" />,
+      icon: <PieChart className="w-8 h-8 text-primary" />,
+      title: "Análise de Portfólio",
+      description: "Visualize a distribuição dos seus investimentos",
+      isNew: true
+    },
+    {
+      icon: <FileText className="w-8 h-8 text-primary" />,
       title: "Relatórios Mensais",
-      description: "Análises detalhadas do mercado",
-      action: "Baixar Relatório",
+      description: "Relatórios detalhados da sua performance",
       isNew: false
     },
     {
-      icon: <Calendar className="w-6 h-6" />,
-      title: "Agenda de Eventos",
-      description: "Webinars e calls exclusivos",
-      action: "Ver Agenda",
+      icon: <TrendingUp className="w-8 h-8 text-primary" />,
+      title: "Sinais Premium",
+      description: "Receba sinais exclusivos dos nossos analistas",
       isNew: true
     },
     {
-      icon: <Target className="w-6 h-6" />,
-      title: "Metas Personalizadas",
-      description: "Defina e acompanhe seus objetivos",
-      action: "Configurar Metas",
+      icon: <Calendar className="w-8 h-8 text-primary" />,
+      title: "Calendário Econômico",
+      description: "Fique por dentro dos eventos que impactam o mercado",
       isNew: false
-    },
-    {
-      icon: <Gift className="w-6 h-6" />,
-      title: "Bônus Surpresa",
-      description: "Conteúdo exclusivo liberado mensalmente",
-      action: "Ver Bônus",
-      isNew: true
     }
   ];
 
   const stats = [
     { label: "Membros Ativos", value: "2,847", icon: <Users className="w-5 h-5" /> },
-    { label: "Taxa de Sucesso", value: "94.2%", icon: <TrendingUp className="w-5 h-5" /> },
-    { label: "Lucro Médio", value: "R$ 3,240", icon: <DollarSign className="w-5 h-5" /> },
+    { label: "Taxa de Sucesso", value: "89%", icon: <Target className="w-5 h-5" /> },
+    { label: "Lucro Médio Mensal", value: "15.2%", icon: <DollarSign className="w-5 h-5" /> },
+    { label: "Traders Certificados", value: "127", icon: <Award className="w-5 h-5" /> },
+    { label: "Suporte Disponível", value: "24/7", icon: <Shield className="w-5 h-5" /> },
     { label: "Tempo Online", value: "24/7", icon: <Clock className="w-5 h-5" /> }
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 relative overflow-hidden">
       <Header />
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div className="absolute top-40 left-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-      </div>
-
-      <div className="container mx-auto px-4 pt-24 pb-16 relative z-10">
-        {/* Hero Section */}
-        <div className="text-center mb-20">
-          <div className="flex justify-center mb-6">
-            <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full blur-lg opacity-75 animate-pulse"></div>
-              <div className="relative bg-gradient-to-r from-yellow-400 to-orange-500 p-6 rounded-full">
-                <Crown className="w-16 h-16 text-white" />
-              </div>
-            </div>
+      
+      {/* Conditional Rendering - Show Ebook or Main Content */}
+      {showEbook ? (
+        <div className="container mx-auto px-4 py-20">
+          <div className="mb-6">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowEbook(false)}
+              className="bg-white/10 border-white/20 text-white hover:bg-white/20"
+            >
+              ← Voltar para Área VIP
+            </Button>
           </div>
-          
-          <h1 className="text-5xl md:text-7xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent animate-pulse">
-              Área VIP
-            </span>
-          </h1>
-          
-          <p className="text-xl md:text-2xl text-white/90 max-w-4xl mx-auto mb-8 leading-relaxed">
-            🎉 <strong>Parabéns!</strong> Você agora tem acesso completo a todo o conteúdo exclusivo, 
-            ferramentas avançadas e suporte premium para dominar o copytrading.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row justify-center gap-4 mb-8">
-            <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-6 py-2 text-lg">
-              <Award className="w-5 h-5 mr-2" />
-              Membro VIP Ativo
-            </Badge>
-            <Badge className="bg-gradient-to-r from-blue-500 to-cyan-600 text-white px-6 py-2 text-lg">
-              <Shield className="w-5 h-5 mr-2" />
-              Acesso Vitalício
-            </Badge>
-          </div>
-          
-          <Button 
-            variant="outline" 
-            onClick={handleLogout} 
-            className="group bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20"
-          >
-            <LogOut className="w-4 h-4 mr-2 group-hover:rotate-12 transition-transform" />
-            Sair da Área VIP
-          </Button>
+          <EbookReader />
         </div>
+      ) : (
+        <>
+          {/* Animated Background Elements */}
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+            <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+            <div className="absolute top-40 left-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+          </div>
 
-        {/* Stats Section */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
-          {stats.map((stat, index) => (
-            <Card key={index} className="bg-white/10 backdrop-blur-sm border-white/20 text-center group hover:bg-white/20 transition-all duration-300">
-              <CardContent className="p-6">
-                <div className="flex justify-center mb-3">
-                  <div className="bg-gradient-to-r from-yellow-400 to-orange-500 p-3 rounded-full">
-                    {stat.icon}
+          <div className="container mx-auto px-4 pt-24 pb-16 relative z-10">
+            {/* Hero Section */}
+            <div className="text-center mb-20">
+              <div className="flex justify-center mb-6">
+                <div className="relative">
+                  <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full blur-lg opacity-75 animate-pulse"></div>
+                  <div className="relative bg-gradient-to-r from-yellow-400 to-orange-500 p-6 rounded-full">
+                    <Crown className="w-16 h-16 text-white" />
                   </div>
                 </div>
-                <div className="text-2xl md:text-3xl font-bold text-white mb-1">{stat.value}</div>
-                <div className="text-white/70 text-sm">{stat.label}</div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-
-        {/* Main Content Tabs */}
-        <div className="mb-12">
-          <div className="flex justify-center mb-8">
-            <div className="bg-white/10 backdrop-blur-sm rounded-full p-2 border border-white/20">
-              <Button
-                variant={activeTab === 'overview' ? 'default' : 'ghost'}
-                onClick={() => setActiveTab('overview')}
-                className={`rounded-full px-6 ${activeTab === 'overview' ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white' : 'text-white hover:bg-white/20'}`}
-              >
-                <Star className="w-4 h-4 mr-2" />
-                Visão Geral
-              </Button>
-              <Button
-                variant={activeTab === 'tools' ? 'default' : 'ghost'}
-                onClick={() => setActiveTab('tools')}
-                className={`rounded-full px-6 ml-2 ${activeTab === 'tools' ? 'bg-gradient-to-r from-yellow-400 to-orange-500 text-white' : 'text-white hover:bg-white/20'}`}
-              >
-                <Calculator className="w-4 h-4 mr-2" />
-                Ferramentas
-              </Button>
+              </div>
+              
+              <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 tracking-tight">
+                Área <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">VIP</span>
+              </h1>
+              
+              <p className="text-xl text-white/80 max-w-3xl mx-auto mb-8">
+                Bem-vindo à nossa comunidade exclusiva! Aqui você tem acesso aos melhores conteúdos, 
+                ferramentas avançadas e suporte dedicado para maximizar seus resultados no Copy Trading.
+              </p>
+              
+              <div className="flex flex-wrap justify-center gap-4 mb-12">
+                <Badge className="bg-green-500/20 text-green-300 border-green-500/30 px-4 py-2 text-sm">
+                  <Zap className="w-4 h-4 mr-2" />
+                  Membro VIP Ativo
+                </Badge>
+                <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30 px-4 py-2 text-sm">
+                  <Shield className="w-4 h-4 mr-2" />
+                  Acesso Vitalício
+                </Badge>
+                <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/30 px-4 py-2 text-sm">
+                  <Gift className="w-4 h-4 mr-2" />
+                  Conteúdo Exclusivo
+                </Badge>
+              </div>
             </div>
-          </div>
-        </div>
 
-        {/* Overview Tab */}
-        {activeTab === 'overview' && (
-          <>
-            {/* Exclusive Content Cards */}
-            <div className="grid md:grid-cols-3 gap-8 mb-20">
-              {exclusiveContent.map((content, index) => (
-                <Card key={index} className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300 group">
-                  <CardHeader className="text-center">
-                    <div className="flex justify-center mb-4">
-                      <div className={`bg-gradient-to-r ${content.gradient} p-6 rounded-2xl group-hover:scale-110 transition-transform duration-300`}>
-                        {content.icon}
-                      </div>
+            {/* Stats Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-20">
+              {stats.map((stat, index) => (
+                <Card key={index} className="bg-white/10 backdrop-blur-sm border-white/20 text-center hover:bg-white/15 transition-all duration-300">
+                  <CardContent className="p-4">
+                    <div className="flex justify-center mb-2 text-primary">
+                      {stat.icon}
                     </div>
-                    <CardTitle className="text-xl font-bold text-white">{content.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <p className="text-white/80 text-center">{content.description}</p>
-                    <Button 
-                      className={`w-full bg-gradient-to-r ${content.gradient} hover:opacity-90 text-white border-0`}
-                      onClick={() => {
-                        if (content.isExternal) {
-                          window.open(content.link, '_blank');
-                        } else if (content.isDownload) {
-                          alert('Download do ebook será implementado em breve!');
-                        }
-                      }}
-                    >
-                      {content.isDownload && <Download className="w-4 h-4 mr-2" />}
-                      {content.isExternal && <ExternalLink className="w-4 h-4 mr-2" />}
-                      {content.action}
-                    </Button>
+                    <div className="text-2xl font-bold text-white">{stat.value}</div>
+                    <div className="text-xs text-white/70">{stat.label}</div>
                   </CardContent>
                 </Card>
               ))}
             </div>
 
-            {/* Educational Content - Copy Trading Iframe */}
-            <div className="text-center mb-20">
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
-                🎓 Material Educativo Exclusivo
-              </h2>
-              <p className="text-white/80 text-lg max-w-3xl mx-auto mb-8">
-                Aprenda tudo sobre Copy Trading com nosso conteúdo educativo premium e interativo
-              </p>
-              
-              <div className="bg-white/10 backdrop-blur-sm rounded-3xl p-8 border border-white/20">
-                <h3 className="text-2xl font-bold text-white mb-6">
-                  📚 O que é Copy Trading?
-                </h3>
-                <div className="flex justify-center">
-                  <iframe 
-                    src="https://gamma.app/embed/xp6g1ejuvho4gzk" 
-                    style={{width: '700px', maxWidth: '100%', height: '450px'}} 
-                    allow="fullscreen" 
-                    title="O que é Copy Trading?"
-                    className="rounded-2xl shadow-2xl"
-                  />
-                </div>
-                <p className="text-white/60 mt-4 text-sm">
-                  ✨ Material educativo exclusivo para membros VIP
-                </p>
+            {/* Tab Navigation */}
+            <div className="flex justify-center mb-12">
+              <div className="bg-white/10 backdrop-blur-sm rounded-full p-2 border border-white/20">
+                <Button
+                  variant={activeTab === 'overview' ? 'default' : 'ghost'}
+                  onClick={() => setActiveTab('overview')}
+                  className={`rounded-full px-8 py-3 transition-all duration-300 ${
+                    activeTab === 'overview' 
+                      ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg' 
+                      : 'text-white/70 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  Visão Geral
+                </Button>
+                <Button
+                  variant={activeTab === 'tools' ? 'default' : 'ghost'}
+                  onClick={() => setActiveTab('tools')}
+                  className={`rounded-full px-8 py-3 transition-all duration-300 ${
+                    activeTab === 'tools' 
+                      ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg' 
+                      : 'text-white/70 hover:text-white hover:bg-white/10'
+                  }`}
+                >
+                  Ferramentas
+                </Button>
               </div>
             </div>
-          </>
-        )}
 
-        {/* Tools Tab */}
-        {activeTab === 'tools' && (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
-            {bonusContent.map((bonus, index) => (
-              <Card key={index} className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/20 transition-all duration-300 group">
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-3 rounded-xl">
-                        {bonus.icon}
-                      </div>
-                      <CardTitle className="text-white text-lg">{bonus.title}</CardTitle>
-                    </div>
-                    {bonus.isNew && (
-                      <Badge className="bg-gradient-to-r from-green-500 to-emerald-600 text-white">
-                        <Zap className="w-3 h-3 mr-1" />
-                        Novo
-                      </Badge>
-                    )}
+            {/* Tab Content */}
+            {activeTab === 'overview' && (
+              <>
+                {/* Exclusive Content Grid */}
+                <div className="grid md:grid-cols-3 gap-8 mb-20">
+                  {exclusiveContent.map((content, index) => (
+                    <Card key={index} className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-white/10 hover:border-white/20 transition-all duration-500 hover:transform hover:scale-105 overflow-hidden">
+                      <CardHeader className="text-center pb-4">
+                        <div className="flex justify-center mb-4">
+                          <div className={`p-4 rounded-full bg-gradient-to-r ${content.gradient} shadow-lg`}>
+                            {content.icon}
+                          </div>
+                        </div>
+                        <CardTitle className="text-xl font-bold text-white">{content.title}</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <p className="text-white/80 text-center">{content.description}</p>
+                        <Button 
+                          className={`w-full bg-gradient-to-r ${content.gradient} hover:opacity-90 text-white border-0`}
+                          onClick={() => {
+                            if (content.onClick) {
+                              content.onClick();
+                            } else if (content.isExternal) {
+                              window.open(content.link, '_blank');
+                            }
+                          }}
+                        >
+                          {content.isExternal && <ExternalLink className="w-4 h-4 mr-2" />}
+                          {content.action}
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+
+                {/* Educational Content - Copy Trading Iframe */}
+                <div className="text-center mb-20">
+                  <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                    🎓 Material Educativo Exclusivo
+                  </h2>
+                  <p className="text-white/80 text-lg max-w-3xl mx-auto mb-8">
+                    Aprenda tudo sobre Copy Trading com nosso conteúdo educativo premium e interativo
+                  </p>
+                  
+                  <div className="max-w-4xl mx-auto">
+                    <Card className="bg-white/10 backdrop-blur-sm border-white/20 overflow-hidden">
+                      <CardContent className="p-0">
+                        <div className="aspect-video">
+                          <iframe
+                            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                            title="Copy Trading - Tutorial Completo"
+                            className="w-full h-full"
+                            frameBorder="0"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                          ></iframe>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-white/80 mb-4">{bonus.description}</p>
-                  <Button 
-                    variant="outline" 
-                    className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20"
-                    onClick={() => alert(`${bonus.action} - Funcionalidade em desenvolvimento!`)}
-                  >
-                    {bonus.action}
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
+                </div>
+              </>
+            )}
 
-        {/* Support Section */}
-        <div className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-sm rounded-3xl p-8 text-center border border-white/20">
-          <div className="flex justify-center mb-6">
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 p-6 rounded-2xl">
-              <HelpCircle className="w-12 h-12 text-white" />
+            {activeTab === 'tools' && (
+              <>
+                {/* Tools and Features Grid */}
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+                  {bonusContent.map((tool, index) => (
+                    <Card key={index} className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300 relative">
+                      {tool.isNew && (
+                        <Badge className="absolute -top-2 -right-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0">
+                          NOVO
+                        </Badge>
+                      )}
+                      <CardContent className="p-6">
+                        <div className="flex items-center gap-4 mb-4">
+                          <div className="p-3 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg">
+                            {tool.icon}
+                          </div>
+                          <div>
+                            <h3 className="text-lg font-semibold text-white">{tool.title}</h3>
+                            <p className="text-white/70 text-sm">{tool.description}</p>
+                          </div>
+                        </div>
+                        <Button className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:opacity-90 text-white border-0">
+                          Acessar Ferramenta
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {/* Support Section */}
+            <div className="text-center mb-16">
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                🤝 Suporte Dedicado
+              </h2>
+              <p className="text-white/80 text-lg max-w-3xl mx-auto mb-8">
+                Nossa equipe de especialistas está pronta para ajudar você com qualquer dúvida sobre copytrading, 
+                configuração de contas, estratégias de investimento ou uso das ferramentas.
+              </p>
+              
+              <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <Button 
+                  className="w-full h-16 bg-gradient-to-r from-blue-500 to-cyan-600 hover:opacity-90 text-white border-0 text-lg"
+                  onClick={() => window.open('mailto:suporte@criptoprimos.com', '_blank')}
+                >
+                  <Mail className="w-5 h-5 mr-3" />
+                  E-mail: suporte@criptoprimos.com
+                </Button>
+                <Button 
+                  className="w-full h-16 bg-gradient-to-r from-green-500 to-teal-600 hover:opacity-90 text-white border-0 text-lg"
+                  onClick={() => window.open('https://t.me/criptoprimosvip', '_blank')}
+                >
+                  <MessageCircle className="w-5 h-5 mr-3" />
+                  Telegram: @criptoprimosvip
+                </Button>
+              </div>
             </div>
           </div>
-          <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            🆘 Precisa de Ajuda?
-          </h3>
-          <p className="text-white/80 mb-8 max-w-3xl mx-auto text-lg">
-            Nossa equipe de especialistas está pronta para ajudar você com qualquer dúvida sobre copytrading, 
-            configuração de contas, estratégias de investimento ou uso das ferramentas.
-          </p>
-          
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            <Button 
-              className="w-full h-16 bg-gradient-to-r from-blue-500 to-cyan-600 hover:opacity-90 text-white border-0 text-lg"
-              onClick={() => window.open('mailto:suporte@criptoprimos.com', '_blank')}
-            >
-              <Mail className="w-5 h-5 mr-3" />
-              E-mail: suporte@criptoprimos.com
-            </Button>
-            <Button 
-              className="w-full h-16 bg-gradient-to-r from-green-500 to-teal-600 hover:opacity-90 text-white border-0 text-lg"
-              onClick={() => window.open('https://t.me/criptoprimosvip', '_blank')}
-            >
-              <MessageCircle className="w-5 h-5 mr-3" />
-              Telegram: @criptoprimosvip
-            </Button>
-          </div>
-        </div>
-      </div>
+        </>
+      )}
     </div>
   );
 };
