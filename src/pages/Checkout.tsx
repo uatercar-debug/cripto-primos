@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, CreditCard, Lock, ArrowLeft, Shield, CheckCircle } from "lucide-react";
+import { Loader2, CreditCard, Lock, ArrowLeft, Shield, CheckCircle, QrCode, Receipt, Star, Award, Users, Zap } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 export default function Checkout() {
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState<'info' | 'payment'>('info');
+  const [paymentMethod, setPaymentMethod] = useState<'credit_card' | 'pix' | 'boleto'>('credit_card');
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -91,34 +92,47 @@ export default function Checkout() {
   const handlePaymentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.cardNumber || !formData.expiryDate || !formData.cvv || !formData.cardholderName || !formData.docNumber) {
+    // Validar campos obrigatórios baseado no método de pagamento
+    if (!formData.name || !formData.email || !formData.docNumber) {
       toast({
         title: "Campos obrigatórios",
-        description: "Por favor, preencha todos os dados do cartão.",
+        description: "Por favor, preencha todos os campos obrigatórios.",
         variant: "destructive",
       });
       return;
     }
 
-    // Validar formato do cartão
-    const cardNumberClean = formData.cardNumber.replace(/\s/g, '');
-    if (cardNumberClean.length < 13 || cardNumberClean.length > 19) {
-      toast({
-        title: "Cartão inválido",
-        description: "Número do cartão deve ter entre 13 e 19 dígitos.",
-        variant: "destructive",
-      });
-      return;
-    }
+    // Validação específica por método de pagamento
+    if (paymentMethod === 'credit_card') {
+      if (!formData.cardNumber || !formData.expiryDate || !formData.cvv || !formData.cardholderName) {
+        toast({
+          title: "Campos obrigatórios",
+          description: "Por favor, preencha todos os dados do cartão.",
+          variant: "destructive",
+        });
+        return;
+      }
 
-    // Validar CVV
-    if (formData.cvv.length < 3 || formData.cvv.length > 4) {
-      toast({
-        title: "CVV inválido",
-        description: "CVV deve ter 3 ou 4 dígitos.",
-        variant: "destructive",
-      });
-      return;
+      // Validar formato do cartão
+      const cardNumberClean = formData.cardNumber.replace(/\s/g, '');
+      if (cardNumberClean.length < 13 || cardNumberClean.length > 19) {
+        toast({
+          title: "Cartão inválido",
+          description: "Número do cartão deve ter entre 13 e 19 dígitos.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Validar CVV
+      if (formData.cvv.length < 3 || formData.cvv.length > 4) {
+        toast({
+          title: "CVV inválido",
+          description: "CVV deve ter 3 ou 4 dígitos.",
+          variant: "destructive",
+        });
+        return;
+      }
     }
 
     // Validar documento
@@ -145,20 +159,40 @@ export default function Checkout() {
     try {
       console.log('Processing MercadoPago payment...');
       
-      // Preparar dados para o MercadoPago
-      const paymentData = {
+      // Preparar dados baseado no método de pagamento
+      const basePaymentData = {
         name: formData.name,
         email: formData.email,
-        cardNumber: cardNumberClean,
-        expiryDate: formData.expiryDate,
-        cvv: formData.cvv,
-        cardholderName: formData.cardholderName,
         docType: formData.docType,
         docNumber: docClean,
-        amount: 29.00
+        amount: 29.00,
+        paymentMethod: paymentMethod
       };
 
-      const { data, error } = await supabase.functions.invoke('process-mercadopago-payment', {
+      let paymentData;
+      
+      if (paymentMethod === 'credit_card') {
+        const cardNumberClean = formData.cardNumber.replace(/\s/g, '');
+        paymentData = {
+          ...basePaymentData,
+          cardNumber: cardNumberClean,
+          expiryDate: formData.expiryDate,
+          cvv: formData.cvv,
+          cardholderName: formData.cardholderName,
+        };
+      } else {
+        // Para PIX e boleto, apenas dados básicos
+        paymentData = {
+          ...basePaymentData,
+          payment_method_id: paymentMethod === 'pix' ? 'pix' : 'bolbradesco'
+        };
+      }
+
+      const functionName = paymentMethod === 'credit_card' 
+        ? 'process-mercadopago-payment' 
+        : 'create-mercadopago-payment';
+
+      const { data, error } = await supabase.functions.invoke(functionName, {
         body: paymentData
       });
 
@@ -169,26 +203,41 @@ export default function Checkout() {
 
       console.log('Payment processed successfully:', data);
 
-      if (data.status === 'approved') {
-        toast({
-          title: "Pagamento aprovado! 🎉",
-          description: "Seu acesso foi liberado. Redirecionando para área VIP...",
-        });
-        setTimeout(() => navigate('/area-vip'), 2000);
-      } else if (data.status === 'pending') {
-        toast({
-          title: "Pagamento em análise",
-          description: "Seu pagamento está sendo processado. Você receberá um email em breve.",
-        });
-        setTimeout(() => navigate('/'), 3000);
-      } else if (data.status === 'rejected') {
-        toast({
-          title: "Pagamento rejeitado",
-          description: data.status_detail || "Verifique os dados do cartão e tente novamente.",
-          variant: "destructive",
-        });
+      if (paymentMethod === 'credit_card') {
+        if (data.status === 'approved') {
+          toast({
+            title: "Pagamento aprovado! 🎉",
+            description: "Seu acesso foi liberado. Redirecionando para área VIP...",
+          });
+          setTimeout(() => navigate('/area-vip'), 2000);
+        } else if (data.status === 'pending') {
+          toast({
+            title: "Pagamento em análise",
+            description: "Seu pagamento está sendo processado. Você receberá um email em breve.",
+          });
+          setTimeout(() => navigate('/'), 3000);
+        } else if (data.status === 'rejected') {
+          toast({
+            title: "Pagamento rejeitado",
+            description: "Tente novamente com dados diferentes ou escolha outro método de pagamento.",
+            variant: "destructive",
+          });
+        } else {
+          throw new Error(data.status_detail || 'Status de pagamento desconhecido');
+        }
       } else {
-        throw new Error(data.status_detail || 'Status de pagamento desconhecido');
+        // Para PIX e boleto, redirecionar para o MercadoPago
+        if (data.init_point) {
+          toast({
+            title: `${paymentMethod.toUpperCase()} gerado com sucesso!`,
+            description: "Redirecionando para finalizar o pagamento...",
+          });
+          setTimeout(() => {
+            window.open(data.init_point, '_self');
+          }, 1500);
+        } else {
+          throw new Error('Erro ao gerar pagamento');
+        }
       }
 
     } catch (error) {
@@ -230,6 +279,26 @@ export default function Checkout() {
               <CreditCard className="w-5 h-5" />
               {step === 'info' ? 'Seus Dados' : 'Pagamento Seguro'}
             </CardTitle>
+            
+            {/* Barra de confiança no topo */}
+            <div className="flex items-center justify-center gap-6 py-3 px-4 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20 rounded-lg border border-green-200 dark:border-green-800 mt-4">
+              <div className="flex items-center gap-1 text-xs text-green-700 dark:text-green-300">
+                <Users className="w-3 h-3" />
+                <span>+500M usuários</span>
+              </div>
+              <div className="flex items-center gap-1 text-xs text-green-700 dark:text-green-300">
+                <Shield className="w-3 h-3" />
+                <span>SSL Seguro</span>
+              </div>
+              <div className="flex items-center gap-1 text-xs text-green-700 dark:text-green-300">
+                <Award className="w-3 h-3" />
+                <span>Líder LATAM</span>
+              </div>
+              <div className="flex items-center gap-1 text-xs text-green-700 dark:text-green-300">
+                <Zap className="w-3 h-3" />
+                <span>Aprovação Rápida</span>
+              </div>
+            </div>
           </CardHeader>
           
           <CardContent>
@@ -282,115 +351,218 @@ export default function Checkout() {
               </form>
             ) : (
               <form onSubmit={handlePaymentSubmit} className="space-y-6">
+                {/* Seleção do método de pagamento */}
                 <div className="space-y-4">
                   <div>
-                    <Label htmlFor="cardNumber">Número do Cartão</Label>
-                    <Input
-                      id="cardNumber"
-                      type="text"
-                      value={formData.cardNumber}
-                      onChange={(e) => {
-                        const formatted = formatCardNumber(e.target.value);
-                        setFormData(prev => ({ ...prev, cardNumber: formatted }));
-                      }}
-                      placeholder="0000 0000 0000 0000"
-                      className="mt-2"
-                      maxLength={19}
-                      required
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="expiryDate">Validade</Label>
-                      <Input
-                        id="expiryDate"
-                        type="text"
-                        value={formData.expiryDate}
-                        onChange={(e) => {
-                          const formatted = formatExpiryDate(e.target.value);
-                          setFormData(prev => ({ ...prev, expiryDate: formatted }));
-                        }}
-                        placeholder="MM/AA"
-                        className="mt-2"
-                        maxLength={5}
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="cvv">CVV</Label>
-                      <Input
-                        id="cvv"
-                        type="text"
-                        value={formData.cvv}
-                        onChange={(e) => setFormData(prev => ({ ...prev, cvv: e.target.value }))}
-                        placeholder="123"
-                        className="mt-2"
-                        maxLength={4}
-                        required
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="cardholderName">Nome no Cartão</Label>
-                    <Input
-                      id="cardholderName"
-                      type="text"
-                      value={formData.cardholderName}
-                      onChange={(e) => setFormData(prev => ({ ...prev, cardholderName: e.target.value }))}
-                      placeholder="Nome como está no cartão"
-                      className="mt-2"
-                      required
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-3 gap-2">
-                    <div>
-                      <Label htmlFor="docType">Documento</Label>
-                      <select
-                        id="docType"
-                        value={formData.docType}
-                        onChange={(e) => setFormData(prev => ({ ...prev, docType: e.target.value }))}
-                        className="w-full px-3 py-2 border border-input rounded-md text-sm mt-2"
+                    <label className="text-sm font-medium mb-3 block">Escolha a forma de pagamento</label>
+                    <div className="grid grid-cols-3 gap-3">
+                      <button
+                        type="button"
+                        onClick={() => setPaymentMethod('credit_card')}
+                        className={`p-4 rounded-lg border-2 transition-all flex flex-col items-center gap-2 ${
+                          paymentMethod === 'credit_card' 
+                            ? 'border-primary bg-primary/10' 
+                            : 'border-muted hover:border-primary/50'
+                        }`}
                       >
-                        <option value="CPF">CPF</option>
-                        <option value="CNPJ">CNPJ</option>
-                      </select>
-                    </div>
-                    <div className="col-span-2">
-                      <Label htmlFor="docNumber">Número</Label>
-                      <Input
-                        id="docNumber"
-                        type="text"
-                        value={formData.docNumber}
-                        onChange={(e) => {
-                          const raw = e.target.value.replace(/\D/g, '');
-                          const formatted = formatDocument(raw, formData.docType);
-                          setFormData(prev => ({ ...prev, docNumber: formatted }));
-                        }}
-                        placeholder={formData.docType === 'CPF' ? '000.000.000-00' : '00.000.000/0001-00'}
-                        className="mt-2"
-                        maxLength={formData.docType === 'CPF' ? 14 : 18}
-                        required
-                      />
+                        <CreditCard className="w-6 h-6" />
+                        <span className="text-sm font-medium">Cartão</span>
+                        <span className="text-xs text-muted-foreground">Instantâneo</span>
+                      </button>
+                      
+                      <button
+                        type="button"
+                        onClick={() => setPaymentMethod('pix')}
+                        className={`p-4 rounded-lg border-2 transition-all flex flex-col items-center gap-2 ${
+                          paymentMethod === 'pix' 
+                            ? 'border-primary bg-primary/10' 
+                            : 'border-muted hover:border-primary/50'
+                        }`}
+                      >
+                        <QrCode className="w-6 h-6" />
+                        <span className="text-sm font-medium">PIX</span>
+                        <span className="text-xs text-muted-foreground">Instantâneo</span>
+                      </button>
+                      
+                      <button
+                        type="button"
+                        onClick={() => setPaymentMethod('boleto')}
+                        className={`p-4 rounded-lg border-2 transition-all flex flex-col items-center gap-2 ${
+                          paymentMethod === 'boleto' 
+                            ? 'border-primary bg-primary/10' 
+                            : 'border-muted hover:border-primary/50'
+                        }`}
+                      >
+                        <Receipt className="w-6 h-6" />
+                        <span className="text-sm font-medium">Boleto</span>
+                        <span className="text-xs text-muted-foreground">1-3 dias</span>
+                      </button>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-muted/50 p-4 rounded-lg border border-green-200">
-                  <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                    <Lock className="w-4 h-4 text-green-600" />
-                    <span className="font-medium text-green-700">Pagamento 100% seguro via MercadoPago</span>
+                {/* Campos específicos por método de pagamento */}
+                {paymentMethod === 'credit_card' && (
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="cardNumber">Número do Cartão</Label>
+                      <Input
+                        id="cardNumber"
+                        type="text"
+                        value={formData.cardNumber}
+                        onChange={(e) => {
+                          const formatted = formatCardNumber(e.target.value);
+                          setFormData(prev => ({ ...prev, cardNumber: formatted }));
+                        }}
+                        placeholder="0000 0000 0000 0000"
+                        className="mt-2"
+                        maxLength={19}
+                        required
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="expiryDate">Validade</Label>
+                        <Input
+                          id="expiryDate"
+                          type="text"
+                          value={formData.expiryDate}
+                          onChange={(e) => {
+                            const formatted = formatExpiryDate(e.target.value);
+                            setFormData(prev => ({ ...prev, expiryDate: formatted }));
+                          }}
+                          placeholder="MM/AA"
+                          className="mt-2"
+                          maxLength={5}
+                          required
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor="cvv">CVV</Label>
+                        <Input
+                          id="cvv"
+                          type="text"
+                          value={formData.cvv}
+                          onChange={(e) => setFormData(prev => ({ ...prev, cvv: e.target.value }))}
+                          placeholder="123"
+                          className="mt-2"
+                          maxLength={4}
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="cardholderName">Nome no Cartão</Label>
+                      <Input
+                        id="cardholderName"
+                        type="text"
+                        value={formData.cardholderName}
+                        onChange={(e) => setFormData(prev => ({ ...prev, cardholderName: e.target.value }))}
+                        placeholder="Nome como está no cartão"
+                        className="mt-2"
+                        required
+                      />
+                    </div>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <Shield className="w-3 h-3 text-green-600" />
-                    <span>Seus dados são protegidos com criptografia SSL</span>
+                )}
+
+                {paymentMethod === 'pix' && (
+                  <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <div className="flex items-center gap-2 text-blue-700 dark:text-blue-300 mb-2">
+                      <QrCode className="w-5 h-5" />
+                      <span className="font-medium">Pagamento via PIX</span>
+                    </div>
+                    <p className="text-sm text-blue-600 dark:text-blue-400">
+                      Após clicar em "Finalizar Pagamento", você será redirecionado para gerar o QR Code do PIX. 
+                      O pagamento é aprovado instantaneamente após a confirmação.
+                    </p>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
-                    <CheckCircle className="w-3 h-3 text-green-600" />
-                    <span>Processamento seguro certificado PCI DSS</span>
+                )}
+
+                {paymentMethod === 'boleto' && (
+                  <div className="bg-orange-50 dark:bg-orange-950/20 p-4 rounded-lg border border-orange-200 dark:border-orange-800">
+                    <div className="flex items-center gap-2 text-orange-700 dark:text-orange-300 mb-2">
+                      <Receipt className="w-5 h-5" />
+                      <span className="font-medium">Pagamento via Boleto</span>
+                    </div>
+                    <p className="text-sm text-orange-600 dark:text-orange-400">
+                      O boleto será gerado após clicar em "Finalizar Pagamento". 
+                      O prazo para pagamento é de até 3 dias úteis e a aprovação ocorre em 1-3 dias úteis.
+                    </p>
                   </div>
+                )}
+
+                {/* Documento obrigatório para todos os métodos */}
+                <div className="grid grid-cols-3 gap-2">
+                  <div>
+                    <Label htmlFor="docType">Documento</Label>
+                    <select
+                      id="docType"
+                      value={formData.docType}
+                      onChange={(e) => setFormData(prev => ({ ...prev, docType: e.target.value }))}
+                      className="w-full px-3 py-2 border border-input rounded-md text-sm mt-2"
+                    >
+                      <option value="CPF">CPF</option>
+                      <option value="CNPJ">CNPJ</option>
+                    </select>
+                  </div>
+                  <div className="col-span-2">
+                    <Label htmlFor="docNumber">Número</Label>
+                    <Input
+                      id="docNumber"
+                      type="text"
+                      value={formData.docNumber}
+                      onChange={(e) => {
+                        const raw = e.target.value.replace(/\D/g, '');
+                        const formatted = formatDocument(raw, formData.docType);
+                        setFormData(prev => ({ ...prev, docNumber: formatted }));
+                      }}
+                      placeholder={formData.docType === 'CPF' ? '000.000.000-00' : '00.000.000/0001-00'}
+                      className="mt-2"
+                      maxLength={formData.docType === 'CPF' ? 14 : 18}
+                      required
+                    />
+                  </div>
+                </div>
+
+                {/* Selos de confiança */}
+                <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
+                  <div className="flex items-center gap-2 text-sm text-green-700 dark:text-green-300 mb-3">
+                    <Shield className="w-4 h-4" />
+                    <span className="font-medium">Pagamento 100% seguro via MercadoPago</span>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-4 text-xs">
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Lock className="w-3 h-3 text-green-600" />
+                      <span>Criptografia SSL 256-bit</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <CheckCircle className="w-3 h-3 text-green-600" />
+                      <span>Certificação PCI DSS</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Award className="w-3 h-3 text-green-600" />
+                      <span>Empresa líder na América Latina</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-muted-foreground">
+                      <Users className="w-3 h-3 text-green-600" />
+                      <span>+500 milhões de usuários</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Garantia */}
+                <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20 p-4 rounded-lg border border-purple-200 dark:border-purple-800">
+                  <div className="flex items-center gap-2 text-purple-700 dark:text-purple-300 mb-2">
+                    <Star className="w-5 h-5" />
+                    <span className="font-medium">Garantia de 7 dias</span>
+                  </div>
+                  <p className="text-sm text-purple-600 dark:text-purple-400">
+                    Se não ficar satisfeito, devolvemos 100% do seu dinheiro sem perguntas.
+                  </p>
                 </div>
 
                 <div className="flex gap-4">
@@ -415,7 +587,9 @@ export default function Checkout() {
                       </>
                     ) : (
                       <>
-                        <Shield className="w-4 h-4 mr-2" />
+                        {paymentMethod === 'credit_card' && <CreditCard className="w-4 h-4 mr-2" />}
+                        {paymentMethod === 'pix' && <QrCode className="w-4 h-4 mr-2" />}
+                        {paymentMethod === 'boleto' && <Receipt className="w-4 h-4 mr-2" />}
                         Finalizar Pagamento
                       </>
                     )}
@@ -427,9 +601,29 @@ export default function Checkout() {
         </Card>
 
         <div className="text-center mt-6">
-          <p className="text-sm text-muted-foreground">
-            Problemas? Entre em contato conosco pelo email suporte@exemplo.com
+          <p className="text-sm text-muted-foreground mb-4">
+            Problemas? Entre em contato pelo email: <strong>suporte@copytrading.com</strong>
           </p>
+          
+          {/* Selos adicionais de confiança */}
+          <div className="flex items-center justify-center gap-8 py-4 border-t border-muted">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Shield className="w-4 h-4 text-green-600" />
+              <span className="font-medium">256-bit SSL</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Award className="w-4 h-4 text-blue-600" />
+              <span className="font-medium">Mercado Líder</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Users className="w-4 h-4 text-purple-600" />
+              <span className="font-medium">Milhões Confiam</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <CheckCircle className="w-4 h-4 text-green-600" />
+              <span className="font-medium">Garantia 7 dias</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

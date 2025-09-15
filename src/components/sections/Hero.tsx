@@ -2,12 +2,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Star, Users, TrendingUp, Shield, Zap, CheckCircle, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import ebookMockup from "@/assets/ebook-mockup.jpg";
-import { CheckoutModal } from "@/components/checkout/CheckoutModal";
 
 const Hero = () => {
   const [isVisible, setIsVisible] = useState(false);
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsVisible(true);
@@ -73,7 +73,7 @@ const Hero = () => {
             
             <div className="flex flex-col sm:flex-row gap-4">
               <Button 
-                onClick={() => setCheckoutOpen(true)}
+                onClick={() => navigate('/checkout')}
                 className="w-full sm:w-auto h-14 px-8 bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-bold text-lg shadow-2xl hover:shadow-yellow-500/25 transition-all duration-300 group"
               >
                 <Zap className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
@@ -130,11 +130,6 @@ const Hero = () => {
           </div>
         </div>
       </div>
-      
-      <CheckoutModal 
-        open={checkoutOpen} 
-        onOpenChange={setCheckoutOpen} 
-      />
     </section>
   );
 };

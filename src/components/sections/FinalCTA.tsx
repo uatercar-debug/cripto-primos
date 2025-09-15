@@ -1,10 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Clock } from "lucide-react";
-import { useState } from "react";
-import { CheckoutModal } from "@/components/checkout/CheckoutModal";
+import { useNavigate } from "react-router-dom";
 
 const FinalCTA = () => {
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <section className="py-20 bg-gradient-dark text-white">
@@ -25,7 +24,7 @@ const FinalCTA = () => {
               variant="cta" 
               size="xl" 
               className="w-full sm:w-auto group"
-              onClick={() => setCheckoutOpen(true)}
+              onClick={() => navigate('/checkout')}
             >
               <span>Quero meu acesso agora</span>
               <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -57,11 +56,6 @@ const FinalCTA = () => {
           </div>
         </div>
       </div>
-      
-      <CheckoutModal 
-        open={checkoutOpen} 
-        onOpenChange={setCheckoutOpen} 
-      />
     </section>
   );
 };

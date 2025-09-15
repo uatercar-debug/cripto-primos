@@ -2,14 +2,13 @@ import { Button } from "@/components/ui/button";
 import Logo from "@/components/ui/logo";
 import { useState, useEffect } from "react";
 import { Menu, X, Sparkles, Star } from "lucide-react";
-import { Link, useLocation } from "react-router-dom";
-import { CheckoutModal } from "@/components/checkout/CheckoutModal";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [checkoutOpen, setCheckoutOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -73,7 +72,7 @@ const Header = () => {
           {/* CTA Button */}
           <div className="hidden md:block">
             <Button 
-              onClick={() => setCheckoutOpen(true)}
+              onClick={() => navigate('/checkout')}
               variant="cta" 
               size="default"
               className="relative overflow-hidden group bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
@@ -119,7 +118,7 @@ const Header = () => {
               <div className="px-6 pt-4">
                 <Button 
                   onClick={() => {
-                    setCheckoutOpen(true);
+                    navigate('/checkout');
                     setIsMenuOpen(false);
                   }}
                   variant="cta" 
@@ -134,11 +133,6 @@ const Header = () => {
           </div>
         )}
       </div>
-      
-      <CheckoutModal 
-        open={checkoutOpen} 
-        onOpenChange={setCheckoutOpen} 
-      />
     </header>
   );
 };

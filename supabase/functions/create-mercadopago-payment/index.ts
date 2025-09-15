@@ -17,9 +17,9 @@ Deno.serve(async (req) => {
   }
 
   try {
-    const { email, name } = await req.json();
+    const { email, name, docType, docNumber, amount, payment_method_id } = await req.json();
     
-    console.log('Creating MercadoPago payment for:', { email, name });
+    console.log('Creating MercadoPago payment for:', { email, name, payment_method_id });
     
     const accessToken = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
     if (!accessToken) {
@@ -32,23 +32,55 @@ Deno.serve(async (req) => {
         {
           title: "Curso de Copytrading - Método Comprovado",
           quantity: 1,
-          unit_price: 29.00,
+          unit_price: amount || 29.00,
           currency_id: "BRL"
         }
       ],
       payer: {
         name: name,
-        email: email
+        email: email,
+        identification: {
+          type: docType || "CPF",
+          number: docNumber?.replace(/\D/g, '') || ""
+        }
+      },
+      payment_methods: {
+        excluded_payment_types: [],
+        excluded_payment_methods: [],
+        installments: 12
       },
       back_urls: {
-        success: `${req.headers.get('origin')}/success`,
-        failure: `${req.headers.get('origin')}/failure`,
-        pending: `${req.headers.get('origin')}/pending`
+        success: `${req.headers.get('origin')}/area-vip`,
+        failure: `${req.headers.get('origin')}/checkout`,
+        pending: `${req.headers.get('origin')}/checkout`
       },
       auto_return: "approved",
       notification_url: `${Deno.env.get('SUPABASE_URL')}/functions/v1/mercadopago-webhook`,
-      statement_descriptor: "COPYTRADING CURSO"
+      statement_descriptor: "COPYTRADING CURSO",
+      expires: true,
+      expiration_date_from: new Date().toISOString(),
+      expiration_date_to: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 horas
     };
+
+    // Configurar método de pagamento específico se fornecido
+    if (payment_method_id) {
+      if (payment_method_id === 'pix') {
+        preference.payment_methods.excluded_payment_types = [
+          { id: "credit_card" },
+          { id: "debit_card" },
+          { id: "ticket" }
+        ];
+      } else if (payment_method_id === 'bolbradesco') {
+        preference.payment_methods.excluded_payment_types = [
+          { id: "credit_card" },
+          { id: "debit_card" },
+          { id: "bank_transfer" }
+        ];
+        preference.payment_methods.excluded_payment_methods = [
+          { id: "pix" }
+        ];
+      }
+    }
 
     console.log('Creating preference with data:', preference);
 
@@ -72,8 +104,8 @@ Deno.serve(async (req) => {
 
     return new Response(JSON.stringify({
       preferenceId: data.id,
-      initPoint: data.init_point,
-      sandboxInitPoint: data.sandbox_init_point
+      init_point: data.init_point,
+      sandbox_init_point: data.sandbox_init_point
     }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }
