@@ -53,12 +53,25 @@ export default function Checkout() {
     const script = document.createElement('script');
     script.src = 'https://sdk.mercadopago.com/js/v2';
     script.async = true;
+    script.onload = () => {
+      console.log('MercadoPago SDK loaded successfully');
+    };
+    script.onerror = () => {
+      console.error('Failed to load MercadoPago SDK');
+      toast({
+        title: "Erro de carregamento",
+        description: "Não foi possível carregar o sistema de pagamento. Tente recarregar a página.",
+        variant: "destructive",
+      });
+    };
     document.head.appendChild(script);
     
     return () => {
-      document.head.removeChild(script);
+      if (document.head.contains(script)) {
+        document.head.removeChild(script);
+      }
     };
-  }, []);
+  }, [toast]);
 
   const handleInfoSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -87,28 +100,78 @@ export default function Checkout() {
       return;
     }
 
+    // Validar formato do cartão
+    const cardNumberClean = formData.cardNumber.replace(/\s/g, '');
+    if (cardNumberClean.length < 13 || cardNumberClean.length > 19) {
+      toast({
+        title: "Cartão inválido",
+        description: "Número do cartão deve ter entre 13 e 19 dígitos.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validar CVV
+    if (formData.cvv.length < 3 || formData.cvv.length > 4) {
+      toast({
+        title: "CVV inválido",
+        description: "CVV deve ter 3 ou 4 dígitos.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validar documento
+    const docClean = formData.docNumber.replace(/\D/g, '');
+    if (formData.docType === 'CPF' && docClean.length !== 11) {
+      toast({
+        title: "CPF inválido",
+        description: "CPF deve ter 11 dígitos.",
+        variant: "destructive",
+      });
+      return;
+    }
+    if (formData.docType === 'CNPJ' && docClean.length !== 14) {
+      toast({
+        title: "CNPJ inválido",
+        description: "CNPJ deve ter 14 dígitos.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
     
     try {
       console.log('Processing MercadoPago payment...');
       
+      // Preparar dados para o MercadoPago
+      const paymentData = {
+        name: formData.name,
+        email: formData.email,
+        cardNumber: cardNumberClean,
+        expiryDate: formData.expiryDate,
+        cvv: formData.cvv,
+        cardholderName: formData.cardholderName,
+        docType: formData.docType,
+        docNumber: docClean,
+        amount: 29.00
+      };
+
       const { data, error } = await supabase.functions.invoke('process-mercadopago-payment', {
-        body: {
-          ...formData,
-          amount: 29.00
-        }
+        body: paymentData
       });
 
       if (error) {
         console.error('Supabase function error:', error);
-        throw error;
+        throw new Error(error.message || 'Erro na comunicação com o servidor');
       }
 
       console.log('Payment processed successfully:', data);
 
       if (data.status === 'approved') {
         toast({
-          title: "Pagamento aprovado!",
+          title: "Pagamento aprovado! 🎉",
           description: "Seu acesso foi liberado. Redirecionando para área VIP...",
         });
         setTimeout(() => navigate('/area-vip'), 2000);
@@ -118,15 +181,21 @@ export default function Checkout() {
           description: "Seu pagamento está sendo processado. Você receberá um email em breve.",
         });
         setTimeout(() => navigate('/'), 3000);
+      } else if (data.status === 'rejected') {
+        toast({
+          title: "Pagamento rejeitado",
+          description: data.status_detail || "Verifique os dados do cartão e tente novamente.",
+          variant: "destructive",
+        });
       } else {
-        throw new Error(data.status_detail || 'Pagamento rejeitado');
+        throw new Error(data.status_detail || 'Status de pagamento desconhecido');
       }
 
     } catch (error) {
       console.error('Error processing payment:', error);
       toast({
         title: "Erro ao processar pagamento",
-        description: error.message || "Tente novamente em alguns instantes.",
+        description: error.message || "Tente novamente em alguns instantes ou entre em contato conosco.",
         variant: "destructive",
       });
     } finally {
@@ -309,14 +378,19 @@ export default function Checkout() {
                   </div>
                 </div>
 
-                <div className="bg-muted/50 p-4 rounded-lg">
+                <div className="bg-muted/50 p-4 rounded-lg border border-green-200">
                   <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                    <Lock className="w-4 h-4" />
-                    Pagamento 100% seguro
+                    <Lock className="w-4 h-4 text-green-600" />
+                    <span className="font-medium text-green-700">Pagamento 100% seguro via MercadoPago</span>
                   </div>
-                  <p className="text-xs text-muted-foreground">
-                    Seus dados são protegidos pela criptografia MercadoPago.
-                  </p>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Shield className="w-3 h-3 text-green-600" />
+                    <span>Seus dados são protegidos com criptografia SSL</span>
+                  </div>
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground mt-1">
+                    <CheckCircle className="w-3 h-3 text-green-600" />
+                    <span>Processamento seguro certificado PCI DSS</span>
+                  </div>
                 </div>
 
                 <div className="flex gap-4">
