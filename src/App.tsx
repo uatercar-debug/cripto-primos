@@ -12,6 +12,7 @@ import AreaVip from "./pages/AreaVip";
 import Recomendacoes from "./pages/Recomendacoes";
 import Newsletter from "./pages/Newsletter";
 import Login from "./pages/Login";
+import Checkout from "./pages/Checkout";
 
 const queryClient = new QueryClient();
 
@@ -26,6 +27,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/afiliados" element={<Afiliados />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/checkout" element={<Checkout />} />
             <Route 
               path="/area-vip" 
               element={
