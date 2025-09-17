@@ -70,7 +70,68 @@ Deno.serve(async (req) => {
 
       if (!paymentResponse.ok) {
         const errorText = await paymentResponse.text();
+        const errorObj = JSON.parse(errorText);
         console.error('PIX/Boleto payment creation error:', paymentResponse.status, errorText);
+        
+        // Verificar se é erro de configuração do PIX
+        if (errorObj.message && errorObj.message.includes('key enabled for QR')) {
+          console.log('PIX not configured, falling back to preference creation...');
+          
+          // Fallback para criar preferência e redirecionar para MercadoPago
+          const preferenceData = {
+            items: [{
+              title: "Curso de Copytrading - Método Comprovado",
+              quantity: 1,
+              unit_price: amount || 29.00
+            }],
+            payer: {
+              email: email,
+              identification: {
+                type: docType,
+                number: docNumber.replace(/[^\d]/g, '')
+              }
+            },
+            back_urls: {
+              success: "https://47432545-ac42-48d7-9a0d-1506bd6170b8.lovableproject.com/area-vip",
+              failure: "https://47432545-ac42-48d7-9a0d-1506bd6170b8.lovableproject.com/checkout",
+              pending: "https://47432545-ac42-48d7-9a0d-1506bd6170b8.lovableproject.com/checkout"
+            },
+            auto_return: "approved",
+            payment_methods: {
+              excluded_payment_types: payment_method_id === 'pix' || paymentMethod === 'pix' ? 
+                [{ id: "credit_card" }, { id: "debit_card" }, { id: "ticket" }] : 
+                [{ id: "credit_card" }, { id: "debit_card" }, { id: "bank_transfer" }],
+              excluded_payment_methods: [],
+              installments: 1
+            }
+          };
+
+          const preferenceResponse = await fetch('https://api.mercadopago.com/checkout/preferences', {
+            method: 'POST',
+            headers: {
+              'Authorization': `Bearer ${accessToken}`,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(preferenceData)
+          });
+
+          if (!preferenceResponse.ok) {
+            throw new Error(`Erro ao criar preferência: ${preferenceResponse.status}`);
+          }
+
+          const preference = await preferenceResponse.json();
+          
+          return new Response(JSON.stringify({
+            paymentId: preference.id,
+            status: 'redirect_required',
+            init_point: preference.init_point,
+            sandbox_init_point: preference.sandbox_init_point
+          }), {
+            status: 200,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+        
         throw new Error(`Erro ao processar pagamento: ${paymentResponse.status}`);
       }
 

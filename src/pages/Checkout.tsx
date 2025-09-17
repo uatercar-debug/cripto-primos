@@ -210,6 +210,14 @@ export default function Checkout() {
           description: "Seu acesso foi liberado. Redirecionando para área VIP...",
         });
         setTimeout(() => navigate('/area-vip'), 2000);
+      } else if (data.status === 'redirect_required') {
+        // Caso PIX não esteja configurado, redirecionar para MercadoPago
+        const redirectUrl = data.init_point;
+        if (redirectUrl) {
+          window.location.href = redirectUrl;
+        } else {
+          throw new Error('URL de redirecionamento não encontrada');
+        }
       } else if (data.status === 'pending') {
         if (paymentMethod === 'pix') {
           setPaymentData(data);
