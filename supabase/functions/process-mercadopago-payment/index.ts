@@ -26,17 +26,72 @@ Deno.serve(async (req) => {
       cardholderName, 
       docType, 
       docNumber, 
-      amount 
+      amount,
+      payment_method_id,
+      paymentMethod
     } = await req.json();
     
-    console.log('Processing MercadoPago payment for:', { email, name, amount });
+    console.log('Processing MercadoPago payment for:', { email, name, amount, paymentMethod: paymentMethod || payment_method_id });
     
     const accessToken = Deno.env.get('MERCADOPAGO_ACCESS_TOKEN');
     if (!accessToken) {
       throw new Error('MercadoPago access token not found');
     }
 
-    // Primeiro, criar o card token
+    // Verificar se é PIX ou boleto
+    const isPixOrBoleto = payment_method_id === 'pix' || payment_method_id === 'bolbradesco' || paymentMethod === 'pix' || paymentMethod === 'boleto';
+    
+    if (isPixOrBoleto) {
+      // Para PIX e boleto, criar pagamento direto
+      const paymentData = {
+        transaction_amount: amount || 29.00,
+        description: "Curso de Copytrading - Método Comprovado",
+        payment_method_id: payment_method_id === 'pix' || paymentMethod === 'pix' ? 'pix' : 'bolbradesco',
+        payer: {
+          email: email,
+          identification: {
+            type: docType,
+            number: docNumber.replace(/[^\d]/g, '')
+          }
+        }
+      };
+
+      console.log('Creating PIX/Boleto payment...');
+      
+      const paymentResponse = await fetch('https://api.mercadopago.com/v1/payments', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+          'X-Idempotency-Key': crypto.randomUUID()
+        },
+        body: JSON.stringify(paymentData)
+      });
+
+      if (!paymentResponse.ok) {
+        const errorText = await paymentResponse.text();
+        console.error('PIX/Boleto payment creation error:', paymentResponse.status, errorText);
+        throw new Error(`Erro ao processar pagamento: ${paymentResponse.status}`);
+      }
+
+      const payment = await paymentResponse.json();
+      console.log('PIX/Boleto payment created:', payment.id, 'Status:', payment.status);
+
+      return new Response(JSON.stringify({
+        paymentId: payment.id,
+        status: payment.status,
+        status_detail: payment.status_detail,
+        amount: payment.transaction_amount,
+        qr_code: payment.point_of_interaction?.transaction_data?.qr_code,
+        qr_code_base64: payment.point_of_interaction?.transaction_data?.qr_code_base64,
+        ticket_url: payment.point_of_interaction?.transaction_data?.ticket_url
+      }), {
+        status: 200,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Para cartão de crédito - fluxo original
     const [month, year] = expiryDate.split('/');
     
     const cardTokenData = {

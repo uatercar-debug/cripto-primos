@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function Checkout() {
   const [isLoading, setIsLoading] = useState(false);
-  const [step, setStep] = useState<'info' | 'payment'>('info');
+  const [step, setStep] = useState<'info' | 'payment' | 'pix_pending' | 'boleto_pending'>('info');
   const [paymentMethod, setPaymentMethod] = useState<'credit_card' | 'pix' | 'boleto'>('credit_card');
   const [formData, setFormData] = useState({
     name: "",
@@ -22,6 +22,7 @@ export default function Checkout() {
     docType: "CPF",
     docNumber: ""
   });
+  const [paymentData, setPaymentData] = useState<any>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -181,16 +182,15 @@ export default function Checkout() {
           cardholderName: formData.cardholderName,
         };
       } else {
-        // Para PIX e boleto, apenas dados básicos
+        // Para PIX e boleto, usar a função de processamento direto
         paymentData = {
           ...basePaymentData,
           payment_method_id: paymentMethod === 'pix' ? 'pix' : 'bolbradesco'
         };
       }
 
-      const functionName = paymentMethod === 'credit_card' 
-        ? 'process-mercadopago-payment' 
-        : 'create-mercadopago-payment';
+      // Usar sempre a função de processamento direto
+      const functionName = 'process-mercadopago-payment';
 
       const { data, error } = await supabase.functions.invoke(functionName, {
         body: paymentData
@@ -203,41 +203,43 @@ export default function Checkout() {
 
       console.log('Payment processed successfully:', data);
 
-      if (paymentMethod === 'credit_card') {
-        if (data.status === 'approved') {
+      // Tratar resposta baseado no status do pagamento
+      if (data.status === 'approved') {
+        toast({
+          title: "Pagamento aprovado! 🎉",
+          description: "Seu acesso foi liberado. Redirecionando para área VIP...",
+        });
+        setTimeout(() => navigate('/area-vip'), 2000);
+      } else if (data.status === 'pending') {
+        if (paymentMethod === 'pix') {
+          setPaymentData(data);
+          setStep('pix_pending');
           toast({
-            title: "Pagamento aprovado! 🎉",
-            description: "Seu acesso foi liberado. Redirecionando para área VIP...",
+            title: "PIX gerado com sucesso! 🎉",
+            description: "Complete o pagamento via PIX para liberar seu acesso.",
           });
-          setTimeout(() => navigate('/area-vip'), 2000);
-        } else if (data.status === 'pending') {
+        } else if (paymentMethod === 'boleto') {
+          setPaymentData(data);
+          setStep('boleto_pending');
+          toast({
+            title: "Boleto gerado com sucesso! 🎉", 
+            description: "Complete o pagamento do boleto para liberar seu acesso.",
+          });
+        } else {
           toast({
             title: "Pagamento em análise",
             description: "Seu pagamento está sendo processado. Você receberá um email em breve.",
           });
           setTimeout(() => navigate('/'), 3000);
-        } else if (data.status === 'rejected') {
-          toast({
-            title: "Pagamento rejeitado",
-            description: "Tente novamente com dados diferentes ou escolha outro método de pagamento.",
-            variant: "destructive",
-          });
-        } else {
-          throw new Error(data.status_detail || 'Status de pagamento desconhecido');
         }
+      } else if (data.status === 'rejected') {
+        toast({
+          title: "Pagamento rejeitado",
+          description: "Tente novamente com dados diferentes ou escolha outro método de pagamento.",
+          variant: "destructive",
+        });
       } else {
-        // Para PIX e boleto, redirecionar para o MercadoPago
-        if (data.init_point) {
-          toast({
-            title: `${paymentMethod.toUpperCase()} gerado com sucesso!`,
-            description: "Redirecionando para finalizar o pagamento...",
-          });
-          setTimeout(() => {
-            window.open(data.init_point, '_self');
-          }, 1500);
-        } else {
-          throw new Error('Erro ao gerar pagamento');
-        }
+        throw new Error(data.status_detail || 'Status de pagamento desconhecido');
       }
 
     } catch (error) {
@@ -302,7 +304,7 @@ export default function Checkout() {
           </CardHeader>
           
           <CardContent>
-            {step === 'info' ? (
+            {step === 'info' && (
               <form onSubmit={handleInfoSubmit} className="space-y-6">
                 <div className="space-y-4">
                   <div>
@@ -349,7 +351,9 @@ export default function Checkout() {
                   Continuar para Pagamento
                 </Button>
               </form>
-            ) : (
+            )}
+
+            {step === 'payment' && (
               <form onSubmit={handlePaymentSubmit} className="space-y-6">
                 {/* Seleção do método de pagamento */}
                 <div className="space-y-4">
@@ -596,6 +600,105 @@ export default function Checkout() {
                   </Button>
                 </div>
               </form>
+            )}
+
+            {step === 'pix_pending' && paymentData && (
+              <div className="space-y-6 text-center">
+                <div className="mb-6">
+                  <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <QrCode className="w-8 h-8 text-green-600" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">PIX Gerado com Sucesso!</h3>
+                  <p className="text-muted-foreground">
+                    Escaneie o QR Code ou copie o código PIX para realizar o pagamento
+                  </p>
+                </div>
+
+                {paymentData.qr_code_base64 && (
+                  <div className="bg-white p-4 rounded-lg border mx-auto max-w-xs">
+                    <img 
+                      src={`data:image/png;base64,${paymentData.qr_code_base64}`} 
+                      alt="QR Code PIX" 
+                      className="w-full"
+                    />
+                  </div>
+                )}
+
+                {paymentData.qr_code && (
+                  <div className="space-y-3">
+                    <p className="text-sm font-medium">Ou copie o código PIX:</p>
+                    <div className="bg-muted p-3 rounded-lg break-all text-sm">
+                      {paymentData.qr_code}
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => navigator.clipboard.writeText(paymentData.qr_code)}
+                      className="w-full"
+                    >
+                      Copiar Código PIX
+                    </Button>
+                  </div>
+                )}
+
+                <div className="bg-blue-50 dark:bg-blue-950/30 p-4 rounded-lg">
+                  <p className="text-sm text-blue-700 dark:text-blue-300">
+                    Após o pagamento, o acesso será liberado automaticamente em até 5 minutos.
+                  </p>
+                </div>
+
+                <Button 
+                  variant="outline" 
+                  onClick={() => setStep('payment')}
+                  className="w-full"
+                >
+                  Escolher Outra Forma de Pagamento
+                </Button>
+              </div>
+            )}
+
+            {step === 'boleto_pending' && paymentData && (
+              <div className="space-y-6 text-center">
+                <div className="mb-6">
+                  <div className="w-16 h-16 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Receipt className="w-8 h-8 text-orange-600" />
+                  </div>
+                  <h3 className="text-xl font-semibold mb-2">Boleto Gerado com Sucesso!</h3>
+                  <p className="text-muted-foreground">
+                    Clique no link abaixo para visualizar e imprimir seu boleto
+                  </p>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="bg-muted/50 p-4 rounded-lg">
+                    <p className="text-sm font-medium mb-2">Vencimento em 3 dias</p>
+                    <p className="text-lg font-bold">R$ {paymentData.amount?.toFixed(2)}</p>
+                  </div>
+
+                  {paymentData.ticket_url && (
+                    <Button 
+                      onClick={() => window.open(paymentData.ticket_url, '_blank')}
+                      className="w-full"
+                      size="lg"
+                    >
+                      Visualizar e Imprimir Boleto
+                    </Button>
+                  )}
+                </div>
+
+                <div className="bg-orange-50 dark:bg-orange-950/30 p-4 rounded-lg">
+                  <p className="text-sm text-orange-700 dark:text-orange-300">
+                    Após o pagamento, o acesso será liberado automaticamente em até 2 dias úteis.
+                  </p>
+                </div>
+
+                <Button 
+                  variant="outline" 
+                  onClick={() => setStep('payment')}
+                  className="w-full"
+                >
+                  Escolher Outra Forma de Pagamento
+                </Button>
+              </div>
             )}
           </CardContent>
         </Card>
