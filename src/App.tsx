@@ -13,6 +13,12 @@ import Recomendacoes from "./pages/Recomendacoes";
 import Newsletter from "./pages/Newsletter";
 import Login from "./pages/Login";
 import Checkout from "./pages/Checkout";
+import RiskCalculator from "./components/tools/RiskCalculator";
+import PerformanceDashboard from "./components/tools/PerformanceDashboard";
+import PortfolioAnalysis from "./components/tools/PortfolioAnalysis";
+import MonthlyReports from "./components/tools/MonthlyReports";
+import PremiumSignals from "./components/tools/PremiumSignals";
+import EconomicCalendar from "./components/tools/EconomicCalendar";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +39,54 @@ const App = () => (
               element={
                 <ProtectedRoute>
                   <AreaVip />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/area-vip/risk-calculator" 
+              element={
+                <ProtectedRoute>
+                  <RiskCalculator />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/area-vip/performance-dashboard" 
+              element={
+                <ProtectedRoute>
+                  <PerformanceDashboard />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/area-vip/portfolio-analysis" 
+              element={
+                <ProtectedRoute>
+                  <PortfolioAnalysis />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/area-vip/monthly-reports" 
+              element={
+                <ProtectedRoute>
+                  <MonthlyReports />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/area-vip/premium-signals" 
+              element={
+                <ProtectedRoute>
+                  <PremiumSignals />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/area-vip/economic-calendar" 
+              element={
+                <ProtectedRoute>
+                  <EconomicCalendar />
                 </ProtectedRoute>
               } 
             />

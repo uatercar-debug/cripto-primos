@@ -272,7 +272,7 @@ const AreaVip = () => {
                 {/* Tools and Features Grid */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
                   {bonusContent.map((tool, index) => (
-                    <Card key={index} className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300 relative">
+                    <Card key={index} className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300 relative cursor-pointer">
                       {tool.isNew && (
                         <Badge className="absolute -top-2 -right-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0">
                           NOVO
@@ -288,7 +288,23 @@ const AreaVip = () => {
                             <p className="text-white/70 text-sm">{tool.description}</p>
                           </div>
                         </div>
-                        <Button className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:opacity-90 text-white border-0">
+                        <Button 
+                          className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:opacity-90 text-white border-0"
+                          onClick={() => {
+                            const toolRoutes = {
+                              'Calculadora de Risco': 'risk-calculator',
+                              'Dashboard de Performance': 'performance-dashboard',
+                              'Análise de Portfólio': 'portfolio-analysis',
+                              'Relatórios Mensais': 'monthly-reports',
+                              'Sinais Premium': 'premium-signals',
+                              'Calendário Econômico': 'economic-calendar'
+                            };
+                            const route = toolRoutes[tool.title as keyof typeof toolRoutes];
+                            if (route) {
+                              navigate(`/area-vip/${route}`);
+                            }
+                          }}
+                        >
                           Acessar Ferramenta
                         </Button>
                       </CardContent>
