@@ -20,45 +20,43 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 215 25% 15%;
 
-    /* Brand colors - Copytrading theme */
-    --primary: 210 100% 45%; /* Professional blue */
+    /* Brand colors - Professional theme */
+    --primary: 220 90% 48%; /* Corporate blue */
     --primary-foreground: 0 0% 100%;
     
-    --secondary: 150 70% 55%; /* Trust green */
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 220 15% 96%; /* Subtle gray */
+    --secondary-foreground: 220 20% 20%;
 
     /* Accent colors */
-    --accent-lime: 75 85% 60%; /* Lime green for CTAs */
-    --accent-lime-foreground: 215 25% 15%;
+    --accent: 220 15% 20%; /* Dark corporate */
+    --accent-foreground: 0 0% 100%;
     
-    --accent-dark: 215 35% 12%; /* Dark blue */
-    --accent-dark-foreground: 0 0% 100%;
+    --success: 142 71% 45%; /* Professional green */
+    --success-foreground: 0 0% 100%;
 
     /* Muted colors */
-    --muted: 210 15% 96%;
-    --muted-foreground: 215 15% 45%;
+    --muted: 220 15% 96%;
+    --muted-foreground: 220 15% 45%;
 
     /* Utility colors */
-    --success: 142 76% 36%;
-    --success-foreground: 0 0% 100%;
-    
-    --destructive: 0 84.2% 60.2%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
+    
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
 
     /* Form elements */
-    --border: 214 15% 88%;
-    --input: 214 15% 88%;
-    --ring: 210 100% 45%;
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 220 90% 48%;
 
-    /* Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(210 100% 45%), hsl(150 70% 55%));
-    --gradient-cta: linear-gradient(135deg, hsl(75 85% 60%), hsl(150 70% 55%));
-    --gradient-dark: linear-gradient(135deg, hsl(215 35% 12%), hsl(210 100% 20%));
+    /* Minimal gradients - only for subtle effects */
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(220 15% 98%));
     
-    /* Shadows */
-    --shadow-soft: 0 4px 12px -2px hsl(210 15% 35% / 0.15);
-    --shadow-card: 0 8px 25px -8px hsl(210 15% 35% / 0.2);
-    --shadow-cta: 0 8px 25px -5px hsl(75 85% 60% / 0.4);
+    /* Professional shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(220 15% 35% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(220 15% 35% / 0.1), 0 2px 4px -1px hsl(220 15% 35% / 0.06);
+    --shadow-lg: 0 10px 15px -3px hsl(220 15% 35% / 0.1), 0 4px 6px -2px hsl(220 15% 35% / 0.05);
 
     /* Border radius */
     --radius: 0.75rem;
