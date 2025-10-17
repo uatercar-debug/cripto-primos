@@ -38,10 +38,6 @@ export default {
         accent: {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
-          lime: "hsl(var(--accent-lime))",
-          "lime-foreground": "hsl(var(--accent-lime-foreground))",
-          dark: "hsl(var(--accent-dark))",
-          "dark-foreground": "hsl(var(--accent-dark-foreground))",
         },
         success: {
           DEFAULT: "hsl(var(--success))",
@@ -56,19 +52,11 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
       },
-      backgroundImage: {
-        'gradient-hero': 'var(--gradient-hero)',
-        'gradient-cta': 'var(--gradient-cta)',
-        'gradient-dark': 'var(--gradient-dark)',
-      },
       boxShadow: {
-        'soft': 'var(--shadow-soft)',
-        'card': 'var(--shadow-card)',
-        'cta': 'var(--shadow-cta)',
-      },
-      transitionProperty: {
-        'smooth': 'var(--transition-smooth)',
-        'bounce': 'var(--transition-bounce)',
+        'sm': 'var(--shadow-sm)',
+        'md': 'var(--shadow-md)',
+        'lg': 'var(--shadow-lg)',
+        'xl': 'var(--shadow-xl)',
       },
       borderRadius: {
         lg: "var(--radius)",

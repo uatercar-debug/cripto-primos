@@ -8,66 +8,59 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* Base colors */
+    /* Base colors - Professional palette */
     --background: 0 0% 100%;
-    --foreground: 215 25% 15%;
+    --foreground: 220 15% 20%;
 
     /* Card colors */
     --card: 0 0% 100%;
-    --card-foreground: 215 25% 15%;
+    --card-foreground: 220 15% 20%;
 
     /* Popover colors */
     --popover: 0 0% 100%;
-    --popover-foreground: 215 25% 15%;
+    --popover-foreground: 220 15% 20%;
 
-    /* Brand colors - Copytrading theme */
-    --primary: 210 100% 45%; /* Professional blue */
+    /* Brand colors - Professional and trustworthy */
+    --primary: 220 70% 50%; /* Deep professional blue */
     --primary-foreground: 0 0% 100%;
     
-    --secondary: 150 70% 55%; /* Trust green */
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 220 15% 96%; /* Light gray for subtle elements */
+    --secondary-foreground: 220 15% 20%;
 
     /* Accent colors */
-    --accent-lime: 75 85% 60%; /* Lime green for CTAs */
-    --accent-lime-foreground: 215 25% 15%;
+    --accent: 220 60% 55%; /* Lighter blue for accents */
+    --accent-foreground: 0 0% 100%;
     
-    --accent-dark: 215 35% 12%; /* Dark blue */
-    --accent-dark-foreground: 0 0% 100%;
+    --success: 142 76% 36%; /* Green for success states */
+    --success-foreground: 0 0% 100%;
 
     /* Muted colors */
-    --muted: 210 15% 96%;
-    --muted-foreground: 215 15% 45%;
+    --muted: 220 15% 96%;
+    --muted-foreground: 220 10% 46%;
 
     /* Utility colors */
-    --success: 142 76% 36%;
-    --success-foreground: 0 0% 100%;
-    
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
     /* Form elements */
-    --border: 214 15% 88%;
-    --input: 214 15% 88%;
-    --ring: 210 100% 45%;
+    --border: 220 15% 88%;
+    --input: 220 15% 88%;
+    --ring: 220 70% 50%;
 
-    /* Gradients */
-    --gradient-hero: linear-gradient(135deg, hsl(210 100% 45%), hsl(150 70% 55%));
-    --gradient-cta: linear-gradient(135deg, hsl(75 85% 60%), hsl(150 70% 55%));
-    --gradient-dark: linear-gradient(135deg, hsl(215 35% 12%), hsl(210 100% 20%));
-    
-    /* Shadows */
-    --shadow-soft: 0 4px 12px -2px hsl(210 15% 35% / 0.15);
-    --shadow-card: 0 8px 25px -8px hsl(210 15% 35% / 0.2);
-    --shadow-cta: 0 8px 25px -5px hsl(75 85% 60% / 0.4);
+    /* Border radius - More conservative */
+    --radius: 0.5rem;
+    --radius-lg: 0.75rem;
+    --radius-xl: 1rem;
 
-    /* Border radius */
-    --radius: 0.75rem;
-    --radius-lg: 1rem;
-    --radius-xl: 1.5rem;
+    /* Shadows - Professional and subtle */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
 
     /* Transitions */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    --transition-smooth: all 0.2s ease-in-out;
+    --transition-fast: all 0.15s ease-in-out;
   }
 
   .dark {

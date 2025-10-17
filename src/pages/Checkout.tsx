@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, CreditCard, Lock, ArrowLeft, Shield, CheckCircle, QrCode, Receipt, Star, Award, Users, Zap } from "lucide-react";
+import { Loader2, CreditCard, Lock, ArrowLeft, Shield, CheckCircle, QrCode, Receipt, Award, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
@@ -263,7 +263,7 @@ export default function Checkout() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-8">
+    <div className="min-h-screen bg-background py-8">
       <div className="container max-w-2xl mx-auto px-4">
         <div className="mb-6">
           <Button 
@@ -290,23 +290,22 @@ export default function Checkout() {
               {step === 'info' ? 'Seus Dados' : 'Pagamento Seguro'}
             </CardTitle>
             
-            {/* Barra de confiança no topo */}
-            <div className="flex items-center justify-center gap-6 py-3 px-4 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20 rounded-lg border border-green-200 dark:border-green-800 mt-4">
-              <div className="flex items-center gap-1 text-xs text-green-700 dark:text-green-300">
-                <Users className="w-3 h-3" />
-                <span>+500M usuários</span>
-              </div>
-              <div className="flex items-center gap-1 text-xs text-green-700 dark:text-green-300">
-                <Shield className="w-3 h-3" />
-                <span>SSL Seguro</span>
-              </div>
-              <div className="flex items-center gap-1 text-xs text-green-700 dark:text-green-300">
-                <Award className="w-3 h-3" />
-                <span>Líder LATAM</span>
-              </div>
-              <div className="flex items-center gap-1 text-xs text-green-700 dark:text-green-300">
-                <Zap className="w-3 h-3" />
-                <span>Aprovação Rápida</span>
+            {/* Selo MercadoPago */}
+            <div className="flex items-center justify-center gap-4 py-4 px-4 bg-muted/30 rounded-lg border border-border mt-4">
+              <img src="/mercadopago-logo.png" alt="MercadoPago" className="h-6" />
+              <div className="flex items-center gap-6 text-xs text-muted-foreground">
+                <div className="flex items-center gap-1.5">
+                  <Shield className="w-3.5 h-3.5 text-success" />
+                  <span>Seguro</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <Users className="w-3.5 h-3.5 text-primary" />
+                  <span>+500M usuários</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle className="w-3.5 h-3.5 text-success" />
+                  <span>Certificado</span>
+                </div>
               </div>
             </div>
           </CardHeader>
@@ -481,27 +480,27 @@ export default function Checkout() {
                 )}
 
                 {paymentMethod === 'pix' && (
-                  <div className="bg-blue-50 dark:bg-blue-950/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
-                    <div className="flex items-center gap-2 text-blue-700 dark:text-blue-300 mb-2">
+                  <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
+                    <div className="flex items-center gap-2 text-primary mb-2">
                       <QrCode className="w-5 h-5" />
                       <span className="font-medium">Pagamento via PIX</span>
                     </div>
-                    <p className="text-sm text-blue-600 dark:text-blue-400">
-                      Após clicar em "Finalizar Pagamento", você será redirecionado para gerar o QR Code do PIX. 
-                      O pagamento é aprovado instantaneamente após a confirmação.
+                    <p className="text-sm text-muted-foreground">
+                      Após clicar em "Finalizar Pagamento", você receberá o QR Code do PIX. 
+                      O pagamento é aprovado instantaneamente.
                     </p>
                   </div>
                 )}
 
                 {paymentMethod === 'boleto' && (
-                  <div className="bg-orange-50 dark:bg-orange-950/20 p-4 rounded-lg border border-orange-200 dark:border-orange-800">
-                    <div className="flex items-center gap-2 text-orange-700 dark:text-orange-300 mb-2">
+                  <div className="bg-accent/5 p-4 rounded-lg border border-accent/20">
+                    <div className="flex items-center gap-2 text-accent mb-2">
                       <Receipt className="w-5 h-5" />
                       <span className="font-medium">Pagamento via Boleto</span>
                     </div>
-                    <p className="text-sm text-orange-600 dark:text-orange-400">
-                      O boleto será gerado após clicar em "Finalizar Pagamento". 
-                      O prazo para pagamento é de até 3 dias úteis e a aprovação ocorre em 1-3 dias úteis.
+                    <p className="text-sm text-muted-foreground">
+                      O boleto será gerado após finalizar o pagamento. 
+                      Prazo de pagamento: até 3 dias úteis. Aprovação: 1-3 dias úteis.
                     </p>
                   </div>
                 )}
@@ -540,40 +539,43 @@ export default function Checkout() {
                 </div>
 
                 {/* Selos de confiança */}
-                <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/20 dark:to-blue-950/20 p-4 rounded-lg border border-green-200 dark:border-green-800">
-                  <div className="flex items-center gap-2 text-sm text-green-700 dark:text-green-300 mb-3">
-                    <Shield className="w-4 h-4" />
-                    <span className="font-medium">Pagamento 100% seguro via MercadoPago</span>
+                <div className="bg-success/5 p-4 rounded-lg border border-success/20">
+                  <div className="flex items-center gap-3 mb-3">
+                    <img src="/mercadopago-logo.png" alt="MercadoPago" className="h-5" />
+                    <div className="flex items-center gap-2 text-sm text-success font-medium">
+                      <Shield className="w-4 h-4" />
+                      <span>Pagamento 100% seguro</span>
+                    </div>
                   </div>
                   
-                  <div className="grid grid-cols-2 gap-4 text-xs">
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Lock className="w-3 h-3 text-green-600" />
-                      <span>Criptografia SSL 256-bit</span>
+                  <div className="grid grid-cols-2 gap-3 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      <Lock className="w-3 h-3 text-success" />
+                      <span>SSL 256-bit</span>
                     </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <CheckCircle className="w-3 h-3 text-green-600" />
-                      <span>Certificação PCI DSS</span>
+                    <div className="flex items-center gap-2">
+                      <CheckCircle className="w-3 h-3 text-success" />
+                      <span>PCI DSS</span>
                     </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Award className="w-3 h-3 text-green-600" />
-                      <span>Empresa líder na América Latina</span>
+                    <div className="flex items-center gap-2">
+                      <Award className="w-3 h-3 text-primary" />
+                      <span>Líder LATAM</span>
                     </div>
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                      <Users className="w-3 h-3 text-green-600" />
-                      <span>+500 milhões de usuários</span>
+                    <div className="flex items-center gap-2">
+                      <Users className="w-3 h-3 text-primary" />
+                      <span>+500M usuários</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Garantia */}
-                <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20 p-4 rounded-lg border border-purple-200 dark:border-purple-800">
-                  <div className="flex items-center gap-2 text-purple-700 dark:text-purple-300 mb-2">
-                    <Star className="w-5 h-5" />
-                    <span className="font-medium">Garantia de 7 dias</span>
+                <div className="bg-muted/30 p-4 rounded-lg border border-border">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Shield className="w-5 h-5 text-primary" />
+                    <span className="font-medium text-foreground">Garantia de 7 dias</span>
                   </div>
-                  <p className="text-sm text-purple-600 dark:text-purple-400">
-                    Se não ficar satisfeito, devolvemos 100% do seu dinheiro sem perguntas.
+                  <p className="text-sm text-muted-foreground">
+                    Satisfação garantida ou seu dinheiro de volta, sem perguntas.
                   </p>
                 </div>
 
@@ -613,8 +615,8 @@ export default function Checkout() {
             {step === 'pix_pending' && paymentData && (
               <div className="space-y-6 text-center">
                 <div className="mb-6">
-                  <div className="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <QrCode className="w-8 h-8 text-green-600" />
+                  <div className="w-16 h-16 bg-success/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <QrCode className="w-8 h-8 text-success" />
                   </div>
                   <h3 className="text-xl font-semibold mb-2">PIX Gerado com Sucesso!</h3>
                   <p className="text-muted-foreground">
@@ -648,8 +650,8 @@ export default function Checkout() {
                   </div>
                 )}
 
-                <div className="bg-blue-50 dark:bg-blue-950/30 p-4 rounded-lg">
-                  <p className="text-sm text-blue-700 dark:text-blue-300">
+                <div className="bg-primary/5 p-4 rounded-lg border border-primary/20">
+                  <p className="text-sm text-muted-foreground">
                     Após o pagamento, o acesso será liberado automaticamente em até 5 minutos.
                   </p>
                 </div>
@@ -667,8 +669,8 @@ export default function Checkout() {
             {step === 'boleto_pending' && paymentData && (
               <div className="space-y-6 text-center">
                 <div className="mb-6">
-                  <div className="w-16 h-16 bg-orange-100 dark:bg-orange-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Receipt className="w-8 h-8 text-orange-600" />
+                  <div className="w-16 h-16 bg-accent/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <Receipt className="w-8 h-8 text-accent" />
                   </div>
                   <h3 className="text-xl font-semibold mb-2">Boleto Gerado com Sucesso!</h3>
                   <p className="text-muted-foreground">
@@ -693,8 +695,8 @@ export default function Checkout() {
                   )}
                 </div>
 
-                <div className="bg-orange-50 dark:bg-orange-950/30 p-4 rounded-lg">
-                  <p className="text-sm text-orange-700 dark:text-orange-300">
+                <div className="bg-accent/5 p-4 rounded-lg border border-accent/20">
+                  <p className="text-sm text-muted-foreground">
                     Após o pagamento, o acesso será liberado automaticamente em até 2 dias úteis.
                   </p>
                 </div>
@@ -716,23 +718,23 @@ export default function Checkout() {
             Problemas? Entre em contato pelo email: <strong>suporte@copytrading.com</strong>
           </p>
           
-          {/* Selos adicionais de confiança */}
-          <div className="flex items-center justify-center gap-8 py-4 border-t border-muted">
+          {/* Selos de confiança rodapé */}
+          <div className="flex items-center justify-center gap-8 py-4 border-t border-border">
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Shield className="w-4 h-4 text-green-600" />
-              <span className="font-medium">256-bit SSL</span>
+              <Shield className="w-4 h-4 text-success" />
+              <span>256-bit SSL</span>
             </div>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Award className="w-4 h-4 text-blue-600" />
-              <span className="font-medium">Mercado Líder</span>
+              <Award className="w-4 h-4 text-primary" />
+              <span>Líder LATAM</span>
             </div>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Users className="w-4 h-4 text-purple-600" />
-              <span className="font-medium">Milhões Confiam</span>
+              <Users className="w-4 h-4 text-primary" />
+              <span>+500M usuários</span>
             </div>
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <CheckCircle className="w-4 h-4 text-green-600" />
-              <span className="font-medium">Garantia 7 dias</span>
+              <CheckCircle className="w-4 h-4 text-success" />
+              <span>Garantia 7 dias</span>
             </div>
           </div>
         </div>
