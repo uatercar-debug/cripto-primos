@@ -33,7 +33,7 @@ const AreaVip = () => {
       title: "Comunidade VIP",
       description: "Grupo Telegram exclusivo com traders experientes",
       action: "Entrar no Grupo",
-      link: "https://t.me/criptoprimosvip",
+      link: "https://t.me/+KaPCWjOtpn5lNmYx",
       isExternal: true,
       gradient: "from-green-500 to-teal-600"
     },
@@ -334,10 +334,10 @@ const AreaVip = () => {
                 </Button>
                 <Button 
                   className="w-full h-16 bg-gradient-to-r from-green-500 to-teal-600 hover:opacity-90 text-white border-0 text-lg"
-                  onClick={() => window.open('https://t.me/criptoprimosvip', '_blank')}
+                  onClick={() => window.open('https://t.me/+KaPCWjOtpn5lNmYx', '_blank')}
                 >
                   <MessageCircle className="w-5 h-5 mr-3" />
-                  Telegram: @criptoprimosvip
+                  Telegram VIP
                 </Button>
               </div>
             </div>

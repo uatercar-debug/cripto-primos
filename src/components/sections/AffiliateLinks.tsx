@@ -19,6 +19,7 @@ const AffiliateLinks = () => {
       name: "Exness",
       description: "Corretora regulamentada e confiável para copytrading",
       link: "https://one.exnesstrack.org/a/4tbg0vx3jn",
+      mobileLink: "https://social-trading.exness.com/a/4tbg0vx3jn/?platform=mobile",
       code: "4tbg0vx3jn",
       color: "from-blue-500 to-cyan-500",
       icon: (
@@ -166,14 +167,27 @@ const AffiliateLinks = () => {
                       </div>
                     </div>
 
-                    {/* Action Button */}
-                    <Button
-                      className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg shadow-md hover:shadow-lg transition-all duration-300 group"
-                      onClick={() => window.open(platform.link, '_blank')}
-                    >
-                      <ExternalLink className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
-                      Acessar {platform.name}
-                    </Button>
+                    {/* Action Buttons */}
+                    <div className="space-y-2">
+                      <Button
+                        className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg shadow-md hover:shadow-lg transition-all duration-300 group"
+                        onClick={() => window.open(platform.link, '_blank')}
+                      >
+                        <ExternalLink className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
+                        Acessar {platform.name}
+                      </Button>
+                      
+                      {platform.name === "Exness" && (
+                        <Button
+                          variant="outline"
+                          className="w-full h-12 border-primary text-primary hover:bg-primary/10 font-semibold text-lg shadow-sm hover:shadow-md transition-all duration-300 group"
+                          onClick={() => window.open((platform as any).mobileLink, '_blank')}
+                        >
+                          <ExternalLink className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
+                          Acessar Mobile
+                        </Button>
+                      )}
+                    </div>
                   </CardContent>
                 </Card>
               </div>
