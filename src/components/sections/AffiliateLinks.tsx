@@ -63,7 +63,7 @@ const AffiliateLinks = () => {
   };
 
   return (
-    <section className="py-24 bg-gradient-to-br from-slate-50 via-white to-green-50/30 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 relative overflow-hidden">
+    <section className="py-24 bg-muted/30 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-green-400 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse"></div>
@@ -73,17 +73,15 @@ const AffiliateLinks = () => {
       <div className="container mx-auto px-4 relative z-10">
         <div className="max-w-6xl mx-auto">
           <div className={`text-center mb-16 transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <Badge className="bg-gradient-to-r from-green-500/10 to-blue-500/10 border border-green-200/20 rounded-full px-4 py-2 mb-6">
-              <Heart className="w-4 h-4 mr-2 text-green-600" />
-              <span className="text-sm font-medium text-green-700">Apoie o Projeto</span>
+            <Badge className="bg-success/10 border border-success/20 rounded-full px-4 py-2 mb-6">
+              <Heart className="w-4 h-4 mr-2 text-success" />
+              <span className="text-sm font-medium text-success">Apoie o Projeto</span>
             </Badge>
             
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-              <span className="bg-gradient-to-r from-slate-900 via-green-900 to-blue-900 dark:from-white dark:via-green-100 dark:to-blue-100 bg-clip-text text-transparent">
-                Já tem experiência?
-              </span>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight text-foreground">
+              Já tem experiência?
               <br />
-              <span className="bg-gradient-to-r from-green-600 via-blue-600 to-cyan-600 bg-clip-text text-transparent">
+              <span className="text-primary">
                 Que ótimo! 🚀
               </span>
             </h2>
@@ -94,18 +92,18 @@ const AffiliateLinks = () => {
                 <strong className="text-green-600 dark:text-green-400"> Desejamos sucesso na sua jornada!</strong>
               </p>
               
-              <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-2xl p-8 border border-green-200/20">
+              <div className="bg-muted/50 rounded-2xl p-8 border border-border">
                 <div className="flex items-start gap-4">
-                  <div className="bg-gradient-to-r from-green-500 to-blue-500 p-3 rounded-2xl">
-                    <Gift className="w-6 h-6 text-white" />
+                  <div className="bg-primary p-3 rounded-2xl">
+                    <Gift className="w-6 h-6 text-primary-foreground" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
+                    <h3 className="text-lg font-bold text-foreground mb-2">
                       Nos Apoie Utilizando Nossos Códigos de Afiliado
                     </h3>
-                    <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                    <p className="text-muted-foreground leading-relaxed">
                       Assim você nos apoia a manter esse projeto, ajuda a levar educação financeira a mais pessoas 
-                      e ainda garante <strong className="text-green-600 dark:text-green-400">isenção de taxas extras</strong>.
+                      e ainda garante <strong className="text-success">isenção de taxas extras</strong>.
                     </p>
                   </div>
                 </div>
@@ -141,7 +139,7 @@ const AffiliateLinks = () => {
                     {/* Benefits */}
                     <div className="flex flex-wrap gap-2 justify-center">
                       {platform.benefits.map((benefit, idx) => (
-                        <Badge key={idx} className={`bg-gradient-to-r ${platform.color} text-white border-0`}>
+                        <Badge key={idx} className="bg-primary text-primary-foreground border-0">
                           {benefit}
                         </Badge>
                       ))}
@@ -170,7 +168,7 @@ const AffiliateLinks = () => {
 
                     {/* Action Button */}
                     <Button
-                      className={`w-full h-12 bg-gradient-to-r ${platform.color} hover:opacity-90 text-white font-bold text-lg shadow-lg hover:shadow-xl transition-all duration-300 group`}
+                      className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg shadow-md hover:shadow-lg transition-all duration-300 group"
                       onClick={() => window.open(platform.link, '_blank')}
                     >
                       <ExternalLink className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
@@ -184,55 +182,55 @@ const AffiliateLinks = () => {
 
           {/* Platform Benefits */}
           <div className={`grid md:grid-cols-2 gap-8 mb-16 transition-all duration-1000 delay-800 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="bg-gradient-to-r from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20 rounded-2xl p-6 border border-blue-200/20">
+            <div className="bg-muted/50 rounded-2xl p-6 border border-border">
               <div className="flex items-center gap-3 mb-4">
-                <div className="bg-gradient-to-r from-blue-500 to-cyan-500 p-3 rounded-xl">
-                  <Zap className="w-6 h-6 text-white" />
+                <div className="bg-primary p-3 rounded-xl">
+                  <Zap className="w-6 h-6 text-primary-foreground" />
                 </div>
-                <h4 className="text-lg font-bold text-slate-900 dark:text-white">Por que Exness?</h4>
+                <h4 className="text-lg font-bold text-foreground">Por que Exness?</h4>
               </div>
-              <ul className="space-y-2 text-slate-600 dark:text-slate-300">
+              <ul className="space-y-2 text-muted-foreground">
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
+                  <CheckCircle className="w-4 h-4 text-success" />
                   <span>Regulamentada pela CySEC e FCA</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
+                  <CheckCircle className="w-4 h-4 text-success" />
                   <span>Spreads a partir de 0.0 pips</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
+                  <CheckCircle className="w-4 h-4 text-success" />
                   <span>Execução instantânea</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
+                  <CheckCircle className="w-4 h-4 text-success" />
                   <span>Suporte 24/7 em português</span>
                 </li>
               </ul>
             </div>
 
-            <div className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 rounded-2xl p-6 border border-yellow-200/20">
+            <div className="bg-muted/50 rounded-2xl p-6 border border-border">
               <div className="flex items-center gap-3 mb-4">
-                <div className="bg-gradient-to-r from-yellow-500 to-orange-500 p-3 rounded-xl">
-                  <Star className="w-6 h-6 text-white" />
+                <div className="bg-accent p-3 rounded-xl">
+                  <Star className="w-6 h-6 text-accent-foreground" />
                 </div>
-                <h4 className="text-lg font-bold text-slate-900 dark:text-white">Por que Binance?</h4>
+                <h4 className="text-lg font-bold text-foreground">Por que Binance?</h4>
               </div>
-              <ul className="space-y-2 text-slate-600 dark:text-slate-300">
+              <ul className="space-y-2 text-muted-foreground">
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
+                  <CheckCircle className="w-4 h-4 text-success" />
                   <span>Maior volume de negociação mundial</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
+                  <CheckCircle className="w-4 h-4 text-success" />
                   <span>Mais de 600 criptomoedas</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
+                  <CheckCircle className="w-4 h-4 text-success" />
                   <span>Taxas competitivas (0.1%)</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
+                  <CheckCircle className="w-4 h-4 text-success" />
                   <span>Plataforma segura e confiável</span>
                 </li>
               </ul>
@@ -241,18 +239,16 @@ const AffiliateLinks = () => {
 
           {/* Bottom Message */}
           <div className={`text-center transition-all duration-1000 delay-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 rounded-2xl p-8 border border-green-200/20">
+            <div className="bg-muted/50 rounded-2xl p-8 border border-border">
               <div className="flex justify-center mb-4">
-                <div className="bg-gradient-to-r from-green-500 to-blue-500 p-4 rounded-2xl">
-                  <Users className="w-8 h-8 text-white" />
+                <div className="bg-success p-4 rounded-2xl">
+                  <Users className="w-8 h-8 text-success-foreground" />
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
-                <span className="bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
-                  Obrigado pelo Apoio! 🙏
-                </span>
+              <h3 className="text-2xl font-bold text-foreground mb-4">
+                Obrigado pelo Apoio! 🙏
               </h3>
-              <p className="text-slate-600 dark:text-slate-300 text-lg max-w-3xl mx-auto">
+              <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
                 Com seu apoio, podemos continuar criando conteúdo de qualidade e ajudando mais pessoas 
                 a investirem com segurança e conhecimento.
               </p>
