@@ -1,11 +1,8 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronLeft, ChevronRight, Book, CheckCircle2, Circle } from 'lucide-react';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { Book, CheckCircle2, Circle, Menu, X } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import ebookData from '@/data/ebook-content';
 
 import type { ChecklistItem as BaseChecklistItem } from '@/data/ebook-content';
@@ -15,7 +12,9 @@ interface ChecklistItem extends BaseChecklistItem {
 }
 
 const EbookReaderEnhanced = () => {
-  const [currentChapter, setCurrentChapter] = useState(0);
+  const [activeChapter, setActiveChapter] = useState(0);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const chapterRefs = useRef<(HTMLElement | null)[]>([]);
   const [checklists, setChecklists] = useState<Record<string, ChecklistItem[]>>(
     ebookData.chapters.reduce((acc, chapter) => {
       if (chapter.checklist && chapter.checklist.length > 0) {
@@ -28,9 +27,38 @@ const EbookReaderEnhanced = () => {
     }, {} as Record<string, ChecklistItem[]>)
   );
 
-  const currentChapterData = ebookData.chapters[currentChapter];
-  const totalChapters = ebookData.chapters.length;
-  const progress = ((currentChapter + 1) / totalChapters) * 100;
+  // Detect which chapter is in view
+  useEffect(() => {
+    const observers = chapterRefs.current.map((ref, index) => {
+      if (!ref) return null;
+      
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setActiveChapter(index);
+            }
+          });
+        },
+        { threshold: 0.3, rootMargin: '-20% 0px -70% 0px' }
+      );
+      
+      observer.observe(ref);
+      return observer;
+    });
+
+    return () => {
+      observers.forEach((observer) => observer?.disconnect());
+    };
+  }, []);
+
+  const scrollToChapter = (index: number) => {
+    chapterRefs.current[index]?.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
+    });
+    setIsSidebarOpen(false);
+  };
 
   const toggleChecklistItem = (chapterId: string, itemId: string) => {
     setChecklists(prev => ({
@@ -145,11 +173,9 @@ const EbookReaderEnhanced = () => {
             {section.profiles && (
               <div className="grid md:grid-cols-3 gap-4">
                 {section.profiles.map((profile: any, i: number) => (
-                  <Card key={i} className="bg-card/30">
-                    <CardHeader>
-                      <CardTitle className="text-lg">{profile.type}</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-3">
+                  <div key={i} className="bg-card/30 border border-border rounded-lg p-4">
+                    <h3 className="text-lg font-semibold mb-3">{profile.type}</h3>
+                    <div className="space-y-3">
                       <div>
                         <p className="text-sm font-medium mb-2">Características:</p>
                         <ul className="text-sm space-y-1">
@@ -163,8 +189,8 @@ const EbookReaderEnhanced = () => {
                           <strong>Ideal para:</strong> {profile.ideal_for}
                         </p>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 ))}
               </div>
             )}
@@ -192,130 +218,181 @@ const EbookReaderEnhanced = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Top Bar - Fixed */}
-      <div className="sticky top-0 z-10 bg-background border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between mb-3">
+      {/* Fixed Header */}
+      <header className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
-              <Book className="w-5 h-5 text-primary" />
+              <Book className="w-6 h-6 text-primary" />
               <div>
-                <h1 className="text-lg font-bold text-foreground">
+                <h1 className="text-base sm:text-lg font-bold text-foreground">
                   {ebookData.title}
                 </h1>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground hidden sm:block">
                   {ebookData.subtitle}
                 </p>
               </div>
             </div>
-            <div className="text-right">
-              <Badge variant="outline" className="mb-1">
-                Capítulo {currentChapterData.number}
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="lg:hidden"
+            >
+              {isSidebarOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
+            </Button>
+
+            <div className="hidden lg:block">
+              <Badge variant="outline">
+                Capítulo {ebookData.chapters[activeChapter]?.number || 1}
               </Badge>
-              <p className="text-xs text-muted-foreground">
-                {currentChapter + 1} de {totalChapters}
-              </p>
             </div>
           </div>
-          <Progress value={progress} className="h-1.5" />
         </div>
-      </div>
+      </header>
 
-      {/* Main Content Area */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Chapter Title */}
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-foreground mb-2">
-            {currentChapterData.title}
-          </h2>
-          <div className="h-1 w-20 bg-primary rounded-full"></div>
-        </div>
-
-        {/* Chapter Image */}
-        {currentChapterData.image && (
-          <div className="mb-10 rounded-xl overflow-hidden border border-border">
-            <img 
-              src={currentChapterData.image} 
-              alt={currentChapterData.title}
-              className="w-full h-auto object-cover"
-            />
-          </div>
-        )}
-
-        {/* Chapter Content */}
-        <div className="prose prose-slate max-w-none">
-          {renderContent(currentChapterData.content)}
-        </div>
-
-        {/* Checklist */}
-        {checklists[currentChapterData.id] && checklists[currentChapterData.id].length > 0 && (
-          <div className="mt-12 p-6 bg-muted/30 border border-border rounded-xl">
-            <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-foreground">
-              <CheckCircle2 className="w-6 h-6 text-primary" />
-              Checklist do Capítulo
-            </h3>
-            <div className="space-y-3">
-              {checklists[currentChapterData.id].map((item) => (
-                <div key={item.id} className="flex items-start gap-3 p-3 bg-background rounded-lg border border-border/50">
-                  <Checkbox
-                    id={item.id}
-                    checked={item.checked}
-                    onCheckedChange={() => toggleChecklistItem(currentChapterData.id, item.id)}
-                    className="mt-0.5"
-                  />
-                  <label
-                    htmlFor={item.id}
-                    className={`text-base cursor-pointer flex-1 ${
-                      item.checked ? 'line-through text-muted-foreground' : 'text-foreground'
-                    }`}
-                  >
-                    {item.text}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Bottom Navigation - Fixed */}
-      <div className="sticky bottom-0 z-10 bg-background border-t border-border">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex justify-between items-center gap-4">
-            <Button 
-              variant="outline" 
-              onClick={() => setCurrentChapter(Math.max(0, currentChapter - 1))}
-              disabled={currentChapter === 0}
-              className="flex items-center gap-2"
-            >
-              <ChevronLeft className="w-4 h-4" />
-              <span className="hidden sm:inline">Anterior</span>
-            </Button>
-
-            <div className="flex gap-2 flex-wrap justify-center">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+        <div className="flex gap-8">
+          {/* Sidebar Navigation - Desktop */}
+          <aside className="hidden lg:block sticky top-24 h-fit w-64 flex-shrink-0">
+            <nav className="space-y-1">
+              <h2 className="text-sm font-semibold text-muted-foreground mb-3 px-3">
+                ÍNDICE
+              </h2>
               {ebookData.chapters.map((chapter, index) => (
-                <Button
+                <button
                   key={chapter.id}
-                  variant={index === currentChapter ? "default" : "outline"}
-                  size="sm"
-                  onClick={() => setCurrentChapter(index)}
-                  className="w-9 h-9 p-0 text-xs"
-                  title={chapter.title}
+                  onClick={() => scrollToChapter(index)}
+                  className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                    activeChapter === index
+                      ? 'bg-primary text-primary-foreground font-medium'
+                      : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                  }`}
                 >
-                  {chapter.number}
-                </Button>
+                  <span className="text-xs opacity-70 block mb-0.5">
+                    Capítulo {chapter.number}
+                  </span>
+                  {chapter.title}
+                </button>
+              ))}
+            </nav>
+          </aside>
+
+          {/* Mobile Sidebar */}
+          {isSidebarOpen && (
+            <div className="lg:hidden fixed inset-0 z-50 bg-background/80 backdrop-blur-sm">
+              <div className="fixed inset-y-0 left-0 w-72 bg-background border-r border-border shadow-lg overflow-y-auto">
+                <div className="p-4">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-sm font-semibold text-muted-foreground">
+                      ÍNDICE
+                    </h2>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setIsSidebarOpen(false)}
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                  <nav className="space-y-1">
+                    {ebookData.chapters.map((chapter, index) => (
+                      <button
+                        key={chapter.id}
+                        onClick={() => scrollToChapter(index)}
+                        className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
+                          activeChapter === index
+                            ? 'bg-primary text-primary-foreground font-medium'
+                            : 'text-muted-foreground hover:bg-muted hover:text-foreground'
+                        }`}
+                      >
+                        <span className="text-xs opacity-70 block mb-0.5">
+                          Capítulo {chapter.number}
+                        </span>
+                        {chapter.title}
+                      </button>
+                    ))}
+                  </nav>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Main Content */}
+          <main className="flex-1 min-w-0 max-w-4xl mx-auto">
+            <div className="space-y-16">
+              {ebookData.chapters.map((chapter, index) => (
+                <section
+                  key={chapter.id}
+                  ref={(el) => (chapterRefs.current[index] = el)}
+                  className="scroll-mt-24"
+                >
+                  {/* Chapter Header */}
+                  <div className="mb-8">
+                    <Badge variant="outline" className="mb-3">
+                      Capítulo {chapter.number}
+                    </Badge>
+                    <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-3">
+                      {chapter.title}
+                    </h2>
+                    <div className="h-1 w-20 bg-primary rounded-full"></div>
+                  </div>
+
+                  {/* Chapter Image */}
+                  {chapter.image && (
+                    <div className="mb-10 rounded-xl overflow-hidden border border-border">
+                      <img 
+                        src={chapter.image} 
+                        alt={chapter.title}
+                        className="w-full h-auto object-cover"
+                      />
+                    </div>
+                  )}
+
+                  {/* Chapter Content */}
+                  <div className="prose prose-slate max-w-none mb-10">
+                    {renderContent(chapter.content)}
+                  </div>
+
+                  {/* Checklist */}
+                  {checklists[chapter.id] && checklists[chapter.id].length > 0 && (
+                    <div className="mt-12 p-6 bg-muted/30 border border-border rounded-xl">
+                      <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-foreground">
+                        <CheckCircle2 className="w-6 h-6 text-primary" />
+                        Checklist do Capítulo
+                      </h3>
+                      <div className="space-y-3">
+                        {checklists[chapter.id].map((item) => (
+                          <div key={item.id} className="flex items-start gap-3 p-3 bg-background rounded-lg border border-border/50">
+                            <Checkbox
+                              id={`${chapter.id}-${item.id}`}
+                              checked={item.checked}
+                              onCheckedChange={() => toggleChecklistItem(chapter.id, item.id)}
+                              className="mt-0.5"
+                            />
+                            <label
+                              htmlFor={`${chapter.id}-${item.id}`}
+                              className={`text-base cursor-pointer flex-1 ${
+                                item.checked ? 'line-through text-muted-foreground' : 'text-foreground'
+                              }`}
+                            >
+                              {item.text}
+                            </label>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Chapter Divider */}
+                  {index < ebookData.chapters.length - 1 && (
+                    <div className="mt-16 pt-16 border-t border-border/50" />
+                  )}
+                </section>
               ))}
             </div>
-
-            <Button 
-              variant="outline" 
-              onClick={() => setCurrentChapter(Math.min(totalChapters - 1, currentChapter + 1))}
-              disabled={currentChapter === totalChapters - 1}
-              className="flex items-center gap-2"
-            >
-              <span className="hidden sm:inline">Próximo</span>
-              <ChevronRight className="w-4 h-4" />
-            </Button>
-          </div>
+          </main>
         </div>
       </div>
     </div>
