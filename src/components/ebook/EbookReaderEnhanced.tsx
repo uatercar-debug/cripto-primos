@@ -191,98 +191,96 @@ const EbookReaderEnhanced = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto">
-      {/* Progress Bar */}
-      <div className="mb-6">
-        <div className="flex justify-between items-center mb-2">
-          <span className="text-sm font-medium">Progresso do Ebook</span>
-          <span className="text-sm text-muted-foreground">
-            {currentChapter + 1} de {totalChapters} capítulos
-          </span>
-        </div>
-        <Progress value={progress} className="h-2" />
-      </div>
-
-      <Card className="bg-card/50 backdrop-blur-sm border-primary/20">
-        <CardHeader className="border-b border-border/50">
-          <div className="flex items-center justify-between">
+    <div className="min-h-screen bg-background">
+      {/* Top Bar - Fixed */}
+      <div className="sticky top-0 z-10 bg-background border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
-              <Book className="w-6 h-6 text-primary" />
+              <Book className="w-5 h-5 text-primary" />
               <div>
-                <CardTitle className="text-xl">
+                <h1 className="text-lg font-bold text-foreground">
                   {ebookData.title}
-                </CardTitle>
-                <p className="text-sm text-muted-foreground mt-1">
+                </h1>
+                <p className="text-xs text-muted-foreground">
                   {ebookData.subtitle}
                 </p>
               </div>
             </div>
-          </div>
-          
-          <div className="flex items-center justify-between mt-6">
-            <div>
-              <Badge variant="outline" className="mb-2">
+            <div className="text-right">
+              <Badge variant="outline" className="mb-1">
                 Capítulo {currentChapterData.number}
               </Badge>
-              <h2 className="text-2xl font-bold text-primary">
-                {currentChapterData.title}
-              </h2>
+              <p className="text-xs text-muted-foreground">
+                {currentChapter + 1} de {totalChapters}
+              </p>
             </div>
           </div>
-        </CardHeader>
+          <Progress value={progress} className="h-1.5" />
+        </div>
+      </div>
 
-        <CardContent className="p-0">
-          <ScrollArea className="h-[600px] w-full">
-            <div className="p-8">
-              {/* Chapter Image */}
-              {currentChapterData.image && (
-                <div className="mb-8 rounded-lg overflow-hidden">
-                  <img 
-                    src={currentChapterData.image} 
-                    alt={currentChapterData.title}
-                    className="w-full h-auto object-cover"
+      {/* Main Content Area */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Chapter Title */}
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-foreground mb-2">
+            {currentChapterData.title}
+          </h2>
+          <div className="h-1 w-20 bg-primary rounded-full"></div>
+        </div>
+
+        {/* Chapter Image */}
+        {currentChapterData.image && (
+          <div className="mb-10 rounded-xl overflow-hidden border border-border">
+            <img 
+              src={currentChapterData.image} 
+              alt={currentChapterData.title}
+              className="w-full h-auto object-cover"
+            />
+          </div>
+        )}
+
+        {/* Chapter Content */}
+        <div className="prose prose-slate max-w-none">
+          {renderContent(currentChapterData.content)}
+        </div>
+
+        {/* Checklist */}
+        {checklists[currentChapterData.id] && checklists[currentChapterData.id].length > 0 && (
+          <div className="mt-12 p-6 bg-muted/30 border border-border rounded-xl">
+            <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-foreground">
+              <CheckCircle2 className="w-6 h-6 text-primary" />
+              Checklist do Capítulo
+            </h3>
+            <div className="space-y-3">
+              {checklists[currentChapterData.id].map((item) => (
+                <div key={item.id} className="flex items-start gap-3 p-3 bg-background rounded-lg border border-border/50">
+                  <Checkbox
+                    id={item.id}
+                    checked={item.checked}
+                    onCheckedChange={() => toggleChecklistItem(currentChapterData.id, item.id)}
+                    className="mt-0.5"
                   />
+                  <label
+                    htmlFor={item.id}
+                    className={`text-base cursor-pointer flex-1 ${
+                      item.checked ? 'line-through text-muted-foreground' : 'text-foreground'
+                    }`}
+                  >
+                    {item.text}
+                  </label>
                 </div>
-              )}
-
-              {/* Chapter Content */}
-              {renderContent(currentChapterData.content)}
-
-              {/* Checklist */}
-              {checklists[currentChapterData.id] && checklists[currentChapterData.id].length > 0 && (
-                <div className="mt-12 p-6 bg-primary/5 border border-primary/20 rounded-lg">
-                  <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
-                    <CheckCircle2 className="w-6 h-6 text-primary" />
-                    Checklist do Capítulo
-                  </h3>
-                  <div className="space-y-3">
-                    {checklists[currentChapterData.id].map((item) => (
-                      <div key={item.id} className="flex items-start gap-3 p-3 bg-card rounded-lg">
-                        <Checkbox
-                          id={item.id}
-                          checked={item.checked}
-                          onCheckedChange={() => toggleChecklistItem(currentChapterData.id, item.id)}
-                          className="mt-0.5"
-                        />
-                        <label
-                          htmlFor={item.id}
-                          className={`text-base cursor-pointer flex-1 ${
-                            item.checked ? 'line-through text-muted-foreground' : ''
-                          }`}
-                        >
-                          {item.text}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+              ))}
             </div>
-          </ScrollArea>
-        </CardContent>
+          </div>
+        )}
+      </div>
 
-        <div className="border-t border-border/50 p-4">
-          <div className="flex justify-between items-center">
+      {/* Bottom Navigation - Fixed */}
+      <div className="sticky bottom-0 z-10 bg-background border-t border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex justify-between items-center gap-4">
             <Button 
               variant="outline" 
               onClick={() => setCurrentChapter(Math.max(0, currentChapter - 1))}
@@ -290,7 +288,7 @@ const EbookReaderEnhanced = () => {
               className="flex items-center gap-2"
             >
               <ChevronLeft className="w-4 h-4" />
-              Anterior
+              <span className="hidden sm:inline">Anterior</span>
             </Button>
 
             <div className="flex gap-2 flex-wrap justify-center">
@@ -300,7 +298,7 @@ const EbookReaderEnhanced = () => {
                   variant={index === currentChapter ? "default" : "outline"}
                   size="sm"
                   onClick={() => setCurrentChapter(index)}
-                  className="w-10 h-10 p-0"
+                  className="w-9 h-9 p-0 text-xs"
                   title={chapter.title}
                 >
                   {chapter.number}
@@ -314,12 +312,12 @@ const EbookReaderEnhanced = () => {
               disabled={currentChapter === totalChapters - 1}
               className="flex items-center gap-2"
             >
-              Próximo
+              <span className="hidden sm:inline">Próximo</span>
               <ChevronRight className="w-4 h-4" />
             </Button>
           </div>
         </div>
-      </Card>
+      </div>
     </div>
   );
 };
