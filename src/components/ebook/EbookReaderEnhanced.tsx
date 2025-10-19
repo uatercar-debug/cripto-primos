@@ -219,7 +219,7 @@ const EbookReaderEnhanced = () => {
   return (
     <div className="min-h-screen bg-background">
       {/* Fixed Header */}
-      <header className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
+      <header className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
@@ -255,8 +255,8 @@ const EbookReaderEnhanced = () => {
       <div className="w-full flex">
         <div className="flex w-full">
           {/* Sidebar Navigation - Desktop */}
-          <aside className="hidden lg:block sticky top-24 h-fit w-72 flex-shrink-0 border-r border-border">
-            <nav className="space-y-1 px-6 py-8">
+          <aside className="hidden lg:block sticky top-16 h-screen w-72 flex-shrink-0 bg-muted/30">
+            <nav className="space-y-1 px-6 py-8 h-full overflow-y-auto">
               <h2 className="text-sm font-semibold text-muted-foreground mb-4 px-3">
                 ÍNDICE
               </h2>
@@ -282,7 +282,7 @@ const EbookReaderEnhanced = () => {
           {/* Mobile Sidebar */}
           {isSidebarOpen && (
             <div className="lg:hidden fixed inset-0 z-50 bg-background/80 backdrop-blur-sm">
-              <div className="fixed inset-y-0 left-0 w-72 bg-background border-r border-border shadow-lg overflow-y-auto">
+              <div className="fixed inset-y-0 left-0 w-72 bg-background shadow-lg overflow-y-auto">
                 <div className="p-4">
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="text-sm font-semibold text-muted-foreground">
@@ -341,8 +341,8 @@ const EbookReaderEnhanced = () => {
 
                   {/* Chapter Image */}
                   {chapter.image && (
-                    <div className="mb-10 rounded-xl overflow-hidden border border-border">
-                      <img 
+                    <div className="mb-10 rounded-xl overflow-hidden">
+                      <img
                         src={chapter.image} 
                         alt={chapter.title}
                         className="w-full h-auto object-cover"
@@ -357,14 +357,14 @@ const EbookReaderEnhanced = () => {
 
                   {/* Checklist */}
                   {checklists[chapter.id] && checklists[chapter.id].length > 0 && (
-                    <div className="mt-12 p-6 bg-muted/30 border border-border rounded-xl">
+                    <div className="mt-12 p-6 bg-muted/30 rounded-xl">
                       <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-foreground">
                         <CheckCircle2 className="w-6 h-6 text-primary" />
                         Checklist do Capítulo
                       </h3>
                       <div className="space-y-3">
                         {checklists[chapter.id].map((item) => (
-                          <div key={item.id} className="flex items-start gap-3 p-3 bg-background rounded-lg border border-border/50">
+                          <div key={item.id} className="flex items-start gap-3 p-3 bg-background rounded-lg">
                             <Checkbox
                               id={`${chapter.id}-${item.id}`}
                               checked={item.checked}
@@ -387,7 +387,7 @@ const EbookReaderEnhanced = () => {
 
                   {/* Chapter Divider */}
                   {index < ebookData.chapters.length - 1 && (
-                    <div className="mt-16 pt-16 border-t border-border/50" />
+                    <div className="mt-16 pt-16" />
                   )}
                 </section>
               ))}
