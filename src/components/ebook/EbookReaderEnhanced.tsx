@@ -6,11 +6,11 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import ebookData from '@/data/ebook-content.json';
+import ebookData from '@/data/ebook-content';
 
-interface ChecklistItem {
-  id: string;
-  text: string;
+import type { ChecklistItem as BaseChecklistItem } from '@/data/ebook-content';
+
+interface ChecklistItem extends BaseChecklistItem {
   checked: boolean;
 }
 
