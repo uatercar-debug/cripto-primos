@@ -6,7 +6,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Header from "@/components/navigation/Header";
-import EbookReader from "@/components/ebook/EbookReader";
+import EbookReaderEnhanced from "@/components/ebook/EbookReaderEnhanced";
 
 const AreaVip = () => {
   const { logout } = useAuth();
@@ -112,7 +112,7 @@ const AreaVip = () => {
               ← Voltar para Área VIP
             </Button>
           </div>
-          <EbookReader />
+          <EbookReaderEnhanced />
         </div>
       ) : (
         <>
