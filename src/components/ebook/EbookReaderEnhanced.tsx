@@ -220,7 +220,7 @@ const EbookReaderEnhanced = () => {
     <div className="min-h-screen bg-background">
       {/* Fixed Header */}
       <header className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-border">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3">
               <Book className="w-6 h-6 text-primary" />
@@ -252,12 +252,12 @@ const EbookReaderEnhanced = () => {
         </div>
       </header>
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
-        <div className="flex gap-8">
+      <div className="w-full flex">
+        <div className="flex w-full">
           {/* Sidebar Navigation - Desktop */}
-          <aside className="hidden lg:block sticky top-24 h-fit w-64 flex-shrink-0">
-            <nav className="space-y-1">
-              <h2 className="text-sm font-semibold text-muted-foreground mb-3 px-3">
+          <aside className="hidden lg:block sticky top-24 h-fit w-72 flex-shrink-0 border-r border-border">
+            <nav className="space-y-1 px-6 py-8">
+              <h2 className="text-sm font-semibold text-muted-foreground mb-4 px-3">
                 ÍNDICE
               </h2>
               {ebookData.chapters.map((chapter, index) => (
@@ -320,8 +320,8 @@ const EbookReaderEnhanced = () => {
           )}
 
           {/* Main Content */}
-          <main className="flex-1 min-w-0 max-w-4xl mx-auto">
-            <div className="space-y-16">
+          <main className="flex-1 min-w-0 px-6 sm:px-12 lg:px-16 xl:px-24 py-8 lg:py-12">
+            <div className="space-y-16 max-w-4xl mx-auto">
               {ebookData.chapters.map((chapter, index) => (
                 <section
                   key={chapter.id}
