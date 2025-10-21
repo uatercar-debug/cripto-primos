@@ -97,7 +97,7 @@ const AreaVip = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 relative overflow-hidden">
+    <div className="min-h-screen bg-background relative overflow-hidden">
       {/* Only show Header when NOT showing ebook */}
       {!showEbook && <Header />}
       
@@ -106,44 +106,37 @@ const AreaVip = () => {
         <EbookReaderEnhanced />
       ) : (
         <>
-          {/* Animated Background Elements */}
-          <div className="absolute inset-0 overflow-hidden">
-            <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-            <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-            <div className="absolute top-40 left-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-          </div>
+          {/* Subtle Background Pattern */}
+          <div className="absolute inset-0 bg-gradient-to-b from-muted/30 via-background to-background"></div>
 
           <div className="container mx-auto px-4 pt-24 pb-16 relative z-10">
             {/* Hero Section */}
             <div className="text-center mb-20">
               <div className="flex justify-center mb-6">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full blur-lg opacity-75 animate-pulse"></div>
-                  <div className="relative bg-gradient-to-r from-yellow-400 to-orange-500 p-6 rounded-full">
-                    <Crown className="w-16 h-16 text-white" />
-                  </div>
+                <div className="p-4 bg-primary/10 rounded-2xl border border-primary/20">
+                  <Crown className="w-16 h-16 text-primary" />
                 </div>
               </div>
               
-              <h1 className="text-6xl md:text-7xl font-bold text-white mb-6 tracking-tight">
-                Área <span className="bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">VIP</span>
+              <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 tracking-tight">
+                Área <span className="text-primary">VIP</span>
               </h1>
               
-              <p className="text-xl text-white/80 max-w-3xl mx-auto mb-8">
+              <p className="text-lg text-muted-foreground max-w-3xl mx-auto mb-8">
                 Bem-vindo à nossa comunidade exclusiva! Aqui você tem acesso aos melhores conteúdos, 
                 ferramentas avançadas e suporte dedicado para maximizar seus resultados no Copy Trading.
               </p>
               
               <div className="flex flex-wrap justify-center gap-4 mb-12">
-                <Badge className="bg-green-500/20 text-green-300 border-green-500/30 px-4 py-2 text-sm">
+                <Badge variant="outline" className="px-4 py-2 text-sm">
                   <Zap className="w-4 h-4 mr-2" />
                   Membro VIP Ativo
                 </Badge>
-                <Badge className="bg-blue-500/20 text-blue-300 border-blue-500/30 px-4 py-2 text-sm">
+                <Badge variant="outline" className="px-4 py-2 text-sm">
                   <Shield className="w-4 h-4 mr-2" />
                   Acesso Vitalício
                 </Badge>
-                <Badge className="bg-purple-500/20 text-purple-300 border-purple-500/30 px-4 py-2 text-sm">
+                <Badge variant="outline" className="px-4 py-2 text-sm">
                   <Gift className="w-4 h-4 mr-2" />
                   Conteúdo Exclusivo
                 </Badge>
@@ -153,13 +146,13 @@ const AreaVip = () => {
             {/* Stats Grid */}
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-20">
               {stats.map((stat, index) => (
-                <Card key={index} className="bg-white/10 backdrop-blur-sm border-white/20 text-center hover:bg-white/15 transition-all duration-300">
+                <Card key={index} className="text-center hover:shadow-lg transition-all duration-300">
                   <CardContent className="p-4">
                     <div className="flex justify-center mb-2 text-primary">
                       {stat.icon}
                     </div>
-                    <div className="text-2xl font-bold text-white">{stat.value}</div>
-                    <div className="text-xs text-white/70">{stat.label}</div>
+                    <div className="text-2xl font-bold text-foreground">{stat.value}</div>
+                    <div className="text-xs text-muted-foreground">{stat.label}</div>
                   </CardContent>
                 </Card>
               ))}
@@ -167,26 +160,18 @@ const AreaVip = () => {
 
             {/* Tab Navigation */}
             <div className="flex justify-center mb-12">
-              <div className="bg-white/10 backdrop-blur-sm rounded-full p-2 border border-white/20">
+              <div className="bg-muted rounded-full p-1">
                 <Button
                   variant={activeTab === 'overview' ? 'default' : 'ghost'}
                   onClick={() => setActiveTab('overview')}
-                  className={`rounded-full px-8 py-3 transition-all duration-300 ${
-                    activeTab === 'overview' 
-                      ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg' 
-                      : 'text-white/70 hover:text-white hover:bg-white/10'
-                  }`}
+                  className="rounded-full px-8 py-3"
                 >
                   Visão Geral
                 </Button>
                 <Button
                   variant={activeTab === 'tools' ? 'default' : 'ghost'}
                   onClick={() => setActiveTab('tools')}
-                  className={`rounded-full px-8 py-3 transition-all duration-300 ${
-                    activeTab === 'tools' 
-                      ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg' 
-                      : 'text-white/70 hover:text-white hover:bg-white/10'
-                  }`}
+                  className="rounded-full px-8 py-3"
                 >
                   Ferramentas
                 </Button>
@@ -199,19 +184,19 @@ const AreaVip = () => {
                 {/* Exclusive Content Grid */}
                 <div className="grid md:grid-cols-3 gap-8 mb-20">
                   {exclusiveContent.map((content, index) => (
-                    <Card key={index} className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm border-white/10 hover:border-white/20 transition-all duration-500 hover:transform hover:scale-105 overflow-hidden">
+                    <Card key={index} className="hover:shadow-xl transition-all duration-300 hover:transform hover:scale-105">
                       <CardHeader className="text-center pb-4">
                         <div className="flex justify-center mb-4">
-                          <div className={`p-4 rounded-full bg-gradient-to-r ${content.gradient} shadow-lg`}>
+                          <div className="p-4 rounded-xl bg-primary/10 border border-primary/20">
                             {content.icon}
                           </div>
                         </div>
-                        <CardTitle className="text-xl font-bold text-white">{content.title}</CardTitle>
+                        <CardTitle className="text-xl font-bold">{content.title}</CardTitle>
                       </CardHeader>
                       <CardContent className="space-y-4">
-                        <p className="text-white/80 text-center">{content.description}</p>
+                        <p className="text-muted-foreground text-center">{content.description}</p>
                         <Button 
-                          className={`w-full bg-gradient-to-r ${content.gradient} hover:opacity-90 text-white border-0`}
+                          className="w-full"
                           onClick={() => {
                             if (content.onClick) {
                               content.onClick();
@@ -230,15 +215,15 @@ const AreaVip = () => {
 
                 {/* Educational Content - Copy Trading Iframe */}
                 <div className="text-center mb-20">
-                  <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                  <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
                     🎓 Material Educativo Exclusivo
                   </h2>
-                  <p className="text-white/80 text-lg max-w-3xl mx-auto mb-8">
+                  <p className="text-muted-foreground text-lg max-w-3xl mx-auto mb-8">
                     Aprenda tudo sobre Copy Trading com nosso conteúdo educativo premium e interativo
                   </p>
                   
                   <div className="max-w-4xl mx-auto">
-                    <Card className="bg-white/10 backdrop-blur-sm border-white/20 overflow-hidden">
+                    <Card className="overflow-hidden shadow-lg">
                       <CardContent className="p-0">
                         <div className="aspect-video">
                           <iframe
@@ -262,24 +247,24 @@ const AreaVip = () => {
                 {/* Tools and Features Grid */}
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
                   {bonusContent.map((tool, index) => (
-                    <Card key={index} className="bg-white/10 backdrop-blur-sm border-white/20 hover:bg-white/15 transition-all duration-300 relative cursor-pointer">
+                    <Card key={index} className="hover:shadow-lg transition-all duration-300 relative cursor-pointer">
                       {tool.isNew && (
-                        <Badge className="absolute -top-2 -right-2 bg-gradient-to-r from-green-500 to-emerald-500 text-white border-0">
+                        <Badge className="absolute -top-2 -right-2 bg-primary">
                           NOVO
                         </Badge>
                       )}
                       <CardContent className="p-6">
                         <div className="flex items-center gap-4 mb-4">
-                          <div className="p-3 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg">
+                          <div className="p-3 bg-primary/10 rounded-lg border border-primary/20">
                             {tool.icon}
                           </div>
                           <div>
-                            <h3 className="text-lg font-semibold text-white">{tool.title}</h3>
-                            <p className="text-white/70 text-sm">{tool.description}</p>
+                            <h3 className="text-lg font-semibold">{tool.title}</h3>
+                            <p className="text-muted-foreground text-sm">{tool.description}</p>
                           </div>
                         </div>
                         <Button 
-                          className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:opacity-90 text-white border-0"
+                          className="w-full"
                           onClick={() => {
                             const toolRoutes = {
                               'Calculadora de Risco': 'risk-calculator',
@@ -306,24 +291,25 @@ const AreaVip = () => {
 
             {/* Support Section */}
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
                 🤝 Suporte Dedicado
               </h2>
-              <p className="text-white/80 text-lg max-w-3xl mx-auto mb-8">
+              <p className="text-muted-foreground text-lg max-w-3xl mx-auto mb-8">
                 Nossa equipe de especialistas está pronta para ajudar você com qualquer dúvida sobre copytrading, 
                 configuração de contas, estratégias de investimento ou uso das ferramentas.
               </p>
               
               <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
                 <Button 
-                  className="w-full h-16 bg-gradient-to-r from-blue-500 to-cyan-600 hover:opacity-90 text-white border-0 text-lg"
+                  className="w-full h-16 text-lg"
+                  variant="outline"
                   onClick={() => window.open('mailto:suporte@criptoprimos.com', '_blank')}
                 >
                   <Mail className="w-5 h-5 mr-3" />
                   E-mail: suporte@criptoprimos.com
                 </Button>
                 <Button 
-                  className="w-full h-16 bg-gradient-to-r from-green-500 to-teal-600 hover:opacity-90 text-white border-0 text-lg"
+                  className="w-full h-16 text-lg"
                   onClick={() => window.open('https://t.me/+KaPCWjOtpn5lNmYx', '_blank')}
                 >
                   <MessageCircle className="w-5 h-5 mr-3" />
