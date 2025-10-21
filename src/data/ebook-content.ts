@@ -799,12 +799,12 @@ export const ebookData: EbookData = {
       icon: "Scale",
       image: "/images/advantages-benefits.png",
       content: {
-        intro: "É fundamental entender tanto as vantagens quanto os riscos do Copy Trading para tomar decisões informadas e realistas. **Nenhum investimento é perfeito** - todos têm prós e contras. O segredo não é buscar o investimento perfeito, mas sim conhecer profundamente as características de cada um e escolher o que melhor se alinha com seus objetivos, perfil de risco e realidade financeira. Este capítulo apresenta uma análise honesta e sem filtros sobre Copy Trading, baseada em dados reais de mercado e experiências práticas de milhares de investidores."
+        intro: "É fundamental entender tanto as vantagens quanto os riscos do Copy Trading para tomar decisões informadas e realistas. **Nenhum investimento é perfeito** - todos têm prós e contras. O segredo não é buscar o investimento perfeito, mas sim conhecer profundamente as características de cada um e escolher o que melhor se alinha com seus objetivos, perfil de risco e realidade financeira. Este capítulo apresenta uma análise honesta e sem filtros sobre Copy Trading, baseada em dados reais de mercado e experiências práticas de milhares de investidores.",
         sections: [
           {
             title: "Vantagens do Copy Trading",
             image: "/images/advantages-benefits.png",
-            description: "O Copy Trading representa uma **revolução democrática** no acesso a estratégias profissionais de investimento. Historicamente, apenas investidores institucionais e pessoas com alto patrimônio tinham acesso a gestores profissionais. Hoje, qualquer pessoa com R$200 pode copiar as mesmas estratégias usadas por traders que gerenciam milhões. Esta democratização oferece benefícios tangíveis e mensuráveis, especialmente para iniciantes que não têm anos para estudar análise técnica ou tempo para monitorar mercados 24/7."
+            description: "O Copy Trading representa uma **revolução democrática** no acesso a estratégias profissionais de investimento. Historicamente, apenas investidores institucionais e pessoas com alto patrimônio tinham acesso a gestores profissionais. Hoje, qualquer pessoa com R$200 pode copiar as mesmas estratégias usadas por traders que gerenciam milhões. Esta democratização oferece benefícios tangíveis e mensuráveis, especialmente para iniciantes que não têm anos para estudar análise técnica ou tempo para monitorar mercados 24/7.",
             benefits: [
               {
                 name: "🎯 Acessibilidade para Iniciantes",
@@ -848,27 +848,20 @@ export const ebookData: EbookData = {
               },
               {
                 name: "🤖 Automação Completa",
-                description: "Psicologia é o maior inimigo do trader. Mesmo com estratégia perfeita, 80% dos traders falham por erros emocionais: hesitar na entrada, sair cedo por medo, segurar perdas por esperança, aumentar posição por ganância. Copy Trading **elimina completamente o fator emocional**: quando o trader abre posição, sua conta copia automaticamente (sem hesitação). Quando ele fecha, você fecha (sem ganância ou medo atrapalhando). Stop Loss e Take Profit são executados perfeitamente, sem "só mais um minuto" que destrói contas. É execução robótica de estratégias humanas.",
+                description: "Psicologia é o maior inimigo do trader. Mesmo com estratégia perfeita, 80% dos traders falham por erros emocionais: hesitar na entrada, sair cedo por medo, segurar perdas por esperança, aumentar posição por ganância. Copy Trading **elimina completamente o fator emocional**: quando o trader abre posição, sua conta copia automaticamente (sem hesitação). Quando ele fecha, você fecha (sem ganância ou medo atrapalhando). Stop Loss e Take Profit são executados perfeitamente, sem 'só mais um minuto' que destrói contas. É execução robótica de estratégias humanas.",
                 impact: "**Eliminação de Erro Humano**: Estudos mostram que 70-80% das perdas em trading vem de erros psicológicos, não de estratégia ruim. Automação elimina esses 70-80% de erros. Você nunca vai 'esquecer' de colocar Stop Loss, nunca vai 'esperar mais um pouco' e transformar pequena perda em catástrofe, nunca vai entrar em operação por FOMO (fear of missing out). A estratégia é executada **exatamente como planejada**, sem desvios emocionais. Isso sozinho pode aumentar performance em 30-50% comparado a execução manual da mesma estratégia."
               },
               {
                 name: "📈 Potencial de Retorno Superior",
                 description: "Investimentos tradicionais brasileiros entregam: Poupança ~0,5% ao mês (6% ao ano), Tesouro Direto ~0,8% ao mês (10% ao ano), Fundos DI ~0,7% ao mês (8,5% ao ano), Ações (buy & hold) ~1-2% ao mês (12-24% ao ano). Traders profissionais de Copy Trading consistentemente entregam **5-15% ao mês** (60-180% ao ano). Isso é 10-20x superior à poupança, 5-10x superior a ações. Claro, com maior risco e volatilidade, mas o potencial de retorno é incomparável.",
-                impact: "**Matemática dos Juros Compostos**: R$1.000 investidos:
-
-- **Poupança (0,5%/mês)**: R$1.062 em 1 ano | R$1.348 em 5 anos
-- **Tesouro Direto (0,8%/mês)**: R$1.100 em 1 ano | R$1.593 em 5 anos  
-- **Copy Trading conservador (5%/mês)**: R$1.796 em 1 ano | R$11.467 em 5 anos
-- **Copy Trading moderado (10%/mês)**: R$3.138 em 1 ano | R$105.196 em 5 anos
-
-A diferença é **exponencial**. Em 5 anos, Copy Trading moderado entrega 78x mais que poupança, 66x mais que Tesouro. Isso pode ser a diferença entre aposentadoria confortável e dificuldade financeira. **Atenção**: esses números assumem consistência (que não é garantida) e não consideram impostos. Mas ilustram o potencial transformador de retornos superiores compostos ao longo do tempo."
+                impact: "**Matemática dos Juros Compostos**: R$1.000 investidos: Poupança (0,5%/mês) = R$1.062 em 1 ano | R$1.348 em 5 anos. Tesouro Direto (0,8%/mês) = R$1.100 em 1 ano | R$1.593 em 5 anos. Copy Trading conservador (5%/mês) = R$1.796 em 1 ano | R$11.467 em 5 anos. Copy Trading moderado (10%/mês) = R$3.138 em 1 ano | R$105.196 em 5 anos. A diferença é **exponencial**. Em 5 anos, Copy Trading moderado entrega 78x mais que poupança, 66x mais que Tesouro. Isso pode ser a diferença entre aposentadoria confortável e dificuldade financeira. **Atenção**: esses números assumem consistência (que não é garantida) e não consideram impostos. Mas ilustram o potencial transformador de retornos superiores compostos ao longo do tempo."
               }
             ]
           },
           {
             title: "Riscos do Copy Trading",
             image: "/images/risks-warning.png",
-            description: "**Investimento sem risco não existe**. Quem promete ganho garantido está mentindo ou aplicando golpe. Copy Trading tem riscos reais e significativos que você PRECISA entender antes de investir. Conhecê-los profundamente não é opcional - é **essencial para sobrevivência financeira**. A boa notícia: todos os riscos têm mitigações práticas. A má notícia: se você ignorar esses riscos, pode perder todo seu capital. Esta seção é brutalmente honesta sobre o que pode dar errado e como se proteger. Leia com atenção - seu dinheiro depende disso."
+            description: "**Investimento sem risco não existe**. Quem promete ganho garantido está mentindo ou aplicando golpe. Copy Trading tem riscos reais e significativos que você PRECISA entender antes de investir. Conhecê-los profundamente não é opcional - é **essencial para sobrevivência financeira**. A boa notícia: todos os riscos têm mitigações práticas. A má notícia: se você ignorar esses riscos, pode perder todo seu capital. Esta seção é brutalmente honesta sobre o que pode dar errado e como se proteger. Leia com atenção - seu dinheiro depende disso.",
             risks: [
               {
                 name: "❌ Nenhum Trader Acerta Sempre",

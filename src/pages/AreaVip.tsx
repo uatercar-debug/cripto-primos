@@ -98,22 +98,12 @@ const AreaVip = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 relative overflow-hidden">
-      <Header />
+      {/* Only show Header when NOT showing ebook */}
+      {!showEbook && <Header />}
       
       {/* Conditional Rendering - Show Ebook or Main Content */}
       {showEbook ? (
-        <div className="container mx-auto px-4 py-20">
-          <div className="mb-6">
-            <Button 
-              variant="outline" 
-              onClick={() => setShowEbook(false)}
-              className="bg-white/10 border-white/20 text-white hover:bg-white/20"
-            >
-              ← Voltar para Área VIP
-            </Button>
-          </div>
-          <EbookReaderEnhanced />
-        </div>
+        <EbookReaderEnhanced />
       ) : (
         <>
           {/* Animated Background Elements */}
