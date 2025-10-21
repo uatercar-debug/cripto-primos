@@ -255,7 +255,7 @@ const EbookReaderEnhanced = () => {
       <div className="w-full flex">
         <div className="flex w-full">
           {/* Sidebar Navigation - Desktop */}
-          <aside className="hidden lg:block sticky top-16 h-[calc(100vh-4rem)] w-72 flex-shrink-0 bg-muted/30 overflow-hidden">
+          <aside className="hidden lg:block sticky top-16 h-screen w-72 flex-shrink-0 bg-muted/30">
             <nav className="space-y-1 px-6 py-8 h-full overflow-y-auto">
               <h2 className="text-sm font-semibold text-muted-foreground mb-4 px-3">
                 ÍNDICE
