@@ -13,6 +13,7 @@ import Recomendacoes from "./pages/Recomendacoes";
 import Newsletter from "./pages/Newsletter";
 import Login from "./pages/Login";
 import Checkout from "./pages/Checkout";
+import Ebook from "./pages/Ebook";
 import RiskCalculator from "./components/tools/RiskCalculator";
 import PerformanceDashboard from "./components/tools/PerformanceDashboard";
 import PortfolioAnalysis from "./components/tools/PortfolioAnalysis";
@@ -43,7 +44,15 @@ const App = () => (
               } 
             />
             <Route 
-              path="/area-vip/risk-calculator" 
+              path="/area-vip/ebook" 
+              element={
+                <ProtectedRoute>
+                  <Ebook />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/area-vip/risk-calculator"
               element={
                 <ProtectedRoute>
                   <RiskCalculator />

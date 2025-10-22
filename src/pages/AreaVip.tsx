@@ -6,13 +6,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Header from "@/components/navigation/Header";
-import EbookReaderEnhanced from "@/components/ebook/EbookReaderEnhanced";
 
 const AreaVip = () => {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('overview');
-  const [showEbook, setShowEbook] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -25,7 +23,7 @@ const AreaVip = () => {
       title: "Ebook Exclusivo",
       description: "Copytrading Descomplicado - Guia Completo",
       action: "Ler Ebook",
-      onClick: () => setShowEbook(true),
+      onClick: () => navigate('/area-vip/ebook'),
       gradient: "from-blue-500 to-purple-600"
     },
     {
@@ -98,16 +96,10 @@ const AreaVip = () => {
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Only show Header when NOT showing ebook */}
-      {!showEbook && <Header />}
+      <Header />
       
-      {/* Conditional Rendering - Show Ebook or Main Content */}
-      {showEbook ? (
-        <EbookReaderEnhanced />
-      ) : (
-        <>
-          {/* Subtle Background Pattern */}
-          <div className="absolute inset-0 bg-gradient-to-b from-muted/30 via-background to-background"></div>
+      {/* Subtle Background Pattern */}
+      <div className="absolute inset-0 bg-gradient-to-b from-muted/30 via-background to-background"></div>
 
           <div className="container mx-auto px-4 pt-24 pb-16 relative z-10">
             {/* Hero Section */}
@@ -318,8 +310,6 @@ const AreaVip = () => {
               </div>
             </div>
           </div>
-        </>
-      )}
     </div>
   );
 };
