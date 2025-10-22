@@ -106,25 +106,25 @@ const MonthlyReports = () => {
     <div className="max-w-7xl mx-auto p-6">
       <div className="text-center mb-8">
         <div className="flex justify-center mb-4">
-          <div className="p-4 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-full">
-            <FileText className="w-8 h-8 text-white" />
+          <div className="p-4 bg-primary rounded-2xl">
+            <FileText className="w-8 h-8 text-primary-foreground" />
           </div>
         </div>
-        <h1 className="text-3xl font-bold text-white mb-2">Relatórios Mensais</h1>
-        <p className="text-white/70">Análise detalhada da performance e insights do mercado</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Relatórios Mensais</h1>
+        <p className="text-muted-foreground">Análise detalhada da performance e insights do mercado</p>
       </div>
 
       {/* Month Selector */}
       <div className="flex justify-center mb-8">
-        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+        <Card className="bg-card border-border">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <Calendar className="w-5 h-5 text-white" />
+              <Calendar className="w-5 h-5 text-foreground" />
               <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-                <SelectTrigger className="bg-white/10 border-white/20 text-white min-w-[200px]">
+                <SelectTrigger className="min-w-[200px]">
                   <SelectValue placeholder="Selecionar mês" />
                 </SelectTrigger>
-                <SelectContent className="bg-gray-900 border-white/20">
+                <SelectContent>
                   {reports.map(report => (
                     <SelectItem key={report.month} value={report.month}>
                       {report.monthName}
@@ -138,16 +138,16 @@ const MonthlyReports = () => {
       </div>
 
       {/* Report Header */}
-      <Card className="mb-8 bg-gradient-to-r from-purple-900/20 to-blue-900/20 backdrop-blur-sm border-white/20">
+      <Card className="mb-8 bg-card border-border">
         <CardHeader>
           <div className="flex justify-between items-start">
             <div>
-              <CardTitle className="text-2xl text-white mb-2">{currentReport.monthName}</CardTitle>
-              <Badge className="bg-green-500/20 text-green-300 border-green-500/30">
+              <CardTitle className="text-2xl text-foreground mb-2">{currentReport.monthName}</CardTitle>
+              <Badge variant="outline">
                 Relatório Publicado
               </Badge>
             </div>
-            <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:opacity-90">
+            <Button className="bg-primary hover:bg-primary/90">
               <Download className="w-4 h-4 mr-2" />
               Baixar PDF
             </Button>
@@ -157,77 +157,77 @@ const MonthlyReports = () => {
 
       {/* Performance Summary */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+        <Card className="bg-card border-border">
           <CardContent className="p-4 text-center">
-            <BarChart3 className="w-6 h-6 text-blue-400 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-white">{currentReport.summary.totalTrades}</div>
-            <div className="text-white/70 text-sm">Total de Trades</div>
+            <BarChart3 className="w-6 h-6 text-primary mx-auto mb-2" />
+            <div className="text-2xl font-bold text-foreground">{currentReport.summary.totalTrades}</div>
+            <div className="text-muted-foreground text-sm">Total de Trades</div>
           </CardContent>
         </Card>
 
-        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+        <Card className="bg-card border-border">
           <CardContent className="p-4 text-center">
-            <Target className="w-6 h-6 text-green-400 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-green-400">{currentReport.summary.winRate}%</div>
-            <div className="text-white/70 text-sm">Taxa de Acerto</div>
+            <Target className="w-6 h-6 text-primary mx-auto mb-2" />
+            <div className="text-2xl font-bold text-primary">{currentReport.summary.winRate}%</div>
+            <div className="text-muted-foreground text-sm">Taxa de Acerto</div>
           </CardContent>
         </Card>
 
-        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+        <Card className="bg-card border-border">
           <CardContent className="p-4 text-center">
-            <DollarSign className="w-6 h-6 text-purple-400 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-purple-400">
+            <DollarSign className="w-6 h-6 text-primary mx-auto mb-2" />
+            <div className="text-2xl font-bold text-primary">
               {formatCurrency(currentReport.summary.totalPnL)}
             </div>
-            <div className="text-white/70 text-sm">P&L Total</div>
+            <div className="text-muted-foreground text-sm">P&L Total</div>
           </CardContent>
         </Card>
 
-        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+        <Card className="bg-card border-border">
           <CardContent className="p-4 text-center">
-            <Award className="w-6 h-6 text-yellow-400 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-yellow-400">{currentReport.summary.sharpeRatio}</div>
-            <div className="text-white/70 text-sm">Sharpe Ratio</div>
+            <Award className="w-6 h-6 text-primary mx-auto mb-2" />
+            <div className="text-2xl font-bold text-primary">{currentReport.summary.sharpeRatio}</div>
+            <div className="text-muted-foreground text-sm">Sharpe Ratio</div>
           </CardContent>
         </Card>
       </div>
 
       <div className="grid lg:grid-cols-2 gap-8 mb-8">
         {/* Detailed Metrics */}
-        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+        <Card className="bg-card border-border">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
+            <CardTitle className="text-foreground flex items-center gap-2">
               <BarChart3 className="w-5 h-5" />
               Métricas Detalhadas
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <div className="text-center p-3 bg-green-500/20 rounded-lg border border-green-500/30">
-                <div className="text-lg font-bold text-green-400">
+              <div className="text-center p-3 bg-muted/30 rounded-lg border border-border">
+                <div className="text-lg font-bold text-primary">
                   {formatCurrency(currentReport.summary.bestDay)}
                 </div>
-                <div className="text-xs text-green-300">Melhor Dia</div>
+                <div className="text-xs text-muted-foreground">Melhor Dia</div>
               </div>
               
-              <div className="text-center p-3 bg-red-500/20 rounded-lg border border-red-500/30">
-                <div className="text-lg font-bold text-red-400">
+              <div className="text-center p-3 bg-muted/30 rounded-lg border border-border">
+                <div className="text-lg font-bold text-destructive">
                   {formatCurrency(currentReport.summary.worstDay)}
                 </div>
-                <div className="text-xs text-red-300">Pior Dia</div>
+                <div className="text-xs text-muted-foreground">Pior Dia</div>
               </div>
             </div>
 
             <div className="space-y-3">
               <div className="flex justify-between">
-                <span className="text-white/70">Tamanho Médio do Trade:</span>
-                <span className="text-white font-medium">
+                <span className="text-muted-foreground">Tamanho Médio do Trade:</span>
+                <span className="text-foreground font-medium">
                   {formatCurrency(currentReport.summary.avgTradeSize)}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-white/70">Max Drawdown:</span>
-                <span className="text-red-400 font-medium">
+                <span className="text-muted-foreground">Max Drawdown:</span>
+                <span className="text-destructive font-medium">
                   {currentReport.summary.maxDrawdown}%
                 </span>
               </div>
@@ -236,9 +236,9 @@ const MonthlyReports = () => {
         </Card>
 
         {/* Top Performers */}
-        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+        <Card className="bg-card border-border">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
+            <CardTitle className="text-foreground flex items-center gap-2">
               <Award className="w-5 h-5" />
               Top Performers
             </CardTitle>
@@ -246,17 +246,17 @@ const MonthlyReports = () => {
           <CardContent>
             <div className="space-y-3">
               {currentReport.topPerformers.map((trader, index) => (
-                <div key={index} className="flex items-center justify-between p-3 bg-white/5 rounded-lg">
+                <div key={index} className="flex items-center justify-between p-3 bg-muted/30 rounded-lg">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                    <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-primary-foreground font-bold text-sm">
                       {index + 1}
                     </div>
                     <div>
-                      <div className="text-white font-medium">{trader.trader}</div>
-                      <div className="text-white/60 text-sm">{trader.winRate}% win rate</div>
+                      <div className="text-foreground font-medium">{trader.trader}</div>
+                      <div className="text-muted-foreground text-sm">{trader.winRate}% win rate</div>
                     </div>
                   </div>
-                  <div className="text-green-400 font-bold">
+                  <div className="text-primary font-bold">
                     {formatCurrency(trader.pnl)}
                   </div>
                 </div>
@@ -267,9 +267,9 @@ const MonthlyReports = () => {
       </div>
 
       {/* Highlights */}
-      <Card className="mb-8 bg-white/10 backdrop-blur-sm border-white/20">
+      <Card className="mb-8 bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
+          <CardTitle className="text-foreground flex items-center gap-2">
             <TrendingUp className="w-5 h-5" />
             Destaques do Mês
           </CardTitle>
@@ -277,9 +277,9 @@ const MonthlyReports = () => {
         <CardContent>
           <div className="grid md:grid-cols-2 gap-4">
             {currentReport.highlights.map((highlight, index) => (
-              <div key={index} className="flex items-start gap-3 p-3 bg-white/5 rounded-lg">
-                <div className="w-2 h-2 bg-blue-400 rounded-full mt-2"></div>
-                <p className="text-white/80 text-sm">{highlight}</p>
+              <div key={index} className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">
+                <div className="w-2 h-2 bg-primary rounded-full mt-2"></div>
+                <p className="text-foreground text-sm">{highlight}</p>
               </div>
             ))}
           </div>
@@ -287,15 +287,15 @@ const MonthlyReports = () => {
       </Card>
 
       {/* Market Insights */}
-      <Card className="bg-gradient-to-r from-blue-900/20 to-purple-900/20 backdrop-blur-sm border-white/20">
+      <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
+          <CardTitle className="text-foreground flex items-center gap-2">
             <TrendingUp className="w-5 h-5" />
             Insights do Mercado
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-white/80 leading-relaxed">{currentReport.marketInsights}</p>
+          <p className="text-foreground leading-relaxed">{currentReport.marketInsights}</p>
         </CardContent>
       </Card>
     </div>

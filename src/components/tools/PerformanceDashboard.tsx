@@ -72,25 +72,25 @@ const PerformanceDashboard = () => {
     <div className="max-w-7xl mx-auto p-6">
       <div className="text-center mb-8">
         <div className="flex justify-center mb-4">
-          <div className="p-4 bg-gradient-to-r from-green-500 to-blue-600 rounded-full">
-            <BarChart3 className="w-8 h-8 text-white" />
+          <div className="p-4 bg-primary rounded-2xl">
+            <BarChart3 className="w-8 h-8 text-primary-foreground" />
           </div>
         </div>
-        <h1 className="text-3xl font-bold text-white mb-2">Dashboard de Performance</h1>
-        <p className="text-white/70">Acompanhe seus resultados e evolução em tempo real</p>
+        <h1 className="text-3xl font-bold text-foreground mb-2">Dashboard de Performance</h1>
+        <p className="text-muted-foreground">Acompanhe seus resultados e evolução em tempo real</p>
       </div>
 
       {/* Timeframe Selector */}
       <div className="flex justify-center mb-8">
-        <div className="bg-white/10 backdrop-blur-sm rounded-full p-1 border border-white/20">
+        <div className="bg-muted rounded-full p-1">
           {['7d', '30d', '90d', '1y'].map((period) => (
             <button
               key={period}
               onClick={() => setTimeframe(period)}
               className={`px-6 py-2 rounded-full transition-all duration-300 ${
                 timeframe === period
-                  ? 'bg-gradient-to-r from-blue-500 to-purple-500 text-white'
-                  : 'text-white/70 hover:text-white'
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               {period === '7d' ? '7 dias' : period === '30d' ? '30 dias' : period === '90d' ? '90 dias' : '1 ano'}
@@ -102,20 +102,20 @@ const PerformanceDashboard = () => {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {stats.map((stat, index) => (
-          <Card key={index} className={`${stat.bgColor} backdrop-blur-sm border`}>
+          <Card key={index} className="bg-card border-border">
             <CardContent className="p-6">
               <div className="flex items-center justify-between mb-4">
-                <div className={stat.color}>
+                <div className="text-primary">
                   {stat.icon}
                 </div>
-                <Badge className="bg-white/10 text-white/80 border-white/20">
+                <Badge variant="outline">
                   {stat.change}
                 </Badge>
               </div>
-              <div className="text-2xl font-bold text-white mb-1">
+              <div className="text-2xl font-bold text-foreground mb-1">
                 {stat.value}
               </div>
-              <div className="text-sm text-white/70">
+              <div className="text-sm text-muted-foreground">
                 {stat.title}
               </div>
             </CardContent>
@@ -125,9 +125,9 @@ const PerformanceDashboard = () => {
 
       <div className="grid lg:grid-cols-2 gap-8 mb-8">
         {/* Equity Curve */}
-        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+        <Card className="bg-card border-border">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
+            <CardTitle className="text-foreground flex items-center gap-2">
               <TrendingUp className="w-5 h-5" />
               Curva de Equity
             </CardTitle>
@@ -141,21 +141,21 @@ const PerformanceDashboard = () => {
                     <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
-                <XAxis dataKey="date" stroke="rgba(255,255,255,0.6)" />
-                <YAxis stroke="rgba(255,255,255,0.6)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                <XAxis dataKey="date" stroke="hsl(var(--muted-foreground))" />
+                <YAxis stroke="hsl(var(--muted-foreground))" />
                 <Tooltip 
                   contentStyle={{ 
-                    backgroundColor: 'rgba(0,0,0,0.8)', 
-                    border: '1px solid rgba(255,255,255,0.2)',
+                    backgroundColor: 'hsl(var(--card))', 
+                    border: '1px solid hsl(var(--border))',
                     borderRadius: '8px',
-                    color: 'white'
-                  }} 
+                    color: 'hsl(var(--foreground))'
+                  }}
                 />
                 <Area 
                   type="monotone" 
                   dataKey="equity" 
-                  stroke="#10b981" 
+                  stroke="hsl(var(--primary))" 
                   fillOpacity={1} 
                   fill="url(#colorEquity)" 
                   strokeWidth={2}
@@ -166,9 +166,9 @@ const PerformanceDashboard = () => {
         </Card>
 
         {/* Asset Allocation */}
-        <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+        <Card className="bg-card border-border">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
+            <CardTitle className="text-foreground flex items-center gap-2">
               <Target className="w-5 h-5" />
               Alocação de Ativos
             </CardTitle>
@@ -190,11 +190,11 @@ const PerformanceDashboard = () => {
                 </Pie>
                 <Tooltip 
                   contentStyle={{ 
-                    backgroundColor: 'rgba(0,0,0,0.8)', 
-                    border: '1px solid rgba(255,255,255,0.2)',
+                    backgroundColor: 'hsl(var(--card))', 
+                    border: '1px solid hsl(var(--border))',
                     borderRadius: '8px',
-                    color: 'white'
-                  }} 
+                    color: 'hsl(var(--foreground))'
+                  }}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -203,9 +203,9 @@ const PerformanceDashboard = () => {
       </div>
 
       {/* Recent Trades */}
-      <Card className="bg-white/10 backdrop-blur-sm border-white/20">
+      <Card className="bg-card border-border">
         <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
+          <CardTitle className="text-foreground flex items-center gap-2">
             <Calendar className="w-5 h-5" />
             Trades Recentes
           </CardTitle>
@@ -214,31 +214,31 @@ const PerformanceDashboard = () => {
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
-                <tr className="border-b border-white/20">
-                  <th className="text-left text-white/80 p-3">Par</th>
-                  <th className="text-left text-white/80 p-3">Tipo</th>
-                  <th className="text-left text-white/80 p-3">Entrada</th>
-                  <th className="text-left text-white/80 p-3">Saída</th>
-                  <th className="text-left text-white/80 p-3">P&L</th>
-                  <th className="text-left text-white/80 p-3">Status</th>
+                <tr className="border-b border-border">
+                  <th className="text-left text-muted-foreground p-3">Par</th>
+                  <th className="text-left text-muted-foreground p-3">Tipo</th>
+                  <th className="text-left text-muted-foreground p-3">Entrada</th>
+                  <th className="text-left text-muted-foreground p-3">Saída</th>
+                  <th className="text-left text-muted-foreground p-3">P&L</th>
+                  <th className="text-left text-muted-foreground p-3">Status</th>
                 </tr>
               </thead>
               <tbody>
                 {recentTrades.map((trade, index) => (
-                  <tr key={index} className="border-b border-white/10 hover:bg-white/5">
-                    <td className="text-white p-3 font-medium">{trade.pair}</td>
+                  <tr key={index} className="border-b border-border hover:bg-muted/30">
+                    <td className="text-foreground p-3 font-medium">{trade.pair}</td>
                     <td className="p-3">
-                      <Badge className={trade.type === 'Long' ? 'bg-green-500/20 text-green-300 border-green-500/30' : 'bg-red-500/20 text-red-300 border-red-500/30'}>
+                      <Badge variant={trade.type === 'Long' ? 'default' : 'destructive'}>
                         {trade.type}
                       </Badge>
                     </td>
-                    <td className="text-white/80 p-3">{trade.entry}</td>
-                    <td className="text-white/80 p-3">{trade.exit}</td>
-                    <td className={`p-3 font-medium ${trade.pnl.includes('+') ? 'text-green-400' : 'text-red-400'}`}>
+                    <td className="text-muted-foreground p-3">{trade.entry}</td>
+                    <td className="text-muted-foreground p-3">{trade.exit}</td>
+                    <td className={`p-3 font-medium ${trade.pnl.includes('+') ? 'text-primary' : 'text-destructive'}`}>
                       {trade.pnl}
                     </td>
                     <td className="p-3">
-                      <Badge className={trade.status === 'Fechado' ? 'bg-gray-500/20 text-gray-300 border-gray-500/30' : 'bg-blue-500/20 text-blue-300 border-blue-500/30'}>
+                      <Badge variant="outline">
                         {trade.status}
                       </Badge>
                     </td>

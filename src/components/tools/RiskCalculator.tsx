@@ -59,7 +59,7 @@ const RiskCalculator = () => {
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
-              <Label htmlFor="capital" className="text-white">Capital Total (R$)</Label>
+              <Label htmlFor="capital" className="text-foreground">Capital Total (R$)</Label>
               <Input
                 id="capital"
                 type="number"
