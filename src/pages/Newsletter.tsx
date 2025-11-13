@@ -315,16 +315,17 @@ const Newsletter = () => {
                   filteredArticles.map((article, index) => (
                     <Card 
                       key={index} 
-                      className="group border-0 shadow-sm hover:shadow-lg transition-all duration-300 cursor-pointer bg-white dark:bg-slate-800 overflow-hidden"
+                      className="group border-0 shadow-sm hover:shadow-xl transition-all duration-300 bg-white dark:bg-slate-800 overflow-hidden"
+                      onClick={() => window.open(article.url, '_blank')}
                     >
-                      <div className="aspect-video mb-4">
+                      <div className="aspect-video overflow-hidden">
                         <NewsImage 
                           src={article.urlToImage} 
                           alt={article.title}
-                          className="w-full h-full"
+                          className="w-full h-full group-hover:scale-105 transition-transform duration-300"
                         />
                       </div>
-                      <CardContent className="p-6 pt-0">
+                      <CardContent className="p-6">
                         <div className="flex items-center gap-2 mb-4">
                           <Badge className={`text-xs ${getCategoryColor(article.category)}`}>
                             {article.category}
@@ -335,28 +336,27 @@ const Newsletter = () => {
                           </div>
                         </div>
                         
-                        <h3 className="font-semibold text-slate-900 dark:text-white mb-3 group-hover:text-blue-600 transition-colors line-clamp-2">
+                        <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-3 group-hover:text-blue-600 transition-colors line-clamp-2 leading-tight">
                           {article.title}
                         </h3>
                         
-                        <p className="text-slate-600 dark:text-slate-300 text-sm line-clamp-3 mb-4">
+                        <p className="text-slate-600 dark:text-slate-400 text-sm line-clamp-2 mb-4 leading-relaxed">
                           {article.description}
                         </p>
                         
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-2 text-xs text-slate-500">
-                            <Calendar className="w-3 h-3" />
-                            <span>{formatDate(article.publishedAt)}</span>
+                        <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700">
+                          <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                              <Globe className="w-3.5 h-3.5" />
+                              <span className="font-medium">{typeof article.source === 'string' ? article.source : article.source?.name || 'Fonte'}</span>
+                            </div>
+                            <span className="text-slate-300 dark:text-slate-600">•</span>
+                            <div className="flex items-center gap-1 text-xs text-slate-500">
+                              <Calendar className="w-3 h-3" />
+                              <span>{formatDate(article.publishedAt)}</span>
+                            </div>
                           </div>
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:hover:bg-blue-900/20"
-                            onClick={() => window.open(article.url, '_blank')}
-                          >
-                            Ler mais
-                            <ChevronRight className="w-3 h-3 ml-1" />
-                          </Button>
+                          <ChevronRight className="w-4 h-4 text-blue-600 group-hover:translate-x-1 transition-transform" />
                         </div>
                       </CardContent>
                     </Card>
