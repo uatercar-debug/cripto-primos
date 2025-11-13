@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Star, Users, TrendingUp, Shield, Zap, CheckCircle, Sparkles } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import ebookMockup from "@/assets/ebook-mockup.jpg";
+import ebookMockup from "@/assets/ebook-cover-new.png";
 
 const Hero = () => {
   const [isVisible, setIsVisible] = useState(false);
