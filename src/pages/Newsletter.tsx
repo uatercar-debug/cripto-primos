@@ -127,16 +127,31 @@ const Newsletter = () => {
     setIsSubscribing(false);
   };
 
+  // Função para remover duplicatas
+  const removeDuplicates = (articles: any[]) => {
+    const seen = new Set<string>();
+    return articles.filter(article => {
+      const normalizedTitle = article.title.toLowerCase().trim().substring(0, 50);
+      const key = `${article.url}|${normalizedTitle}`;
+      
+      if (!seen.has(key) && article.url !== '#') {
+        seen.add(key);
+        return true;
+      }
+      return false;
+    });
+  };
+
   // Combinar todas as notícias em uma lista
-  const allArticles = Object.entries(news).flatMap(([category, articles]) =>
-    articles.map(article => ({ ...article, category }))
+  const allArticles = removeDuplicates(
+    Object.entries(news).flatMap(([category, articles]) =>
+      articles.map(article => ({ ...article, category }))
+    )
   ).sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
 
   // Filtrar notícias por categoria ativa
   const filteredArticles = activeCategory === 'all' 
-    ? Object.entries(news).flatMap(([category, articles]) =>
-        articles.map(article => ({ ...article, category }))
-      ).sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+    ? allArticles
     : news[activeCategory] || [];
 
   return (
