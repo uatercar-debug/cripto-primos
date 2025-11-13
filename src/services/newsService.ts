@@ -77,8 +77,8 @@ class NewsService {
         }
       });
 
-      // Filtrar, processar e limitar resultados
-      const processedArticles = allArticles
+      // Remover duplicatas, filtrar, processar e limitar resultados
+      const processedArticles = this.removeDuplicates(allArticles)
         .filter(article => this.isRelevantArticle(article))
         .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
         .slice(0, pageSize);
@@ -88,6 +88,25 @@ class NewsService {
       console.error('Erro ao buscar notícias:', error);
       return this.getFallbackNews(category);
     }
+  }
+
+  // Remover artigos duplicados baseado em URL e título similar
+  private removeDuplicates(articles: NewsArticle[]): NewsArticle[] {
+    const seen = new Set<string>();
+    const unique: NewsArticle[] = [];
+
+    for (const article of articles) {
+      // Criar chave única baseada em URL e título normalizado
+      const normalizedTitle = article.title.toLowerCase().trim().substring(0, 50);
+      const key = `${article.url}|${normalizedTitle}`;
+
+      if (!seen.has(key) && article.url !== '#') {
+        seen.add(key);
+        unique.push(article);
+      }
+    }
+
+    return unique;
   }
 
   // Buscar notícias de criptomoedas
