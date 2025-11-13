@@ -77,7 +77,7 @@ const WhatYouWillLearn = () => {
                   <CardContent className="p-8 text-center relative">
                     <div className="relative z-10">
                       <div className="mb-6 flex justify-center">
-                        <div className="p-4 rounded-2xl group-hover:scale-110 transition-all duration-300 shadow-md bg-rose-600">
+                        <div className="p-4 rounded-2xl group-hover:scale-110 transition-all duration-300 shadow-md bg-green-500">
                           <card.icon className="w-8 h-8 text-primary-foreground" />
                         </div>
                       </div>
