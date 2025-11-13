@@ -19,22 +19,27 @@ interface NewsResponse {
   totalArticles: number;
 }
 
-// Fontes RSS em português brasileiro
+// Fontes RSS em português brasileiro - Feeds testados e funcionais
 const RSS_FEEDS = {
   CRYPTO: [
-    'https://cointelegraph.com.br/rss',
     'https://www.criptofacil.com/feed/',
-    'https://portaldobitcoin.com/feed/'
+    'https://beincrypto.com/br/feed/',
+    'https://livecoins.com.br/feed/',
+    'https://www.criptomoedasfacil.com/feed/',
+    'https://www.moneytimes.com.br/category/mercados/criptomoedas/feed/'
   ],
   FINANCE: [
-    'https://g1.globo.com/economia/rss2.xml',
     'https://www.infomoney.com.br/feed/',
-    'https://www.valor.com.br/rss'
+    'https://www.valor.com.br/rss',
+    'https://www.moneytimes.com.br/feed/',
+    'https://investnews.com.br/feed/',
+    'https://www.suno.com.br/feed/'
   ],
   ECONOMY: [
-    'https://g1.globo.com/economia/rss2.xml',
-    'https://www.estadao.com.br/rss/economia.xml',
-    'https://www.folha.uol.com.br/mercado/rss091.xml'
+    'https://www.valor.com.br/rss',
+    'https://www.infomoney.com.br/feed/',
+    'https://www.moneytimes.com.br/category/economia/feed/',
+    'https://investnews.com.br/categoria/economia/feed/'
   ]
 };
 
@@ -94,9 +99,9 @@ class NewsService {
   async getAllNews(): Promise<{ [key: string]: NewsArticle[] }> {
     try {
       const [cryptoNews, financeNews, economyNews] = await Promise.all([
-        this.getCryptoNews(5),
-        this.getNewsByCategory('Mercado Financeiro', 5),
-        this.getNewsByCategory('Política Econômica', 5)
+        this.getCryptoNews(8),
+        this.getNewsByCategory('Mercado Financeiro', 8),
+        this.getNewsByCategory('Política Econômica', 8)
       ]);
 
       return {
@@ -156,9 +161,12 @@ class NewsService {
 
   // Processar item RSS
   private processRSSItem(item: any, category: string): NewsArticle {
+    const rawDescription = item.description || item.content || 'Descrição não disponível';
+    const cleanDescription = this.cleanHtmlAndUrls(rawDescription);
+    
     return {
       title: item.title || 'Título não disponível',
-      description: item.description || item.content || 'Descrição não disponível',
+      description: cleanDescription,
       url: item.link || '#',
       urlToImage: this.getValidImageUrl(item.thumbnail || item.enclosure?.link),
       publishedAt: item.pubDate || new Date().toISOString(),
@@ -166,8 +174,33 @@ class NewsService {
         name: this.extractSourceName(item.link) || 'Fonte desconhecida'
       },
       category: this.mapCategory(category),
-      readTime: this.calculateReadTime(item.description || item.content || '')
+      readTime: this.calculateReadTime(cleanDescription)
     };
+  }
+
+  // Limpar HTML e URLs da descrição
+  private cleanHtmlAndUrls(text: string): string {
+    // Remover todas as tags HTML
+    let cleaned = text.replace(/<[^>]*>/g, ' ');
+    
+    // Remover URLs de imagens
+    cleaned = cleaned.replace(/https?:\/\/[^\s]+\.(jpg|jpeg|png|gif|webp|svg)[^\s]*/gi, '');
+    
+    // Remover outras URLs
+    cleaned = cleaned.replace(/https?:\/\/[^\s]+/g, '');
+    
+    // Remover múltiplos espaços
+    cleaned = cleaned.replace(/\s+/g, ' ');
+    
+    // Remover espaços no início e fim
+    cleaned = cleaned.trim();
+    
+    // Limitar tamanho
+    if (cleaned.length > 200) {
+      cleaned = cleaned.substring(0, 200) + '...';
+    }
+    
+    return cleaned || 'Descrição não disponível';
   }
 
   // Obter URL de imagem válida ou placeholder
