@@ -29,6 +29,24 @@ const Footer = () => {
           
           <Separator className="mb-8" />
           
+          {/* Security Warning */}
+          <div className="text-center mb-8">
+            <div className="bg-yellow-50/10 border-2 border-yellow-500/30 rounded-lg p-6 max-w-3xl mx-auto">
+              <h3 className="text-lg font-semibold text-foreground mb-3 flex items-center justify-center gap-2">
+                <span className="text-yellow-500">🔒</span>
+                Aviso de Segurança
+              </h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                <strong>O acesso à Área VIP é exclusivo e individual.</strong> Cada código é vinculado ao e-mail 
+                usado no pagamento e liberado em apenas um dispositivo. <strong>Compartilhamento de códigos não 
+                é permitido</strong> e pode resultar em bloqueio automático. Isso garante a segurança do conteúdo 
+                e a experiência de todos os usuários.
+              </p>
+            </div>
+          </div>
+
+          <Separator className="mb-8" />
+          
           {/* Disclaimer */}
           <div className="text-center">
             <p className="text-sm text-muted-foreground italic leading-relaxed max-w-3xl mx-auto">

@@ -102,6 +102,33 @@ const AreaVip = () => {
       <div className="absolute inset-0 bg-gradient-to-b from-muted/30 via-background to-background"></div>
 
           <div className="container mx-auto px-4 pt-24 pb-16 relative z-10">
+            {/* Security Warning Banner */}
+            <div className="mb-8">
+              <Card className="border-2 border-yellow-500/50 bg-yellow-50/10">
+                <CardContent className="p-6">
+                  <div className="flex items-start gap-4">
+                    <div className="p-2 bg-yellow-500/20 rounded-lg">
+                      <Shield className="w-6 h-6 text-yellow-500" />
+                    </div>
+                    <div className="flex-1">
+                      <h3 className="text-lg font-semibold text-foreground mb-2">
+                        ⚠️ Aviso Importante sobre Seu Acesso
+                      </h3>
+                      <p className="text-muted-foreground mb-3">
+                        Este acesso é <strong>individual e vinculado ao seu e-mail</strong>.
+                      </p>
+                      <p className="text-muted-foreground text-sm">
+                        Por motivos de segurança, seu código só funciona no primeiro dispositivo usado. 
+                        Se forem detectados acessos — ou tentativas — de diferentes dispositivos ou IPs, 
+                        o sistema <strong>bloqueia automaticamente</strong> o código para proteger o conteúdo 
+                        e manter a plataforma segura.
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
             {/* Hero Section */}
             <div className="text-center mb-20">
               <div className="flex justify-center mb-6">
