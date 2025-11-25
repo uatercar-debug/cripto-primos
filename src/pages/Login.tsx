@@ -10,6 +10,7 @@ import { Lock, ArrowLeft, CheckCircle, Loader2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const Login = () => {
+  const [email, setEmail] = useState('');
   const [accessCode, setAccessCode] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -24,15 +25,12 @@ const Login = () => {
     setError('');
     setIsLoading(true);
 
-    // Simular delay de validação
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    const isValid = login(accessCode);
+    const result = await login(email, accessCode);
     
-    if (isValid) {
+    if (result.success) {
       navigate(from, { replace: true });
     } else {
-      setError('Código de acesso inválido. Verifique e tente novamente.');
+      setError(result.error || 'Erro ao fazer login. Tente novamente.');
     }
     
     setIsLoading(false);
@@ -69,6 +67,22 @@ const Login = () => {
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
+                <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
+                  E-mail
+                </label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="seu@email.com"
+                  className="text-lg"
+                  required
+                  disabled={isLoading}
+                />
+              </div>
+
+              <div>
                 <label htmlFor="accessCode" className="block text-sm font-medium text-foreground mb-2">
                   Código de Acesso
                 </label>
@@ -94,7 +108,7 @@ const Login = () => {
                 type="submit" 
                 className="w-full" 
                 size="lg"
-                disabled={isLoading || !accessCode.trim()}
+                disabled={isLoading || !email.trim() || !accessCode.trim()}
               >
                 {isLoading ? (
                   <>
@@ -120,7 +134,8 @@ const Login = () => {
               </p>
               <div className="space-y-2 text-xs text-muted-foreground">
                 <p>• Verifique sua caixa de entrada e spam</p>
-                <p>• O código tem formato: ABC123456</p>
+                <p>• O código tem 8 caracteres (ex: A1B2C3D4)</p>
+                <p>• Use o mesmo e-mail da compra</p>
                 <p>• Entre em contato se não recebeu</p>
               </div>
             </div>
