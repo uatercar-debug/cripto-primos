@@ -14,13 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      vip_access_codes: {
+        Row: {
+          blocked: boolean | null
+          code: string
+          created_at: string | null
+          device_fingerprint: string | null
+          email: string
+          first_access_at: string | null
+          id: string
+          ip_address: string | null
+          payment_id: string | null
+        }
+        Insert: {
+          blocked?: boolean | null
+          code: string
+          created_at?: string | null
+          device_fingerprint?: string | null
+          email: string
+          first_access_at?: string | null
+          id?: string
+          ip_address?: string | null
+          payment_id?: string | null
+        }
+        Update: {
+          blocked?: boolean | null
+          code?: string
+          created_at?: string | null
+          device_fingerprint?: string | null
+          email?: string
+          first_access_at?: string | null
+          id?: string
+          ip_address?: string | null
+          payment_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_short_code: { Args: never; Returns: string }
     }
     Enums: {
       [_ in never]: never
