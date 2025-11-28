@@ -1,10 +1,14 @@
 import { useState, useEffect } from 'react';
-import { BarChart3, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Award, Zap } from 'lucide-react';
+import { BarChart3, TrendingUp, TrendingDown, DollarSign, Target, Calendar, Award, Zap, ArrowLeft } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { LineChart, Line, AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import Header from '@/components/navigation/Header';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 
 const PerformanceDashboard = () => {
+  const navigate = useNavigate();
   const [timeframe, setTimeframe] = useState('30d');
   
   // Mock data - em produção viria de uma API
@@ -69,7 +73,19 @@ const PerformanceDashboard = () => {
   ];
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
+    <div className="min-h-screen bg-background">
+      <Header />
+      <div className="max-w-7xl mx-auto p-6 pt-24">
+        <div className="mb-8">
+          <Button
+            variant="ghost"
+            onClick={() => navigate('/area-vip')}
+            className="mb-4"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Voltar para Área VIP
+          </Button>
+        </div>
       <div className="text-center mb-8">
         <div className="flex justify-center mb-4">
           <div className="p-4 bg-primary rounded-2xl">
@@ -249,6 +265,7 @@ const PerformanceDashboard = () => {
           </div>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 };
