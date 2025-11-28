@@ -25,8 +25,8 @@ const NewsImage = ({ src, alt, className }: { src: string; alt: string; classNam
 
   if (imageError || !src || src === '/placeholder.svg') {
     return (
-      <div className={`bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-800 rounded-lg flex items-center justify-center ${className}`}>
-        <ImageIcon className="w-8 h-8 text-slate-400" />
+      <div className={`bg-muted/50 rounded-xl flex items-center justify-center ${className}`}>
+        <ImageIcon className="w-8 h-8 text-muted-foreground" />
       </div>
     );
   }
@@ -34,8 +34,8 @@ const NewsImage = ({ src, alt, className }: { src: string; alt: string; classNam
   return (
     <div className={`relative ${className}`}>
       {imageLoading && (
-        <div className="absolute inset-0 bg-slate-200 dark:bg-slate-700 rounded-lg animate-pulse flex items-center justify-center">
-          <ImageIcon className="w-6 h-6 text-slate-400" />
+        <div className="absolute inset-0 bg-muted rounded-xl animate-pulse flex items-center justify-center">
+          <ImageIcon className="w-6 h-6 text-muted-foreground" />
         </div>
       )}
       <img
@@ -43,7 +43,7 @@ const NewsImage = ({ src, alt, className }: { src: string; alt: string; classNam
         alt={alt}
         onError={handleImageError}
         onLoad={handleImageLoad}
-        className={`w-full h-full object-cover rounded-lg transition-opacity duration-300 ${
+        className={`w-full h-full object-cover rounded-xl transition-opacity duration-300 ${
           imageLoading ? 'opacity-0' : 'opacity-100'
         }`}
       />
@@ -155,124 +155,140 @@ const Newsletter = () => {
     : news[activeCategory] || [];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50/30 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
+    <div className="min-h-screen bg-background">
       <Header />
       
       {/* Hero Section */}
       <section className={`relative overflow-hidden transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
         {/* Background Elements */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-r from-blue-400 to-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-r from-pink-400 to-orange-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-accent/20 rounded-full blur-3xl animate-pulse [animation-delay:1s]"></div>
         </div>
         
-        <div className="container mx-auto px-4 pt-32 pb-20 relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
+        <div className="container mx-auto px-4 pt-40 pb-32 relative z-10">
+          <div className="max-w-5xl mx-auto text-center space-y-8">
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-500/10 to-purple-500/10 border border-blue-200/20 rounded-full px-4 py-2 mb-8">
-              <Sparkles className="w-4 h-4 text-blue-600" />
-              <span className="text-sm font-medium text-blue-700">Newsletter Semanal</span>
+            <div className="inline-flex items-center gap-2 bg-primary/5 border border-primary/10 rounded-full px-5 py-2.5 backdrop-blur-sm">
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span className="text-sm font-semibold tracking-wide text-primary">Newsletter Semanal</span>
             </div>
             
-            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-              <span className="bg-gradient-to-r from-slate-900 via-blue-900 to-purple-900 dark:from-white dark:via-blue-100 dark:to-purple-100 bg-clip-text text-transparent">
-                Notícias que
-              </span>
-              <br />
-              <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
-                importam
-              </span>
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-slate-600 dark:text-slate-300 mb-12 max-w-3xl mx-auto leading-relaxed">
-              Fique por dentro das principais notícias sobre criptomoedas, mercado financeiro 
-              e economia. Conteúdo curado semanalmente.
-            </p>
-            
-            {/* Newsletter Signup */}
-            <div className="max-w-lg mx-auto">
-              <form onSubmit={handleSubscribe} className="flex gap-3 mb-4">
-                <div className="flex-1 relative">
-                  <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
-                  <Input 
-                    type="email" 
-                    placeholder="Seu melhor e-mail"
-                    className="pl-12 h-14 text-lg border-2 border-slate-200 focus:border-blue-500 rounded-2xl"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                <Button 
-                  type="submit" 
-                  className="h-14 px-8 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-2xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
-                  disabled={isSubscribing}
-                >
-                  {isSubscribing ? (
-                    <RefreshCw className="w-5 h-5 mr-2 animate-spin" />
-                  ) : (
-                    <Zap className="w-5 h-5 mr-2" />
-                  )}
-                  {isSubscribing ? 'Inscrevendo...' : 'Inscrever'}
-                </Button>
-              </form>
+            <div className="space-y-6">
+              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold leading-[1.1] tracking-tight">
+                <span className="text-foreground">
+                  Notícias que
+                </span>
+                <br />
+                <span className="bg-gradient-to-r from-primary via-primary/80 to-accent bg-clip-text text-transparent">
+                  importam
+                </span>
+              </h1>
               
-              <div className="flex items-center justify-center gap-6 text-sm text-slate-500">
-                <div className="flex items-center gap-2">
-                  <Users className="w-4 h-4" />
-                  <span>5.000+ leitores</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="w-4 h-4" />
-                  <span>Semanal</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Shield className="w-4 h-4" />
-                  <span>Sem spam</span>
-                </div>
-              </div>
+              <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-medium">
+                Fique por dentro das principais notícias sobre criptomoedas, mercado financeiro 
+                e economia. Conteúdo curado semanalmente.
+              </p>
+            </div>
+            
+            {/* Newsletter Signup - Premium Card */}
+            <div className="max-w-2xl mx-auto pt-8">
+              <Card className="border-2 bg-card/50 backdrop-blur-sm shadow-2xl">
+                <CardContent className="p-8">
+                  <form onSubmit={handleSubscribe} className="space-y-6">
+                    <div className="flex flex-col sm:flex-row gap-4">
+                      <div className="flex-1 relative group">
+                        <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground transition-colors group-focus-within:text-primary" />
+                        <Input 
+                          type="email" 
+                          placeholder="Seu melhor e-mail"
+                          className="pl-12 h-14 text-base bg-background border-2 focus:border-primary rounded-xl transition-all duration-300 focus:shadow-lg"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          required
+                        />
+                      </div>
+                      <Button 
+                        type="submit" 
+                        size="lg"
+                        className="h-14 px-10 rounded-xl text-base font-bold shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] bg-primary hover:bg-primary/90"
+                        disabled={isSubscribing}
+                      >
+                        {isSubscribing ? (
+                          <>
+                            <RefreshCw className="w-5 h-5 mr-2 animate-spin" />
+                            Inscrevendo...
+                          </>
+                        ) : (
+                          <>
+                            <Zap className="w-5 h-5 mr-2" />
+                            Inscrever
+                          </>
+                        )}
+                      </Button>
+                    </div>
+                    
+                    <div className="flex items-center justify-center flex-wrap gap-6 text-sm text-muted-foreground pt-2">
+                      <div className="flex items-center gap-2">
+                        <Users className="w-4 h-4 text-primary" />
+                        <span className="font-medium">5.000+ leitores</span>
+                      </div>
+                      <div className="h-1 w-1 rounded-full bg-border" />
+                      <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-primary" />
+                        <span className="font-medium">Semanal</span>
+                      </div>
+                      <div className="h-1 w-1 rounded-full bg-border" />
+                      <div className="flex items-center gap-2">
+                        <Shield className="w-4 h-4 text-primary" />
+                        <span className="font-medium">Sem spam</span>
+                      </div>
+                    </div>
+                  </form>
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>
       </section>
 
       {/* Categories Filter */}
-      <section className="py-16">
+      <section className="py-24 bg-muted/30">
         <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-16 space-y-4">
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">
                 Explore por categoria
               </h2>
-              <p className="text-slate-600 dark:text-slate-300">
+              <p className="text-lg text-muted-foreground font-medium max-w-2xl mx-auto">
                 Filtre as notícias por tópico de seu interesse
               </p>
             </div>
             
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-5">
               {categories.map((category, index) => (
                 <button
                   key={category.id}
                   onClick={() => setActiveCategory(category.id)}
-                  className={`group relative p-6 rounded-2xl border-2 transition-all duration-300 ${
+                  className={`group relative p-8 rounded-2xl border-2 transition-all duration-300 ${
                     activeCategory === category.id
-                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-                      : 'border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600'
+                      ? 'border-primary bg-primary/5 shadow-lg scale-[1.02]'
+                      : 'border-border bg-card hover:border-primary/30 hover:shadow-md hover:scale-[1.01]'
                   }`}
                 >
-                  <div className="text-center">
-                    <div className={`inline-flex p-3 rounded-xl bg-gradient-to-r ${category.color} mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                  <div className="text-center space-y-3">
+                    <div className={`inline-flex p-4 rounded-xl bg-gradient-to-br ${category.color} mb-2 group-hover:scale-110 transition-transform duration-300 shadow-lg text-white`}>
                       {category.icon}
                     </div>
-                    <h3 className="font-semibold text-slate-900 dark:text-white mb-1">
+                    <h3 className="font-bold text-lg text-foreground">
                       {category.title}
                     </h3>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">
+                    <p className="text-sm text-muted-foreground leading-relaxed">
                       {category.description}
                     </p>
                     <Badge 
                       variant={activeCategory === category.id ? "default" : "secondary"}
-                      className="text-xs"
+                      className="text-xs font-semibold mt-2"
                     >
                       {category.count} notícias
                     </Badge>
@@ -285,15 +301,15 @@ const Newsletter = () => {
       </section>
 
       {/* News Section */}
-      <section className="py-16 bg-slate-50/50 dark:bg-slate-800/50">
+      <section className="py-24 bg-background">
         <div className="container mx-auto px-4">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex items-center justify-between mb-12">
-              <div>
-                <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-2">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-16">
+              <div className="space-y-3">
+                <h2 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">
                   Últimas Notícias
                 </h2>
-                <p className="text-slate-600 dark:text-slate-300">
+                <p className="text-lg text-muted-foreground font-medium">
                   Conteúdo atualizado e relevante para investidores
                 </p>
               </div>
@@ -301,7 +317,7 @@ const Newsletter = () => {
                 variant="outline" 
                 onClick={refetch}
                 disabled={loading}
-                className="flex items-center gap-2 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                className="flex items-center gap-2 h-12 px-6 rounded-xl font-semibold border-2 hover:bg-accent hover:border-primary/30 transition-all duration-300 hover:scale-105"
               >
                 <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
                 Atualizar
@@ -309,83 +325,84 @@ const Newsletter = () => {
             </div>
 
             {loading ? (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {[...Array(6)].map((_, i) => (
-                  <Card key={i} className="border-0 shadow-sm">
-                    <CardContent className="p-6">
-                      <Skeleton className="h-4 w-3/4 mb-4" />
-                      <Skeleton className="h-3 w-full mb-2" />
-                      <Skeleton className="h-3 w-2/3 mb-4" />
-                      <div className="flex items-center gap-2">
-                        <Skeleton className="h-6 w-16 rounded-full" />
-                        <Skeleton className="h-4 w-20" />
+                  <Card key={i} className="border-2 shadow-lg">
+                    <CardContent className="p-6 space-y-4">
+                      <Skeleton className="h-48 w-full rounded-lg" />
+                      <Skeleton className="h-5 w-3/4" />
+                      <Skeleton className="h-4 w-full" />
+                      <Skeleton className="h-4 w-2/3" />
+                      <div className="flex items-center gap-2 pt-2">
+                        <Skeleton className="h-6 w-20 rounded-full" />
+                        <Skeleton className="h-4 w-24" />
                       </div>
                     </CardContent>
                   </Card>
                 ))}
               </div>
             ) : (
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredArticles.length > 0 ? (
                   filteredArticles.map((article, index) => (
                     <Card 
                       key={index} 
-                      className="group border-0 shadow-sm hover:shadow-xl transition-all duration-300 bg-white dark:bg-slate-800 overflow-hidden"
+                      className="group border-2 border-border shadow-md hover:shadow-2xl transition-all duration-300 bg-card overflow-hidden cursor-pointer hover:border-primary/30 hover:scale-[1.02]"
                       onClick={() => window.open(article.url, '_blank')}
                     >
-                      <div className="aspect-video overflow-hidden">
+                      <div className="aspect-video overflow-hidden bg-muted">
                         <NewsImage 
                           src={article.urlToImage} 
                           alt={article.title}
-                          className="w-full h-full group-hover:scale-105 transition-transform duration-300"
+                          className="w-full h-full group-hover:scale-110 transition-transform duration-500"
                         />
                       </div>
-                      <CardContent className="p-6">
-                        <div className="flex items-center gap-2 mb-4">
-                          <Badge className={`text-xs ${getCategoryColor(article.category)}`}>
+                      <CardContent className="p-6 space-y-4">
+                        <div className="flex items-center gap-3">
+                          <Badge className={`text-xs font-semibold ${getCategoryColor(article.category)}`}>
                             {article.category}
                           </Badge>
-                          <div className="flex items-center text-xs text-slate-500 gap-1">
-                            <Clock className="w-3 h-3" />
-                            {article.readTime}
+                          <div className="flex items-center text-xs text-muted-foreground gap-1.5">
+                            <Clock className="w-3.5 h-3.5" />
+                            <span className="font-medium">{article.readTime}</span>
                           </div>
                         </div>
                         
-                        <h3 className="font-bold text-lg text-slate-900 dark:text-white mb-3 group-hover:text-blue-600 transition-colors line-clamp-2 leading-tight">
+                        <h3 className="font-bold text-xl text-foreground group-hover:text-primary transition-colors line-clamp-2 leading-tight">
                           {article.title}
                         </h3>
                         
-                        <p className="text-slate-600 dark:text-slate-400 text-sm line-clamp-2 mb-4 leading-relaxed">
+                        <p className="text-muted-foreground text-sm line-clamp-3 leading-relaxed">
                           {article.description}
                         </p>
                         
-                        <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-700">
-                          <div className="flex items-center gap-2">
-                            <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                        <div className="flex items-center justify-between pt-4 border-t-2 border-border">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
                               <Globe className="w-3.5 h-3.5" />
-                              <span className="font-medium">{typeof article.source === 'string' ? article.source : article.source?.name || 'Fonte'}</span>
+                              <span className="font-semibold">{typeof article.source === 'string' ? article.source : article.source?.name || 'Fonte'}</span>
                             </div>
-                            <span className="text-slate-300 dark:text-slate-600">•</span>
-                            <div className="flex items-center gap-1 text-xs text-slate-500">
-                              <Calendar className="w-3 h-3" />
-                              <span>{formatDate(article.publishedAt)}</span>
+                            <span className="text-border">•</span>
+                            <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                              <Calendar className="w-3.5 h-3.5" />
+                              <span className="font-medium">{formatDate(article.publishedAt)}</span>
                             </div>
                           </div>
-                          <ChevronRight className="w-4 h-4 text-blue-600 group-hover:translate-x-1 transition-transform" />
+                          <ChevronRight className="w-5 h-5 text-primary group-hover:translate-x-2 transition-transform duration-300" />
                         </div>
                       </CardContent>
                     </Card>
                   ))
                 ) : (
-                  <div className="col-span-full text-center py-12">
-                    <Newspaper className="w-16 h-16 mx-auto mb-4 text-slate-400" />
-                    <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
+                  <div className="col-span-full text-center py-20">
+                    <Newspaper className="w-20 h-20 mx-auto mb-6 text-muted-foreground" />
+                    <h3 className="text-2xl font-bold text-foreground mb-3">
                       Nenhuma notícia encontrada
                     </h3>
-                    <p className="text-slate-600 dark:text-slate-300 mb-4">
+                    <p className="text-muted-foreground mb-6 text-lg">
                       Tente atualizar ou escolher outra categoria
                     </p>
-                    <Button variant="outline" onClick={refetch}>
+                    <Button variant="outline" onClick={refetch} className="h-12 px-8 rounded-xl font-semibold border-2">
                       Tentar novamente
                     </Button>
                   </div>
@@ -397,40 +414,43 @@ const Newsletter = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 relative overflow-hidden">
+      <section className="py-24 bg-gradient-to-br from-primary via-primary/90 to-accent relative overflow-hidden">
         <div className="absolute inset-0 bg-black/10"></div>
+        <div className="absolute inset-0 bg-grid-white/5"></div>
         <div className="container mx-auto px-4 relative z-10">
-          <div className="max-w-4xl mx-auto text-center text-white">
-            <div className="grid md:grid-cols-3 gap-8 mb-12">
-              <div className="text-center">
-                <div className="text-4xl font-bold mb-2">5K+</div>
-                <p className="text-blue-100">Leitores ativos</p>
+          <div className="max-w-5xl mx-auto text-center text-primary-foreground">
+            <div className="grid md:grid-cols-3 gap-10 mb-16">
+              <div className="text-center space-y-2">
+                <div className="text-5xl font-extrabold mb-3">5K+</div>
+                <p className="text-primary-foreground/80 font-medium text-lg">Leitores ativos</p>
               </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold mb-2">250+</div>
-                <p className="text-blue-100">Artigos publicados</p>
+              <div className="text-center space-y-2">
+                <div className="text-5xl font-extrabold mb-3">250+</div>
+                <p className="text-primary-foreground/80 font-medium text-lg">Artigos publicados</p>
               </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold mb-2">98%</div>
-                <p className="text-blue-100">Taxa de satisfação</p>
+              <div className="text-center space-y-2">
+                <div className="text-5xl font-extrabold mb-3">98%</div>
+                <p className="text-primary-foreground/80 font-medium text-lg">Taxa de satisfação</p>
               </div>
             </div>
             
-            <h3 className="text-3xl md:text-5xl font-bold mb-6">
-              Não perca nenhuma oportunidade
-            </h3>
-            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Receba análises exclusivas, alertas de mercado e insights que podem fazer a diferença nos seus investimentos.
-            </p>
+            <div className="space-y-6 mb-12">
+              <h3 className="text-4xl md:text-6xl font-extrabold leading-tight tracking-tight">
+                Não perca nenhuma oportunidade
+              </h3>
+              <p className="text-xl md:text-2xl text-primary-foreground/90 max-w-3xl mx-auto leading-relaxed font-medium">
+                Receba análises exclusivas, alertas de mercado e insights que podem fazer a diferença nos seus investimentos.
+              </p>
+            </div>
             
-            <div className="max-w-md mx-auto">
-              <form onSubmit={handleSubscribe} className="flex gap-3">
-                <div className="flex-1 relative">
-                  <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+            <div className="max-w-xl mx-auto">
+              <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-4">
+                <div className="flex-1 relative group">
+                  <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-muted-foreground transition-colors group-focus-within:text-primary" />
                   <Input 
                     type="email" 
                     placeholder="Seu melhor e-mail"
-                    className="pl-12 h-14 text-lg border-0 rounded-2xl"
+                    className="pl-12 h-16 text-lg border-0 rounded-2xl bg-background shadow-xl focus:shadow-2xl transition-all duration-300"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -438,15 +458,21 @@ const Newsletter = () => {
                 </div>
                 <Button 
                   type="submit" 
-                  className="h-14 px-8 bg-white text-blue-600 hover:bg-blue-50 rounded-2xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                  size="lg"
+                  className="h-16 px-12 bg-background text-primary hover:bg-background/90 rounded-2xl text-lg font-bold shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                   disabled={isSubscribing}
                 >
                   {isSubscribing ? (
-                    <RefreshCw className="w-5 h-5 mr-2 animate-spin" />
+                    <>
+                      <RefreshCw className="w-5 h-5 mr-2 animate-spin" />
+                      Inscrevendo...
+                    </>
                   ) : (
-                    <Zap className="w-5 h-5 mr-2" />
+                    <>
+                      <Zap className="w-5 h-5 mr-2" />
+                      Inscrever
+                    </>
                   )}
-                  {isSubscribing ? 'Inscrevendo...' : 'Inscrever'}
                 </Button>
               </form>
             </div>
