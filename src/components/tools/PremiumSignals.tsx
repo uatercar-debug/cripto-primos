@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import { TrendingUp, TrendingDown, Clock, Target, DollarSign, AlertTriangle, Star, Filter, Bell } from 'lucide-react';
+import { TrendingUp, TrendingDown, Clock, Target, DollarSign, AlertTriangle, Star, Filter, Bell, ArrowLeft } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import Header from '@/components/navigation/Header';
+import { useNavigate } from 'react-router-dom';
 
 const PremiumSignals = () => {
+  const navigate = useNavigate();
   const [selectedType, setSelectedType] = useState('all');
   const [selectedStatus, setSelectedStatus] = useState('all');
 
@@ -132,7 +135,19 @@ const PremiumSignals = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
+    <div className="min-h-screen bg-background">
+      <Header />
+      <div className="max-w-7xl mx-auto p-6 pt-24">
+        <div className="mb-8">
+          <Button
+            variant="ghost"
+            onClick={() => navigate('/area-vip')}
+            className="mb-4"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Voltar para Área VIP
+          </Button>
+        </div>
       <div className="text-center mb-8">
         <div className="flex justify-center mb-4">
           <div className="p-4 bg-primary rounded-2xl">
@@ -344,6 +359,7 @@ const PremiumSignals = () => {
           </div>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 };
