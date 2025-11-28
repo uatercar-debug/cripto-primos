@@ -183,11 +183,14 @@ class NewsService {
     const rawDescription = item.description || item.content || 'Descrição não disponível';
     const cleanDescription = this.cleanHtmlAndUrls(rawDescription);
     
+    // Tentar extrair imagem de várias fontes possíveis
+    const imageUrl = this.extractImageUrl(item);
+    
     return {
       title: item.title || 'Título não disponível',
       description: cleanDescription,
       url: item.link || '#',
-      urlToImage: this.getValidImageUrl(item.thumbnail || item.enclosure?.link),
+      urlToImage: this.getValidImageUrl(imageUrl),
       publishedAt: item.pubDate || new Date().toISOString(),
       source: {
         name: this.extractSourceName(item.link) || 'Fonte desconhecida'
@@ -195,6 +198,37 @@ class NewsService {
       category: this.mapCategory(category),
       readTime: this.calculateReadTime(cleanDescription)
     };
+  }
+
+  // Extrair URL de imagem de várias fontes possíveis
+  private extractImageUrl(item: any): string | undefined {
+    // 1. Tentar thumbnail direto
+    if (item.thumbnail && item.thumbnail !== '') {
+      return item.thumbnail;
+    }
+
+    // 2. Tentar enclosure (usado pelo Valor e outros)
+    if (item.enclosure?.link) {
+      return item.enclosure.link;
+    }
+
+    // 3. Extrair do HTML do content
+    if (item.content) {
+      const imgMatch = item.content.match(/<img[^>]+src=["']([^"']+)["']/i);
+      if (imgMatch && imgMatch[1]) {
+        return imgMatch[1];
+      }
+    }
+
+    // 4. Extrair do HTML do description
+    if (item.description) {
+      const imgMatch = item.description.match(/<img[^>]+src=["']([^"']+)["']/i);
+      if (imgMatch && imgMatch[1]) {
+        return imgMatch[1];
+      }
+    }
+
+    return undefined;
   }
 
   // Limpar HTML e URLs da descrição
