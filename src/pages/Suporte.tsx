@@ -77,7 +77,7 @@ const Suporte = () => {
                 </p>
                 <div className="bg-muted/50 rounded-lg p-4">
                   <p className="font-mono text-sm break-all text-primary">
-                    suporte@copytradingdescomplicado.com
+                    contato@criptoprimos.com
                   </p>
                 </div>
                 <p className="text-xs text-muted-foreground">

@@ -40,7 +40,7 @@ const AreaVip = () => {
       title: "Suporte Especializado",
       description: "Tire suas dúvidas com nossa equipe de especialistas",
       action: "Falar com Suporte",
-      link: "mailto:suporte@criptoprimos.com",
+      link: "mailto:contato@criptoprimos.com",
       isExternal: true,
       gradient: "from-orange-500 to-red-600"
     }
@@ -321,10 +321,10 @@ const AreaVip = () => {
                 <Button 
                   className="w-full h-12 sm:h-14 md:h-16 text-sm sm:text-base md:text-lg"
                   variant="outline"
-                  onClick={() => window.open('mailto:suporte@criptoprimos.com', '_blank')}
+                  onClick={() => window.open('mailto:contato@criptoprimos.com', '_blank')}
                 >
                   <Mail className="w-4 h-4 sm:w-5 sm:h-5 mr-2 sm:mr-3 flex-shrink-0" />
-                  <span className="truncate">suporte@criptoprimos.com</span>
+                  <span className="truncate">contato@criptoprimos.com</span>
                 </Button>
                 <Button 
                   className="w-full h-12 sm:h-14 md:h-16 text-sm sm:text-base md:text-lg"
