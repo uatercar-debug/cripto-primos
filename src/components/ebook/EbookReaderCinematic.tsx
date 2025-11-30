@@ -482,74 +482,74 @@ const EbookReaderCinematic = () => {
   // COVER SCREEN
   if (showCover) {
     return (
-      <div className={`fixed inset-0 bg-[#0a0a0f] flex items-center justify-center overflow-hidden transition-opacity duration-500 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+      <div className={`fixed inset-0 bg-[#0a0a0f] overflow-y-auto transition-opacity duration-500 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
         {/* Animated Background */}
-        <div className="absolute inset-0">
+        <div className="fixed inset-0 pointer-events-none">
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/20 rounded-full blur-[120px] animate-pulse"></div>
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-teal-500/20 rounded-full blur-[120px] animate-pulse" style={{ animationDelay: '1s' }}></div>
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-600/10 rounded-full blur-[150px]"></div>
         </div>
 
         {/* Grid Pattern */}
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#1a1a2e10_1px,transparent_1px),linear-gradient(to_bottom,#1a1a2e10_1px,transparent_1px)] bg-[size:60px_60px]"></div>
+        <div className="fixed inset-0 bg-[linear-gradient(to_right,#1a1a2e10_1px,transparent_1px),linear-gradient(to_bottom,#1a1a2e10_1px,transparent_1px)] bg-[size:60px_60px] pointer-events-none"></div>
 
         {/* Content */}
-        <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
+        <div className="relative z-10 min-h-screen flex flex-col items-center justify-center text-center px-6 py-12 md:py-20 max-w-4xl mx-auto">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 rounded-full px-5 py-2 mb-8 animate-fade-in">
+          <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 rounded-full px-5 py-2 mb-6 md:mb-8 animate-fade-in">
             <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
             <span className="text-emerald-400 text-sm font-medium">Acesso VIP Exclusivo</span>
           </div>
 
           {/* Cover Image */}
-          <div className="relative mb-10 animate-float">
+          <div className="relative mb-6 md:mb-10 animate-float w-full">
             <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-transparent to-transparent z-10"></div>
             <img 
               src={ebookCover}
               alt="Ebook Cover"
-              className="w-full max-w-md mx-auto rounded-2xl shadow-2xl shadow-emerald-500/20"
+              className="w-full max-w-[280px] md:max-w-md mx-auto rounded-2xl shadow-2xl shadow-emerald-500/20"
             />
           </div>
 
           {/* Title */}
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 leading-tight animate-fade-in" style={{ animationDelay: '200ms' }}>
+          <h1 className="text-3xl md:text-6xl font-bold text-white mb-4 md:mb-6 leading-tight animate-fade-in" style={{ animationDelay: '200ms' }}>
             {ebookData.title}
           </h1>
           
-          <p className="text-xl md:text-2xl text-slate-400 mb-10 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '400ms' }}>
+          <p className="text-lg md:text-2xl text-slate-400 mb-8 md:mb-10 max-w-2xl mx-auto animate-fade-in" style={{ animationDelay: '400ms' }}>
             {ebookData.subtitle}
           </p>
 
           {/* Stats */}
-          <div className="flex items-center justify-center gap-8 mb-12 animate-fade-in" style={{ animationDelay: '600ms' }}>
+          <div className="flex items-center justify-center gap-6 md:gap-8 mb-10 md:mb-12 animate-fade-in" style={{ animationDelay: '600ms' }}>
             <div className="text-center">
-              <div className="text-3xl font-bold text-emerald-400">{ebookData.chapters.length}</div>
-              <div className="text-slate-500 text-sm">Capítulos</div>
+              <div className="text-2xl md:text-3xl font-bold text-emerald-400">{ebookData.chapters.length}</div>
+              <div className="text-slate-500 text-xs md:text-sm">Capítulos</div>
             </div>
-            <div className="w-px h-12 bg-slate-800"></div>
+            <div className="w-px h-10 md:h-12 bg-slate-800"></div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-emerald-400">~45</div>
-              <div className="text-slate-500 text-sm">Minutos</div>
+              <div className="text-2xl md:text-3xl font-bold text-emerald-400">~45</div>
+              <div className="text-slate-500 text-xs md:text-sm">Minutos</div>
             </div>
-            <div className="w-px h-12 bg-slate-800"></div>
+            <div className="w-px h-10 md:h-12 bg-slate-800"></div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-emerald-400">100%</div>
-              <div className="text-slate-500 text-sm">Prático</div>
+              <div className="text-2xl md:text-3xl font-bold text-emerald-400">100%</div>
+              <div className="text-slate-500 text-xs md:text-sm">Prático</div>
             </div>
           </div>
 
           {/* CTA Button */}
           <Button 
             onClick={startReading}
-            className="h-16 px-12 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold text-xl rounded-2xl shadow-xl shadow-emerald-500/30 transition-all duration-300 hover:scale-105 animate-fade-in group"
+            className="h-14 md:h-16 px-8 md:px-12 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold text-lg md:text-xl rounded-2xl shadow-xl shadow-emerald-500/30 transition-all duration-300 hover:scale-105 animate-fade-in group"
             style={{ animationDelay: '800ms' }}
           >
-            <BookOpen className="w-6 h-6 mr-3 group-hover:rotate-12 transition-transform" />
+            <BookOpen className="w-5 h-5 md:w-6 md:h-6 mr-2 md:mr-3 group-hover:rotate-12 transition-transform" />
             Começar Leitura
           </Button>
 
           {/* Back Button */}
-          <div className="mt-8 animate-fade-in" style={{ animationDelay: '1000ms' }}>
+          <div className="mt-6 md:mt-8 mb-8 animate-fade-in" style={{ animationDelay: '1000ms' }}>
             <Button 
               variant="ghost" 
               onClick={() => navigate('/area-vip')}
@@ -559,11 +559,6 @@ const EbookReaderCinematic = () => {
               Voltar para Área VIP
             </Button>
           </div>
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 animate-bounce">
-          <ChevronDown className="w-6 h-6 text-slate-600" />
         </div>
       </div>
     );
