@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import { Calendar as CalendarIcon, Clock, TrendingUp, AlertTriangle, Star, Filter } from 'lucide-react';
+import { Calendar as CalendarIcon, Clock, TrendingUp, AlertTriangle, Star, Filter, ArrowLeft } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import Header from '@/components/navigation/Header';
+import { useNavigate } from 'react-router-dom';
 
 const EconomicCalendar = () => {
+  const navigate = useNavigate();
   const [selectedImpact, setSelectedImpact] = useState('all');
   const [selectedCountry, setSelectedCountry] = useState('all');
 
@@ -141,16 +144,28 @@ const EconomicCalendar = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
-      <div className="text-center mb-8">
-        <div className="flex justify-center mb-4">
-          <div className="p-4 bg-primary rounded-2xl">
-            <CalendarIcon className="w-8 h-8 text-primary-foreground" />
-          </div>
+    <div className="min-h-screen bg-background">
+      <Header />
+      <div className="max-w-7xl mx-auto p-6 pt-24">
+        <div className="mb-8">
+          <Button
+            variant="ghost"
+            onClick={() => navigate('/area-vip')}
+            className="mb-4"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Voltar para Área VIP
+          </Button>
         </div>
-        <h1 className="text-3xl font-bold text-foreground mb-2">Calendário Econômico</h1>
-        <p className="text-muted-foreground">Fique por dentro dos eventos que impactam o mercado</p>
-      </div>
+        <div className="text-center mb-8">
+          <div className="flex justify-center mb-4">
+            <div className="p-4 bg-primary rounded-2xl">
+              <CalendarIcon className="w-8 h-8 text-primary-foreground" />
+            </div>
+          </div>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Calendário Econômico</h1>
+          <p className="text-muted-foreground">Fique por dentro dos eventos que impactam o mercado</p>
+        </div>
 
       {/* Filters */}
       <div className="grid md:grid-cols-2 gap-4 mb-8">
@@ -309,6 +324,7 @@ const EconomicCalendar = () => {
           </div>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 };

@@ -20,13 +20,13 @@ interface NewsResponse {
 }
 
 // Fontes RSS em português brasileiro - Feeds testados e funcionais
+// Removidos feeds que retornam 422 (formato não suportado pelo RSS2JSON)
 const RSS_FEEDS = {
   CRYPTO: [
     'https://www.criptofacil.com/feed/',
-    'https://beincrypto.com/br/feed/',
     'https://livecoins.com.br/feed/',
-    'https://www.criptomoedasfacil.com/feed/',
-    'https://www.moneytimes.com.br/category/mercados/criptomoedas/feed/'
+    // Removidos: beincrypto.com/br/feed/, criptomoedasfacil.com/feed/, moneytimes.com.br/category/mercados/criptomoedas/feed/
+    // (retornam 422 - formato não suportado)
   ],
   FINANCE: [
     'https://www.infomoney.com.br/feed/',
@@ -55,6 +55,8 @@ const RELEVANT_KEYWORDS = [
 
 class NewsService {
   private rss2jsonUrl: string = 'https://api.rss2json.com/v1/api.json';
+  private maxRetries: number = 2;
+  private requestTimeout: number = 10000; // 10 segundos
 
   constructor() {
     // RSS2JSON é completamente gratuito, sem necessidade de chave
@@ -83,9 +85,20 @@ class NewsService {
         .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
         .slice(0, pageSize);
 
+      // Se não conseguimos artigos suficientes, adicionar fallback
+      if (processedArticles.length < 3) {
+        const fallbackArticles = this.getFallbackNews(category);
+        // Combinar com fallback, removendo duplicatas novamente
+        const combined = [...processedArticles, ...fallbackArticles];
+        return this.removeDuplicates(combined)
+          .slice(0, pageSize);
+      }
+
       return processedArticles;
     } catch (error) {
-      console.error('Erro ao buscar notícias:', error);
+      if (import.meta.env.DEV) {
+        console.error('Erro ao buscar notícias:', error);
+      }
       return this.getFallbackNews(category);
     }
   }
@@ -148,34 +161,81 @@ class NewsService {
     return categoryMap[category] || RSS_FEEDS.FINANCE;
   }
 
-  // Buscar feed RSS
-  private async fetchRSSFeed(feedUrl: string, category: string): Promise<NewsArticle[]> {
+  // Buscar feed RSS com retry e timeout
+  private async fetchRSSFeed(feedUrl: string, category: string, retryCount: number = 0): Promise<NewsArticle[]> {
     try {
-      const response = await fetch(
-        `${this.rss2jsonUrl}?rss_url=${encodeURIComponent(feedUrl)}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+      // Criar AbortController para timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), this.requestTimeout);
+
+      try {
+        const response = await fetch(
+          `${this.rss2jsonUrl}?rss_url=${encodeURIComponent(feedUrl)}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            signal: controller.signal,
+          }
+        );
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          // Se for erro 500 e ainda temos tentativas, fazer retry
+          if (response.status === 500 && retryCount < this.maxRetries) {
+            // Aguardar antes de tentar novamente (exponential backoff)
+            await this.delay(Math.pow(2, retryCount) * 1000);
+            return this.fetchRSSFeed(feedUrl, category, retryCount + 1);
+          }
+          
+          // Para outros erros (422 = feed inválido/não processável, 404 = não encontrado), retornar vazio silenciosamente
+          // Não logar erros comuns (422, 404, 500) para evitar spam no console
+          // 422 significa que o feed não pode ser processado pelo RSS2JSON (feed inválido ou formato não suportado)
+          const silentErrors = [422, 404, 500];
+          if (!silentErrors.includes(response.status) && import.meta.env.DEV) {
+            console.warn(`Feed ${feedUrl} retornou status ${response.status}`);
+          }
+          return [];
         }
-      );
 
-      if (!response.ok) {
-        throw new Error(`Erro na API: ${response.status}`);
-      }
+        const data = await response.json();
+        
+        if (!data.items || !Array.isArray(data.items)) {
+          return [];
+        }
 
-      const data = await response.json();
-      
-      if (!data.items || !Array.isArray(data.items)) {
+        return data.items.map((item: any) => this.processRSSItem(item, category));
+      } catch (fetchError: any) {
+        clearTimeout(timeoutId);
+        
+        // Se foi abortado por timeout e ainda temos tentativas, fazer retry
+        if (fetchError.name === 'AbortError' && retryCount < this.maxRetries) {
+          await this.delay(Math.pow(2, retryCount) * 1000);
+          return this.fetchRSSFeed(feedUrl, category, retryCount + 1);
+        }
+        
+        // Para outros erros, retornar vazio silenciosamente
+        // Não logar em produção para evitar spam
+        if (import.meta.env.DEV && retryCount >= this.maxRetries) {
+          console.warn(`Erro ao buscar feed ${feedUrl}:`, fetchError.message);
+        }
         return [];
       }
-
-      return data.items.map((item: any) => this.processRSSItem(item, category));
-    } catch (error) {
-      console.error(`Erro ao buscar feed ${feedUrl}:`, error);
+    } catch (error: any) {
+      // Retornar vazio silenciosamente - outros feeds podem funcionar
+      // Apenas logar em desenvolvimento após todas as tentativas
+      if (import.meta.env.DEV && retryCount >= this.maxRetries) {
+        console.warn(`Erro final ao buscar feed ${feedUrl}:`, error.message);
+      }
       return [];
     }
+  }
+
+  // Helper para delay
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   // Processar item RSS

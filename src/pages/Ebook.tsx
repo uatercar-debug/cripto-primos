@@ -1,7 +1,7 @@
-import EbookReaderEnhanced from "@/components/ebook/EbookReaderEnhanced";
+import EbookReaderCinematic from "@/components/ebook/EbookReaderCinematic";
 
 const Ebook = () => {
-  return <EbookReaderEnhanced />;
+  return <EbookReaderCinematic />;
 };
 
 export default Ebook;

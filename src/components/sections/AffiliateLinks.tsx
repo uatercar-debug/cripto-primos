@@ -26,7 +26,7 @@ const AffiliateLinks = () => {
         <img 
           src="/exness-logo.png" 
           alt="Exness Logo" 
-          className="w-96 h-96 object-contain"
+          className="w-32 h-32 sm:w-48 sm:h-48 md:w-64 md:h-64 lg:w-96 lg:h-96 object-contain"
         />
       ),
       benefits: ["Regulamentada", "Baixas taxas", "Suporte 24/7"]
@@ -41,7 +41,7 @@ const AffiliateLinks = () => {
         <img 
           src="/binance-logo.png" 
           alt="Binance Logo" 
-          className="w-96 h-96 object-contain"
+          className="w-32 h-32 sm:w-48 sm:h-48 md:w-64 md:h-64 lg:w-96 lg:h-96 object-contain"
         />
       ),
       benefits: ["Maior volume", "Criptomoedas", "Futuros"]
@@ -64,7 +64,7 @@ const AffiliateLinks = () => {
   };
 
   return (
-    <section className="py-24 bg-muted/30 relative overflow-hidden">
+    <section className="py-12 sm:py-16 md:py-24 bg-muted/30 relative overflow-hidden">
       {/* Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-green-400 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse"></div>
@@ -79,7 +79,7 @@ const AffiliateLinks = () => {
               <span className="text-sm font-medium text-success">Apoie o Projeto</span>
             </Badge>
             
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 leading-tight text-foreground">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 leading-tight text-foreground">
               Já tem experiência?
               <br />
               <span className="text-primary">
@@ -93,16 +93,16 @@ const AffiliateLinks = () => {
                 <strong className="text-green-600 dark:text-green-400"> Desejamos sucesso na sua jornada!</strong>
               </p>
               
-              <div className="bg-muted/50 rounded-2xl p-8 border border-border">
-                <div className="flex items-start gap-4">
-                  <div className="bg-primary p-3 rounded-2xl">
-                    <Gift className="w-6 h-6 text-primary-foreground" />
+              <div className="bg-muted/50 rounded-2xl p-4 sm:p-6 md:p-8 border border-border">
+                <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
+                  <div className="bg-primary p-2 sm:p-3 rounded-xl sm:rounded-2xl flex-shrink-0">
+                    <Gift className="w-5 h-5 sm:w-6 sm:h-6 text-primary-foreground" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-bold text-foreground mb-2">
+                    <h3 className="text-base sm:text-lg font-bold text-foreground mb-2">
                       Nos Apoie Utilizando Nossos Códigos de Afiliado
                     </h3>
-                    <p className="text-muted-foreground leading-relaxed">
+                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                       Assim você nos apoia a manter esse projeto, ajuda a levar educação financeira a mais pessoas 
                       e ainda garante <strong className="text-success">isenção de taxas extras</strong>.
                     </p>
@@ -113,7 +113,7 @@ const AffiliateLinks = () => {
           </div>
 
           {/* Platforms Grid */}
-          <div className="grid md:grid-cols-2 gap-8 mb-16">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 mb-8 sm:mb-12 md:mb-16">
             {platforms.map((platform, index) => (
               <div
                 key={index}
@@ -128,7 +128,7 @@ const AffiliateLinks = () => {
                                   {platform.icon}
                                 </div>
                               </div>
-                              <CardTitle className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
+                              <CardTitle className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white mb-2">
                                 {platform.name}
                               </CardTitle>
                               <p className="text-slate-600 dark:text-slate-300">
@@ -136,7 +136,7 @@ const AffiliateLinks = () => {
                               </p>
                             </CardHeader>
                   
-                  <CardContent className="space-y-6">
+                  <CardContent className="space-y-4 sm:space-y-6">
                     {/* Benefits */}
                     <div className="flex flex-wrap gap-2 justify-center">
                       {platform.benefits.map((benefit, idx) => (
@@ -147,11 +147,11 @@ const AffiliateLinks = () => {
                     </div>
 
                     {/* Code Display */}
-                    <div className="bg-slate-100 dark:bg-slate-700 rounded-xl p-4">
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <p className="text-sm text-slate-600 dark:text-slate-400 mb-1">Código de Afiliado:</p>
-                          <p className="font-mono text-lg font-bold text-slate-900 dark:text-white">
+                    <div className="bg-slate-100 dark:bg-slate-700 rounded-xl p-3 sm:p-4">
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="min-w-0 flex-1">
+                          <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 mb-1">Código de Afiliado:</p>
+                          <p className="font-mono text-sm sm:text-lg font-bold text-slate-900 dark:text-white truncate">
                             {platform.code}
                           </p>
                         </div>
@@ -170,20 +170,20 @@ const AffiliateLinks = () => {
                     {/* Action Buttons */}
                     <div className="space-y-2">
                       <Button
-                        className="w-full h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-lg shadow-md hover:shadow-lg transition-all duration-300 group"
+                        className="w-full h-10 sm:h-12 bg-primary hover:bg-primary/90 text-primary-foreground font-bold text-sm sm:text-lg shadow-md hover:shadow-lg transition-all duration-300 group"
                         onClick={() => window.open(platform.link, '_blank')}
                       >
-                        <ExternalLink className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
+                        <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5 mr-2 group-hover:rotate-12 transition-transform" />
                         Acessar {platform.name}
                       </Button>
                       
                       {platform.name === "Exness" && (
                         <Button
                           variant="outline"
-                          className="w-full h-12 border-primary text-primary hover:bg-primary/10 font-semibold text-lg shadow-sm hover:shadow-md transition-all duration-300 group"
+                          className="w-full h-10 sm:h-12 border-primary text-primary hover:bg-primary/10 font-semibold text-sm sm:text-lg shadow-sm hover:shadow-md transition-all duration-300 group"
                           onClick={() => window.open((platform as any).mobileLink, '_blank')}
                         >
-                          <ExternalLink className="w-5 h-5 mr-2 group-hover:rotate-12 transition-transform" />
+                          <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5 mr-2 group-hover:rotate-12 transition-transform" />
                           Acessar Mobile
                         </Button>
                       )}
@@ -195,56 +195,56 @@ const AffiliateLinks = () => {
           </div>
 
           {/* Platform Benefits */}
-          <div className={`grid md:grid-cols-2 gap-8 mb-16 transition-all duration-1000 delay-800 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="bg-muted/50 rounded-2xl p-6 border border-border">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="bg-primary p-3 rounded-xl">
-                  <Zap className="w-6 h-6 text-primary-foreground" />
+          <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 mb-8 sm:mb-12 md:mb-16 transition-all duration-1000 delay-800 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+            <div className="bg-muted/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-border">
+              <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                <div className="bg-primary p-2 sm:p-3 rounded-lg sm:rounded-xl">
+                  <Zap className="w-5 h-5 sm:w-6 sm:h-6 text-primary-foreground" />
                 </div>
-                <h4 className="text-lg font-bold text-foreground">Por que Exness?</h4>
+                <h4 className="text-base sm:text-lg font-bold text-foreground">Por que Exness?</h4>
               </div>
-              <ul className="space-y-2 text-muted-foreground">
+              <ul className="space-y-1.5 sm:space-y-2 text-muted-foreground text-sm sm:text-base">
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-success" />
+                  <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-success flex-shrink-0" />
                   <span>Regulamentada pela CySEC e FCA</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-success" />
+                  <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-success flex-shrink-0" />
                   <span>Spreads a partir de 0.0 pips</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-success" />
+                  <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-success flex-shrink-0" />
                   <span>Execução instantânea</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-success" />
+                  <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-success flex-shrink-0" />
                   <span>Suporte 24/7 em português</span>
                 </li>
               </ul>
             </div>
 
-            <div className="bg-muted/50 rounded-2xl p-6 border border-border">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="bg-accent p-3 rounded-xl">
-                  <Star className="w-6 h-6 text-accent-foreground" />
+            <div className="bg-muted/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-border">
+              <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                <div className="bg-accent p-2 sm:p-3 rounded-lg sm:rounded-xl">
+                  <Star className="w-5 h-5 sm:w-6 sm:h-6 text-accent-foreground" />
                 </div>
-                <h4 className="text-lg font-bold text-foreground">Por que Binance?</h4>
+                <h4 className="text-base sm:text-lg font-bold text-foreground">Por que Binance?</h4>
               </div>
-              <ul className="space-y-2 text-muted-foreground">
+              <ul className="space-y-1.5 sm:space-y-2 text-muted-foreground text-sm sm:text-base">
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-success" />
+                  <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-success flex-shrink-0" />
                   <span>Maior volume de negociação mundial</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-success" />
+                  <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-success flex-shrink-0" />
                   <span>Mais de 600 criptomoedas</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-success" />
+                  <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-success flex-shrink-0" />
                   <span>Taxas competitivas (0.1%)</span>
                 </li>
                 <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-success" />
+                  <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-success flex-shrink-0" />
                   <span>Plataforma segura e confiável</span>
                 </li>
               </ul>
@@ -253,16 +253,16 @@ const AffiliateLinks = () => {
 
           {/* Bottom Message */}
           <div className={`text-center transition-all duration-1000 delay-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-            <div className="bg-muted/50 rounded-2xl p-8 border border-border">
-              <div className="flex justify-center mb-4">
-                <div className="bg-success p-4 rounded-2xl">
-                  <Users className="w-8 h-8 text-success-foreground" />
+            <div className="bg-muted/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border border-border">
+              <div className="flex justify-center mb-3 sm:mb-4">
+                <div className="bg-success p-3 sm:p-4 rounded-xl sm:rounded-2xl">
+                  <Users className="w-6 h-6 sm:w-8 sm:h-8 text-success-foreground" />
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-foreground mb-4">
+              <h3 className="text-xl sm:text-2xl font-bold text-foreground mb-2 sm:mb-4">
                 Obrigado pelo Apoio! 🙏
               </h3>
-              <p className="text-muted-foreground text-lg max-w-3xl mx-auto">
+              <p className="text-muted-foreground text-sm sm:text-base md:text-lg max-w-3xl mx-auto">
                 Com seu apoio, podemos continuar criando conteúdo de qualidade e ajudando mais pessoas 
                 a investirem com segurança e conhecimento.
               </p>

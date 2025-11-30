@@ -73,53 +73,53 @@ const EbookReaderEnhanced = () => {
     if (!content) return null;
 
     return (
-      <div className="space-y-8">
+      <div className="space-y-4 sm:space-y-6 md:space-y-8">
         {/* Intro */}
         {content.intro && (
-          <div className="text-lg leading-relaxed text-muted-foreground">
+          <div className="text-sm sm:text-base md:text-lg leading-relaxed text-muted-foreground">
             {content.intro}
           </div>
         )}
 
         {/* Sections */}
         {content.sections && content.sections.map((section: any, idx: number) => (
-          <div key={idx} className="space-y-4">
+          <div key={idx} className="space-y-3 sm:space-y-4">
             {section.title && (
-              <h2 className="text-2xl font-bold text-primary mt-8 mb-4">
+              <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-primary mt-4 sm:mt-6 md:mt-8 mb-2 sm:mb-3 md:mb-4">
                 {section.title}
               </h2>
             )}
 
             {section.description && (
-              <p className="text-base leading-relaxed">
+              <p className="text-sm sm:text-base leading-relaxed">
                 {section.description}
               </p>
             )}
 
             {section.items && (
-              <ul className="space-y-2 ml-6">
+              <ul className="space-y-1.5 sm:space-y-2 ml-2 sm:ml-4 md:ml-6">
                 {section.items.map((item: string, i: number) => (
-                  <li key={i} className="flex items-start gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                    <span className="text-base" dangerouslySetInnerHTML={{ __html: item.replace(/\*\*(.*?)\*\*/g, '<strong class="text-primary">$1</strong>') }} />
+                  <li key={i} className="flex items-start gap-1.5 sm:gap-2">
+                    <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                    <span className="text-sm sm:text-base" dangerouslySetInnerHTML={{ __html: item.replace(/\*\*(.*?)\*\*/g, '<strong class="text-primary">$1</strong>') }} />
                   </li>
                 ))}
               </ul>
             )}
 
             {section.example && (
-              <div className="bg-accent/20 border-l-4 border-accent p-4 rounded-r-lg my-4">
-                <h3 className="font-semibold text-lg mb-2">
+              <div className="bg-accent/20 border-l-4 border-accent p-3 sm:p-4 rounded-r-lg my-3 sm:my-4">
+                <h3 className="font-semibold text-base sm:text-lg mb-1.5 sm:mb-2">
                   💡 {section.example.title}
                 </h3>
-                <p className="text-base mb-2">{section.example.scenario}</p>
+                <p className="text-sm sm:text-base mb-1.5 sm:mb-2">{section.example.scenario}</p>
                 {section.example.key_point && (
-                  <p className="text-sm font-medium text-primary mt-2">
+                  <p className="text-xs sm:text-sm font-medium text-primary mt-1.5 sm:mt-2">
                     ✨ {section.example.key_point}
                   </p>
                 )}
                 {section.example.warning && (
-                  <p className="text-sm font-medium text-destructive mt-2">
+                  <p className="text-xs sm:text-sm font-medium text-destructive mt-1.5 sm:mt-2">
                     ⚠️ {section.example.warning}
                   </p>
                 )}
@@ -127,40 +127,40 @@ const EbookReaderEnhanced = () => {
             )}
 
             {section.features && (
-              <div className="grid gap-3">
+              <div className="grid gap-2 sm:gap-3">
                 {section.features.map((feature: string, i: number) => (
-                  <div key={i} className="flex items-start gap-2 p-3 bg-card/50 rounded-lg border border-border/50">
-                    <Circle className="w-2 h-2 text-primary mt-2 flex-shrink-0 fill-current" />
-                    <span className="text-base" dangerouslySetInnerHTML={{ __html: feature.replace(/\*\*(.*?)\*\*/g, '<strong class="text-primary">$1</strong>') }} />
+                  <div key={i} className="flex items-start gap-1.5 sm:gap-2 p-2 sm:p-3 bg-card/50 rounded-lg border border-border/50">
+                    <Circle className="w-1.5 h-1.5 sm:w-2 sm:h-2 text-primary mt-1.5 sm:mt-2 flex-shrink-0 fill-current" />
+                    <span className="text-sm sm:text-base" dangerouslySetInnerHTML={{ __html: feature.replace(/\*\*(.*?)\*\*/g, '<strong class="text-primary">$1</strong>') }} />
                   </div>
                 ))}
               </div>
             )}
 
             {section.steps && (
-              <ol className="space-y-3">
+              <ol className="space-y-2 sm:space-y-3">
                 {section.steps.map((step: string, i: number) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <Badge variant="outline" className="mt-0.5 flex-shrink-0">
+                  <li key={i} className="flex items-start gap-2 sm:gap-3">
+                    <Badge variant="outline" className="mt-0.5 flex-shrink-0 text-xs sm:text-sm">
                       {i + 1}
                     </Badge>
-                    <span className="text-base">{step}</span>
+                    <span className="text-sm sm:text-base">{step}</span>
                   </li>
                 ))}
               </ol>
             )}
 
             {section.criteria && (
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {section.criteria.map((criterion: any, i: number) => (
-                  <div key={i} className="border border-border/50 rounded-lg p-4">
-                    <h3 className="font-semibold text-lg mb-2 text-primary">
+                  <div key={i} className="border border-border/50 rounded-lg p-3 sm:p-4">
+                    <h3 className="font-semibold text-base sm:text-lg mb-1.5 sm:mb-2 text-primary">
                       {criterion.name}
                     </h3>
-                    <p className="text-base mb-2">{criterion.description}</p>
+                    <p className="text-sm sm:text-base mb-1.5 sm:mb-2">{criterion.description}</p>
                     {criterion.tip && (
-                      <div className="bg-primary/10 p-3 rounded-lg mt-2">
-                        <p className="text-sm">
+                      <div className="bg-primary/10 p-2 sm:p-3 rounded-lg mt-1.5 sm:mt-2">
+                        <p className="text-xs sm:text-sm">
                           <strong className="text-primary">💡 Dica:</strong> {criterion.tip}
                         </p>
                       </div>
@@ -171,21 +171,21 @@ const EbookReaderEnhanced = () => {
             )}
 
             {section.profiles && (
-              <div className="grid md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
                 {section.profiles.map((profile: any, i: number) => (
-                  <div key={i} className="bg-card/30 border border-border rounded-lg p-4">
-                    <h3 className="text-lg font-semibold mb-3">{profile.type}</h3>
-                    <div className="space-y-3">
+                  <div key={i} className="bg-card/30 border border-border rounded-lg p-3 sm:p-4">
+                    <h3 className="text-base sm:text-lg font-semibold mb-2 sm:mb-3">{profile.type}</h3>
+                    <div className="space-y-2 sm:space-y-3">
                       <div>
-                        <p className="text-sm font-medium mb-2">Características:</p>
-                        <ul className="text-sm space-y-1">
+                        <p className="text-xs sm:text-sm font-medium mb-1.5 sm:mb-2">Características:</p>
+                        <ul className="text-xs sm:text-sm space-y-0.5 sm:space-y-1">
                           {profile.characteristics.map((char: string, j: number) => (
                             <li key={j} className="text-muted-foreground">• {char}</li>
                           ))}
                         </ul>
                       </div>
-                      <div className="pt-2 border-t border-border/50">
-                        <p className="text-sm">
+                      <div className="pt-1.5 sm:pt-2 border-t border-border/50">
+                        <p className="text-xs sm:text-sm">
                           <strong>Ideal para:</strong> {profile.ideal_for}
                         </p>
                       </div>
@@ -196,15 +196,15 @@ const EbookReaderEnhanced = () => {
             )}
 
             {section.warnings && (
-              <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-4">
-                <h3 className="font-semibold text-lg mb-3 text-destructive">
+              <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-3 sm:p-4">
+                <h3 className="font-semibold text-base sm:text-lg mb-2 sm:mb-3 text-destructive">
                   ⚠️ Sinais de Alerta
                 </h3>
-                <ul className="space-y-2">
+                <ul className="space-y-1.5 sm:space-y-2">
                   {section.warnings.map((warning: string, i: number) => (
-                    <li key={i} className="flex items-start gap-2">
-                      <span className="text-destructive mt-0.5">⚠️</span>
-                      <span className="text-base">{warning}</span>
+                    <li key={i} className="flex items-start gap-1.5 sm:gap-2">
+                      <span className="text-destructive mt-0.5 text-sm sm:text-base">⚠️</span>
+                      <span className="text-sm sm:text-base">{warning}</span>
                     </li>
                   ))}
                 </ul>
@@ -320,8 +320,8 @@ const EbookReaderEnhanced = () => {
           )}
 
           {/* Main Content */}
-          <main className="flex-1 min-w-0 px-6 sm:px-12 lg:px-16 xl:px-24 py-8 lg:py-12">
-            <div className="space-y-16 max-w-4xl mx-auto">
+          <main className="flex-1 min-w-0 px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24 py-4 sm:py-6 md:py-8 lg:py-12">
+            <div className="space-y-8 sm:space-y-12 md:space-y-16 max-w-4xl mx-auto">
               {ebookData.chapters.map((chapter, index) => (
                 <section
                   key={chapter.id}
@@ -329,19 +329,19 @@ const EbookReaderEnhanced = () => {
                   className="scroll-mt-24"
                 >
                   {/* Chapter Header */}
-                  <div className="mb-8">
-                    <Badge variant="outline" className="mb-3">
+                  <div className="mb-4 sm:mb-6 md:mb-8">
+                    <Badge variant="outline" className="mb-2 sm:mb-3 text-xs sm:text-sm">
                       Capítulo {chapter.number}
                     </Badge>
-                    <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-3">
+                    <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-foreground mb-2 sm:mb-3">
                       {chapter.title}
                     </h2>
-                    <div className="h-1 w-20 bg-primary rounded-full"></div>
+                    <div className="h-1 w-16 sm:w-20 bg-primary rounded-full"></div>
                   </div>
 
                   {/* Chapter Image */}
                   {chapter.image && (
-                    <div className="mb-10 rounded-xl overflow-hidden">
+                    <div className="mb-6 sm:mb-8 md:mb-10 rounded-lg sm:rounded-xl overflow-hidden">
                       <img
                         src={chapter.image} 
                         alt={chapter.title}
@@ -351,20 +351,20 @@ const EbookReaderEnhanced = () => {
                   )}
 
                   {/* Chapter Content */}
-                  <div className="prose prose-slate max-w-none mb-10">
+                  <div className="prose prose-slate max-w-none mb-6 sm:mb-8 md:mb-10 prose-sm sm:prose-base">
                     {renderContent(chapter.content)}
                   </div>
 
                   {/* Checklist */}
                   {checklists[chapter.id] && checklists[chapter.id].length > 0 && (
-                    <div className="mt-12 p-6 bg-muted/30 rounded-xl">
-                      <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-foreground">
-                        <CheckCircle2 className="w-6 h-6 text-primary" />
+                    <div className="mt-8 sm:mt-10 md:mt-12 p-4 sm:p-5 md:p-6 bg-muted/30 rounded-lg sm:rounded-xl">
+                      <h3 className="text-base sm:text-lg md:text-xl font-bold mb-3 sm:mb-4 flex items-center gap-2 text-foreground">
+                        <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                         Checklist do Capítulo
                       </h3>
-                      <div className="space-y-3">
+                      <div className="space-y-2 sm:space-y-3">
                         {checklists[chapter.id].map((item) => (
-                          <div key={item.id} className="flex items-start gap-3 p-3 bg-background rounded-lg">
+                          <div key={item.id} className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 bg-background rounded-lg">
                             <Checkbox
                               id={`${chapter.id}-${item.id}`}
                               checked={item.checked}
@@ -373,7 +373,7 @@ const EbookReaderEnhanced = () => {
                             />
                             <label
                               htmlFor={`${chapter.id}-${item.id}`}
-                              className={`text-base cursor-pointer flex-1 ${
+                              className={`text-sm sm:text-base cursor-pointer flex-1 ${
                                 item.checked ? 'line-through text-muted-foreground' : 'text-foreground'
                               }`}
                             >
@@ -387,7 +387,7 @@ const EbookReaderEnhanced = () => {
 
                   {/* Chapter Divider */}
                   {index < ebookData.chapters.length - 1 && (
-                    <div className="mt-16 pt-16" />
+                    <div className="mt-8 sm:mt-12 md:mt-16 pt-8 sm:pt-12 md:pt-16" />
                   )}
                 </section>
               ))}

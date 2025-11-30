@@ -1,11 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, CreditCard, Shield, Lock } from "lucide-react";
+import { Loader2, CreditCard, Shield, Lock, QrCode, Receipt } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import SecureCardPayment, { CardPaymentFormData } from "./SecureCardPayment";
+import { useNavigate } from "react-router-dom";
+
+// Gerar ID único para referência externa
+const generateExternalReference = () => {
+  const timestamp = Date.now();
+  const random = Math.random().toString(36).substring(2, 8);
+  return `COPY-${timestamp}-${random}`.toUpperCase();
+};
 
 interface CheckoutModalProps {
   open: boolean;
@@ -15,33 +24,18 @@ interface CheckoutModalProps {
 export function CheckoutModal({ open, onOpenChange }: CheckoutModalProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState<'info' | 'payment'>('info');
+  const [paymentMethod, setPaymentMethod] = useState<'credit_card' | 'pix' | 'boleto'>('credit_card');
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    cardNumber: "",
-    expiryDate: "",
-    cvv: "",
-    cardholderName: "",
     docType: "CPF",
     docNumber: ""
   });
+  const externalReference = useRef(generateExternalReference());
   const { toast } = useToast();
+  const navigate = useNavigate();
 
-  // Funções de formatação
-  const formatCardNumber = (value: string) => {
-    const numbers = value.replace(/\D/g, '');
-    const formatted = numbers.replace(/(\d{4})(?=\d)/g, '$1 ');
-    return formatted;
-  };
-
-  const formatExpiryDate = (value: string) => {
-    const numbers = value.replace(/\D/g, '');
-    if (numbers.length >= 2) {
-      return numbers.substring(0, 2) + '/' + numbers.substring(2, 4);
-    }
-    return numbers;
-  };
-
+  // Formatação de documento
   const formatDocument = (value: string, type: string) => {
     const numbers = value.replace(/\D/g, '');
     if (type === 'CPF') {
@@ -50,18 +44,6 @@ export function CheckoutModal({ open, onOpenChange }: CheckoutModalProps) {
       return numbers.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
     }
   };
-
-  // Carregar SDK do MercadoPago
-  useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://sdk.mercadopago.com/js/v2';
-    script.async = true;
-    document.head.appendChild(script);
-    
-    return () => {
-      document.head.removeChild(script);
-    };
-  }, []);
 
   const handleInfoSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,13 +60,65 @@ export function CheckoutModal({ open, onOpenChange }: CheckoutModalProps) {
     setStep('payment');
   };
 
+  // Handler para pagamento com cartão via Secure Fields (PCI Compliant)
+  // O Device ID é gerado automaticamente pelo Card Payment Brick
+  const handleSecureCardPayment = async (cardFormData: CardPaymentFormData) => {
+    try {
+      console.log('Processing SECURE card payment via MercadoPago Brick...');
+      console.log('External reference:', externalReference.current);
+      
+      const { data, error } = await supabase.functions.invoke('process-mercadopago-payment', {
+        body: {
+          token: cardFormData.token,
+          payment_method_id: cardFormData.payment_method_id,
+          issuer_id: cardFormData.issuer_id,
+          installments: cardFormData.installments,
+          transaction_amount: cardFormData.transaction_amount,
+          name: formData.name,
+          email: formData.email,
+          payer: cardFormData.payer,
+          isSecurePayment: true,
+          // Campos obrigatórios MercadoPago
+          external_reference: externalReference.current
+        }
+      });
+
+      if (error) throw new Error(error.message);
+
+      if (data.status === 'approved') {
+        onOpenChange(false);
+        toast({
+          title: "Pagamento aprovado! 🎉",
+          description: "Seu acesso foi liberado. Redirecionando...",
+        });
+        setTimeout(() => navigate('/area-vip'), 2000);
+      } else if (data.status === 'pending' || data.status === 'in_process') {
+        toast({
+          title: "Pagamento em análise",
+          description: "Você receberá um email em breve.",
+        });
+      } else {
+        throw new Error(data.status_detail || 'Pagamento rejeitado');
+      }
+    } catch (error: any) {
+      console.error('Error:', error);
+      toast({
+        title: "Erro ao processar",
+        description: error.message || "Tente novamente.",
+        variant: "destructive",
+      });
+      throw error;
+    }
+  };
+
+  // Handler para PIX/Boleto
   const handlePaymentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.cardNumber || !formData.expiryDate || !formData.cvv || !formData.cardholderName || !formData.docNumber) {
+    if (!formData.docNumber) {
       toast({
-        title: "Campos obrigatórios",
-        description: "Por favor, preencha todos os dados do cartão.",
+        title: "Campo obrigatório",
+        description: "Por favor, preencha o documento.",
         variant: "destructive",
       });
       return;
@@ -93,43 +127,48 @@ export function CheckoutModal({ open, onOpenChange }: CheckoutModalProps) {
     setIsLoading(true);
     
     try {
-      console.log('Processing MercadoPago payment...');
+      const docClean = formData.docNumber.replace(/\D/g, '');
+      console.log('Processing PIX/Boleto payment...');
+      console.log('External reference:', externalReference.current);
       
       const { data, error } = await supabase.functions.invoke('process-mercadopago-payment', {
         body: {
-          ...formData,
-          amount: 29.00
+          name: formData.name,
+          email: formData.email,
+          docType: formData.docType,
+          docNumber: docClean,
+          amount: 29.00,
+          paymentMethod: paymentMethod,
+          payment_method_id: paymentMethod === 'pix' ? 'pix' : 'bolbradesco',
+          // Campos obrigatórios MercadoPago
+          external_reference: externalReference.current
         }
       });
 
-      if (error) {
-        console.error('Supabase function error:', error);
-        throw error;
-      }
-
-      console.log('Payment processed successfully:', data);
+      if (error) throw error;
 
       if (data.status === 'approved') {
         onOpenChange(false);
         toast({
           title: "Pagamento aprovado!",
-          description: "Seu acesso foi liberado. Verifique seu email para mais informações.",
+          description: "Seu acesso foi liberado.",
         });
+        navigate('/area-vip');
+      } else if (data.status === 'redirect_required' && data.init_point) {
+        window.location.href = data.init_point;
       } else if (data.status === 'pending') {
-        onOpenChange(false);
         toast({
-          title: "Pagamento em análise",
-          description: "Seu pagamento está sendo processado. Você receberá um email em breve.",
+          title: paymentMethod === 'pix' ? "PIX gerado!" : "Boleto gerado!",
+          description: "Complete o pagamento para liberar seu acesso.",
         });
       } else {
         throw new Error(data.status_detail || 'Pagamento rejeitado');
       }
 
-    } catch (error) {
-      console.error('Error processing payment:', error);
+    } catch (error: any) {
       toast({
-        title: "Erro ao processar pagamento",
-        description: error.message || "Tente novamente em alguns instantes.",
+        title: "Erro",
+        description: error.message || "Tente novamente.",
         variant: "destructive",
       });
     } finally {
@@ -139,11 +178,12 @@ export function CheckoutModal({ open, onOpenChange }: CheckoutModalProps) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-lg max-h-[90vh] overflow-y-auto w-[95vw] sm:w-full mx-auto p-4 sm:p-6">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2">
-            <CreditCard className="w-5 h-5" />
-            Finalizar Compra - R$ 29,00
+          <DialogTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="hidden sm:inline">Finalizar Compra - R$ 29,00</span>
+            <span className="sm:hidden">Compra - R$ 29,00</span>
           </DialogTitle>
         </DialogHeader>
         
@@ -178,131 +218,160 @@ export function CheckoutModal({ open, onOpenChange }: CheckoutModalProps) {
             </Button>
           </form>
         ) : (
-          <form onSubmit={handlePaymentSubmit} className="space-y-4">
-            <div>
-              <Label htmlFor="cardNumber">Número do Cartão</Label>
-              <Input
-                id="cardNumber"
-                type="text"
-                value={formData.cardNumber}
-                onChange={(e) => {
-                  const formatted = formatCardNumber(e.target.value);
-                  setFormData(prev => ({ ...prev, cardNumber: formatted }));
-                }}
-                placeholder="0000 0000 0000 0000"
-                maxLength={19}
-                required
-              />
+          <div className="space-y-4">
+            {/* Seleção de método */}
+            <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+              <button
+                type="button"
+                onClick={() => setPaymentMethod('credit_card')}
+                className={`p-2 sm:p-3 rounded-lg border-2 transition-all flex flex-col items-center gap-0.5 sm:gap-1 ${
+                  paymentMethod === 'credit_card' 
+                    ? 'border-primary bg-primary/10' 
+                    : 'border-muted hover:border-primary/50'
+                }`}
+              >
+                <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="text-[10px] sm:text-xs font-medium">Cartão</span>
+              </button>
+              
+              <button
+                type="button"
+                onClick={() => setPaymentMethod('pix')}
+                className={`p-2 sm:p-3 rounded-lg border-2 transition-all flex flex-col items-center gap-0.5 sm:gap-1 ${
+                  paymentMethod === 'pix' 
+                    ? 'border-primary bg-primary/10' 
+                    : 'border-muted hover:border-primary/50'
+                }`}
+              >
+                <QrCode className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="text-[10px] sm:text-xs font-medium">PIX</span>
+              </button>
+              
+              <button
+                type="button"
+                onClick={() => setPaymentMethod('boleto')}
+                className={`p-2 sm:p-3 rounded-lg border-2 transition-all flex flex-col items-center gap-0.5 sm:gap-1 ${
+                  paymentMethod === 'boleto' 
+                    ? 'border-primary bg-primary/10' 
+                    : 'border-muted hover:border-primary/50'
+                }`}
+              >
+                <Receipt className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="text-[10px] sm:text-xs font-medium">Boleto</span>
+              </button>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="expiryDate">Validade</Label>
-                <Input
-                  id="expiryDate"
-                  type="text"
-                  value={formData.expiryDate}
-                  onChange={(e) => {
-                    const formatted = formatExpiryDate(e.target.value);
-                    setFormData(prev => ({ ...prev, expiryDate: formatted }));
+            {/* Cartão - Secure Fields */}
+            {paymentMethod === 'credit_card' && (
+              <div className="space-y-4">
+                <div className="bg-success/5 p-2 rounded-lg border border-success/20 flex items-center gap-2">
+                  <Shield className="w-4 h-4 text-success" />
+                  <span className="text-xs text-success font-medium">
+                    Formulário seguro PCI-DSS
+                  </span>
+                </div>
+                
+                <SecureCardPayment
+                  amount={29.00}
+                  onSubmit={handleSecureCardPayment}
+                  onError={(error) => {
+                    toast({
+                      title: "Erro no formulário",
+                      description: "Verifique os dados e tente novamente.",
+                      variant: "destructive",
+                    });
                   }}
-                  placeholder="MM/AA"
-                  maxLength={5}
-                  required
+                  payer={{
+                    email: formData.email,
+                    identification: {
+                      type: formData.docType,
+                      number: formData.docNumber.replace(/\D/g, '') || '00000000000',
+                    },
+                  }}
                 />
-              </div>
-              <div>
-                <Label htmlFor="cvv">CVV</Label>
-                <Input
-                  id="cvv"
-                  type="text"
-                  value={formData.cvv}
-                  onChange={(e) => setFormData(prev => ({ ...prev, cvv: e.target.value }))}
-                  placeholder="123"
-                  maxLength={4}
-                  required
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="cardholderName">Nome no Cartão</Label>
-              <Input
-                id="cardholderName"
-                type="text"
-                value={formData.cardholderName}
-                onChange={(e) => setFormData(prev => ({ ...prev, cardholderName: e.target.value }))}
-                placeholder="Nome como está no cartão"
-                required
-              />
-            </div>
-
-            <div className="grid grid-cols-3 gap-2">
-              <div>
-                <Label htmlFor="docType">Documento</Label>
-                <select
-                  id="docType"
-                  value={formData.docType}
-                  onChange={(e) => setFormData(prev => ({ ...prev, docType: e.target.value }))}
-                  className="w-full px-3 py-2 border border-input rounded-md text-sm"
+                
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => setStep('info')}
+                  className="w-full"
                 >
-                  <option value="CPF">CPF</option>
-                  <option value="CNPJ">CNPJ</option>
-                </select>
+                  Voltar
+                </Button>
               </div>
-              <div className="col-span-2">
-                <Label htmlFor="docNumber">Número</Label>
-                <Input
-                  id="docNumber"
-                  type="text"
-                  value={formData.docNumber}
-                  onChange={(e) => {
-                    const raw = e.target.value.replace(/\D/g, '');
-                    const formatted = formatDocument(raw, formData.docType);
-                    setFormData(prev => ({ ...prev, docNumber: formatted }));
-                  }}
-                  placeholder={formData.docType === 'CPF' ? '000.000.000-00' : '00.000.000/0001-00'}
-                  maxLength={formData.docType === 'CPF' ? 14 : 18}
-                  required
-                />
-              </div>
-            </div>
+            )}
 
-            <div className="bg-muted/50 p-4 rounded-lg">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                <Lock className="w-4 h-4" />
-                Pagamento 100% seguro
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Seus dados são protegidos pela criptografia MercadoPago.
-              </p>
-            </div>
+            {/* PIX/Boleto */}
+            {(paymentMethod === 'pix' || paymentMethod === 'boleto') && (
+              <form onSubmit={handlePaymentSubmit} className="space-y-4">
+                <div className="grid grid-cols-3 gap-2">
+                  <div>
+                    <Label htmlFor="docType">Documento</Label>
+                    <select
+                      id="docType"
+                      value={formData.docType}
+                      onChange={(e) => setFormData(prev => ({ ...prev, docType: e.target.value }))}
+                      className="w-full px-3 py-2 border border-input rounded-md text-sm"
+                    >
+                      <option value="CPF">CPF</option>
+                      <option value="CNPJ">CNPJ</option>
+                    </select>
+                  </div>
+                  <div className="col-span-2">
+                    <Label htmlFor="docNumber">Número</Label>
+                    <Input
+                      id="docNumber"
+                      type="text"
+                      value={formData.docNumber}
+                      onChange={(e) => {
+                        const raw = e.target.value.replace(/\D/g, '');
+                        const formatted = formatDocument(raw, formData.docType);
+                        setFormData(prev => ({ ...prev, docNumber: formatted }));
+                      }}
+                      placeholder={formData.docType === 'CPF' ? '000.000.000-00' : '00.000.000/0001-00'}
+                      maxLength={formData.docType === 'CPF' ? 14 : 18}
+                      required
+                    />
+                  </div>
+                </div>
 
-            <div className="flex gap-2">
-              <Button 
-                type="button" 
-                variant="outline" 
-                onClick={() => setStep('info')}
-                className="flex-1"
-              >
-                Voltar
-              </Button>
-              <Button 
-                type="submit" 
-                className="flex-1" 
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Processando...
-                  </>
-                ) : (
-                  "Finalizar Pagamento"
-                )}
-              </Button>
-            </div>
-          </form>
+                <div className="bg-muted/50 p-3 sm:p-4 rounded-lg">
+                  <div className="flex items-center gap-1.5 sm:gap-2 text-xs sm:text-sm text-muted-foreground mb-1.5 sm:mb-2">
+                    <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    Pagamento 100% seguro
+                  </div>
+                  <p className="text-[10px] sm:text-xs text-muted-foreground">
+                    Seus dados são protegidos pelo MercadoPago.
+                  </p>
+                </div>
+
+                <div className="flex gap-2">
+                  <Button 
+                    type="button" 
+                    variant="outline" 
+                    onClick={() => setStep('info')}
+                    className="flex-1"
+                  >
+                    Voltar
+                  </Button>
+                  <Button 
+                    type="submit" 
+                    className="flex-1" 
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        Processando...
+                      </>
+                    ) : (
+                      "Finalizar"
+                    )}
+                  </Button>
+                </div>
+              </form>
+            )}
+          </div>
         )}
       </DialogContent>
     </Dialog>

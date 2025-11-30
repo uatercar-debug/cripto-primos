@@ -1,11 +1,14 @@
 import { useState } from 'react';
-import { FileText, Download, Calendar, TrendingUp, TrendingDown, Award, Target, DollarSign, BarChart3 } from 'lucide-react';
+import { FileText, Download, Calendar, TrendingUp, TrendingDown, Award, Target, DollarSign, BarChart3, ArrowLeft } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import Header from '@/components/navigation/Header';
+import { useNavigate } from 'react-router-dom';
 
 const MonthlyReports = () => {
+  const navigate = useNavigate();
   const [selectedMonth, setSelectedMonth] = useState('2024-01');
 
   // Mock reports data
@@ -103,16 +106,28 @@ const MonthlyReports = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6">
-      <div className="text-center mb-8">
-        <div className="flex justify-center mb-4">
-          <div className="p-4 bg-primary rounded-2xl">
-            <FileText className="w-8 h-8 text-primary-foreground" />
-          </div>
+    <div className="min-h-screen bg-background">
+      <Header />
+      <div className="max-w-7xl mx-auto p-6 pt-24">
+        <div className="mb-8">
+          <Button
+            variant="ghost"
+            onClick={() => navigate('/area-vip')}
+            className="mb-4"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Voltar para Área VIP
+          </Button>
         </div>
-        <h1 className="text-3xl font-bold text-foreground mb-2">Relatórios Mensais</h1>
-        <p className="text-muted-foreground">Análise detalhada da performance e insights do mercado</p>
-      </div>
+        <div className="text-center mb-8">
+          <div className="flex justify-center mb-4">
+            <div className="p-4 bg-primary rounded-2xl">
+              <FileText className="w-8 h-8 text-primary-foreground" />
+            </div>
+          </div>
+          <h1 className="text-3xl font-bold text-foreground mb-2">Relatórios Mensais</h1>
+          <p className="text-muted-foreground">Análise detalhada da performance e insights do mercado</p>
+        </div>
 
       {/* Month Selector */}
       <div className="flex justify-center mb-8">
@@ -298,6 +313,7 @@ const MonthlyReports = () => {
           <p className="text-foreground leading-relaxed">{currentReport.marketInsights}</p>
         </CardContent>
       </Card>
+      </div>
     </div>
   );
 };

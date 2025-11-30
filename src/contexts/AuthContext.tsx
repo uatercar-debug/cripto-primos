@@ -59,6 +59,37 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const normalizedEmail = email.toLowerCase().trim();
       const normalizedCode = accessCode.toUpperCase().trim();
 
+      // ============================================
+      // CÓDIGO DE TESTE - REMOVER EM PRODUÇÃO
+      // ============================================
+      const TEST_CREDENTIALS = [
+        { email: 'teste@teste.com', code: 'TESTE123' },
+        { email: 'demo@demo.com', code: 'DEMO2024' },
+        { email: 'admin@admin.com', code: 'ADMIN123' },
+      ];
+      
+      const isTestUser = TEST_CREDENTIALS.find(
+        cred => cred.email === normalizedEmail && cred.code === normalizedCode
+      );
+      
+      if (isTestUser) {
+        const expiresAt = new Date().getTime() + (30 * 24 * 60 * 60 * 1000); // 30 dias
+        const tokenData = {
+          email: normalizedEmail,
+          accessCode: normalizedCode,
+          expiresAt,
+          loginTime: new Date().toISOString(),
+          isTestUser: true,
+        };
+        
+        localStorage.setItem('vip_access_token', JSON.stringify(tokenData));
+        setIsAuthenticated(true);
+        setUserEmail(normalizedEmail);
+        
+        return { success: true };
+      }
+      // ============================================
+
       // Buscar código no banco
       const { data: codeData, error: fetchError } = await supabase
         .from('vip_access_codes')
