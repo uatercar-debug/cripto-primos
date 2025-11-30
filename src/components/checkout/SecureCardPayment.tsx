@@ -6,7 +6,7 @@ import { Loader2 } from "lucide-react";
 interface CardPaymentProps {
   amount: number;
   onSubmit: (formData: CardPaymentFormData) => Promise<void>;
-  onError?: (error: Error) => void;
+  onError?: (error: any) => void;
   onReady?: () => void;
   payer: {
     email: string;
@@ -87,7 +87,7 @@ export function SecureCardPayment({
 
   // Callback quando ocorre erro no Brick
   const handleError = useCallback(
-    (error: Error) => {
+    (error: any) => {
       console.error("Card Payment Brick error:", error);
       setError("Erro no formulário de pagamento");
       setIsLoading(false);

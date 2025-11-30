@@ -43,7 +43,7 @@ export class RecommendationsService {
       throw error;
     }
 
-    return data || [];
+    return (data || []) as Recommendation[];
   }
 
   // Buscar por ID
@@ -59,7 +59,7 @@ export class RecommendationsService {
       return null;
     }
 
-    return data;
+    return data as Recommendation;
   }
 
   // Criar nova recomendação
@@ -75,7 +75,7 @@ export class RecommendationsService {
       throw error;
     }
 
-    return data;
+    return data as Recommendation;
   }
 
   // Atualizar recomendação
@@ -92,7 +92,7 @@ export class RecommendationsService {
       throw error;
     }
 
-    return data;
+    return data as Recommendation;
   }
 
   // Deletar recomendação (soft delete - marca como inativa)
@@ -135,7 +135,7 @@ export class RecommendationsService {
       throw error;
     }
 
-    return data || [];
+    return (data || []) as Recommendation[];
   }
 
   // Buscar recomendações em destaque
@@ -152,7 +152,7 @@ export class RecommendationsService {
       throw error;
     }
 
-    return data || [];
+    return (data || []) as Recommendation[];
   }
 }
 

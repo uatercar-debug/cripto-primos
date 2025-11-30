@@ -14,6 +14,7 @@ export interface Affiliate {
   total_sales: number;
   total_earnings: number;
   available_balance: number;
+  notes?: string; // Notas administrativas
   created_at: string;
   approved_at?: string;
 }
@@ -188,7 +189,7 @@ export const registerAffiliate = async (data: AffiliateRegistration): Promise<{
         pix_key: data.pix_key,
         status: 'pending',
         commission_rate: DEFAULT_COMMISSION_RATE,
-      })
+      } as any)
       .select()
       .maybeSingle();
     
